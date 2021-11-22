@@ -1,3 +1,5 @@
+# parcel
+.parcel-cache/
 dist/
 
 # Logs
