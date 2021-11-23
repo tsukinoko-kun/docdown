@@ -22,6 +22,7 @@
   "dependencies": {
     "@frank-mayer/magic": "^1.1.9",
     "highlight.js": "^11.3.1",
-    "markdown-it": "^12.2.0"
+    "markdown-it": "^12.2.0",
+    "xxhash-wasm": "^0.4.2"
   }
 }

@@ -86,5 +86,25 @@ codeEl.addEventListener(
   passive
 );
 
+const favicon = (document.querySelector("link[rel*='icon']") as HTMLLinkElement)
+  .href;
+
+codeEl.value = `# Title
+
+Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas, similique nam? Fugiat excepturi modi, dolorum incidunt provident, praesentium labore nulla, minima pariatur nisi corporis maiores natus aut amet doloremque error?
+
+## Foo
+
+[foobar](https://example.com)
+
+## Bar
+
+*foo* **bar**
+
+Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com/)
+
+![favicon](${favicon})
+`;
+
 render(codeEl.value);
 updateNavigation();

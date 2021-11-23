@@ -1,0 +1,36 @@
+@import "theme";
+
+.context {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+
+  > * {
+    list-style: none;
+    position: fixed;
+    margin: 0;
+    left: max(4px, var(--pos-x));
+    top: max(4px, var(--pos-y));
+    transform: translateY(-100%);
+    border: {
+      width: 1px;
+      style: solid;
+    }
+    padding: 2px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.25em;
+
+    > * {
+      padding: 2px 8px;
+      @include clickable;
+    }
+  }
+}

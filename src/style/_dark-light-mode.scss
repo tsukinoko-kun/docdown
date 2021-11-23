@@ -1,0 +1,55 @@
+@import "theme";
+
+a {
+  &:not(:hover) {
+    color: $cyan;
+  }
+
+  &:hover {
+    color: $purple;
+  }
+}
+
+::selection {
+  background-color: $current-line;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  body,
+  main {
+    background-color: $current-line;
+  }
+
+  main > * {
+    background-color: $background;
+    color: $foreground;
+  }
+
+  .context > * {
+    background-color: $background;
+    color: $foreground;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root,
+  body,
+  main {
+    background-color: $current-line;
+  }
+
+  main {
+    > #nav,
+    #code,
+    #display {
+      background-color: $foreground;
+      color: $background;
+    }
+  }
+
+  .context > * {
+    background-color: $foreground;
+    color: $background;
+  }
+}

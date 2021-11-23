@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -7,20 +7,19 @@
     <title>MarkDownDoc</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="shortcut icon" href="./image/icon.svg" type="image/svg" />
   </head>
   <body>
     <main>
       <ul id="nav"></ul>
-      <textarea name="code" id="code" cols="50" rows="100">
-# Title
-
-Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas, similique nam? Fugiat excepturi modi, dolorum incidunt provident, praesentium labore nulla, minima pariatur nisi corporis maiores natus aut amet doloremque error?
-</textarea
-      >
+      <ul id="sources"></ul>
+      <textarea name="code" id="code" cols="50" rows="100"></textarea>
       <div id="display"></div>
     </main>
 
     <script src="./script/render.ts" type="module"></script>
+    <script src="./script/shortcuts.ts" type="module"></script>
+    <script src="./script/sources.ts" type="module"></script>
 
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"
