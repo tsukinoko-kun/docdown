@@ -1,0 +1,22 @@
+@import "theme";
+
+// width
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+// Track
+::-webkit-scrollbar-track {
+  background: $background;
+}
+
+// Handle
+::-webkit-scrollbar-thumb {
+  background: rgba($foreground, 0.25);
+}
+
+// Handle on hover
+::-webkit-scrollbar-thumb:hover {
+  background: rgba($foreground, 0.5);
+}
