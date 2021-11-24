@@ -1,21 +1,89 @@
-import { addDisposableEventListener } from "@frank-mayer/magic/bin";
 import { context, ContextOption } from "./context";
-import xxhash from "xxhash-wasm";
 import { insertText } from "./editor";
-import { triggerRender } from "./render";
+import { addDisposableEventListener } from "@frank-mayer/magic/bin";
+import xxhash from "xxhash-wasm";
 
-let exportSourcesRegisterIntern:
-  | ((sources: Array<string>) => string)
-  | undefined = undefined;
-export const exportSourcesRegister = (sources: Array<string>) =>
-  exportSourcesRegisterIntern ? exportSourcesRegisterIntern(sources) : "";
-
+const sourcesEl = document.getElementById("sources") as HTMLUListElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
-export const sourceTag = /(?<=<source>)[0-9a-f]+(?=<\/source>)/g;
+interface ISourceData {
+  id: string;
+  author: string;
+  title: string;
+  creationDate: string;
+  lastAccessed: string;
+}
+
+const sourceDataToString = (
+  sourceData: ISourceData,
+  shorten: boolean = false
+) => {
+  const str = `${sourceData.author} - ${sourceData.title}`;
+  if (shorten) {
+    return str.length > 25 ? str.substring(0, 23) + "…" : str;
+  }
+
+  return str;
+};
+
+const sourcesRegister = new Map<string, ISourceData>();
+
+const useSource = (source: ISourceData) => {
+  if (document.activeElement === codeEl) {
+    insertText(codeEl, `<source>${source.id}</source>`);
+    triggerRender();
+  }
+};
+
+function createLiFromSource(sourceData: ISourceData) {
+  const li = document.createElement("li");
+  li.innerText = sourceDataToString(sourceData, true);
+  li.title = sourceDataToString(sourceData);
+  addDisposableEventListener(
+    li,
+    "mousedown",
+    (ev) => {
+      ev.preventDefault();
+      useSource(sourceData);
+    },
+    {
+      capture: true,
+      passive: false,
+    }
+  );
+  return li;
+}
+
+export const exportSourcesRegister = (sources: Array<string>) =>
+  sources.length === 0
+    ? ""
+    : "<h1>Sources</h1><ol>" +
+      sources
+        .map((sourceId) => {
+          const sourceData = sourcesRegister.get(sourceId);
+          if (sourceData) {
+            return `<li>${sourceDataToString(sourceData)}</li>`;
+          }
+          return "<li>Unknown source</li>";
+        })
+        .join("") +
+      "</ol>";
+
+export const exportSourcesJSON = () => Array.from(sourcesRegister.values());
+export const importSourcesJSON = (sources: IterableIterator<ISourceData>) => {
+  sourcesRegister.clear();
+  sourcesEl.innerHTML = "";
+  for (const source of sources) {
+    sourcesRegister.set(source.id, source);
+
+    sourcesEl.appendChild(createLiFromSource(source));
+  }
+};
+
+export const sourceTag = /(?<=<source>)[0-9a-z]+(?=<\/source>)/g;
 
 xxhash().then((xxh) => {
-  class SourceData {
+  class SourceData implements ISourceData {
     id: string;
     author: string;
     title: string;
@@ -33,46 +101,11 @@ xxhash().then((xxh) => {
       this.creationDate = creationDate;
       this.lastAccessed = lastAccessed;
 
-      this.id = xxh.h64(`${author}-${title}-${creationDate}-${lastAccessed}`);
-    }
-
-    toString(): string;
-    toString(shorten: boolean): string;
-    toString(shorten: boolean = false) {
-      const str = `${this.author} - ${this.title}`;
-      if (shorten) {
-        return str.length > 25 ? str.substring(0, 23) + "…" : str;
-      }
-
-      return str;
+      this.id = Number.parseInt(
+        "0x" + xxh.h64(`${author}-${title}-${creationDate}-${lastAccessed}`)
+      ).toString(36);
     }
   }
-
-  const sourcesRegister = new Map<string, SourceData>();
-
-  exportSourcesRegisterIntern = (sources: Array<string>) =>
-    sources.length === 0
-      ? ""
-      : "<h1>Sources</h1><ol>" +
-        sources
-          .map((sourceId) => {
-            const sourceData = sourcesRegister.get(sourceId);
-            if (sourceData) {
-              return `<li>${sourceData.toString()}</li>`;
-            }
-            return "<li>Unknown source</li>";
-          })
-          .join("") +
-        "</ol>";
-
-  const sourcesEl = document.getElementById("sources") as HTMLUListElement;
-
-  const useSource = (source: SourceData) => {
-    if (document.activeElement === codeEl) {
-      insertText(codeEl, `<source>${source.id}</source>`);
-      triggerRender();
-    }
-  };
 
   const contextOptionAdd: ContextOption = {
     display: "Add New",
@@ -86,22 +119,7 @@ xxhash().then((xxh) => {
 
       sourcesRegister.set(sourceData.id, sourceData);
 
-      const li = document.createElement("li");
-      li.innerText = sourceData.toString(true);
-      li.title = sourceData.toString();
-      addDisposableEventListener(
-        li,
-        "mousedown",
-        (ev) => {
-          ev.preventDefault();
-          useSource(sourceData);
-        },
-        {
-          capture: true,
-          passive: false,
-        }
-      );
-      sourcesEl.appendChild(li);
+      sourcesEl.appendChild(createLiFromSource(sourceData));
     },
   };
 

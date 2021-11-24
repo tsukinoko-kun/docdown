@@ -1,5 +1,5 @@
 import { replaceSelectedText } from "./editor";
-import { triggerRender } from "./render";
+import { loadLocal, saveLocal } from "./session";
 
 let mode: "code" | "display" | "both" = "both";
 
@@ -23,29 +23,43 @@ const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 window.addEventListener(
   "keydown",
   (ev) => {
-    if ((ev.ctrlKey || ev.metaKey) && ev.key === "e") {
-      ev.preventDefault();
+    if (ev.ctrlKey || ev.metaKey) {
+      switch (ev.key) {
+        case "e":
+          ev.preventDefault();
 
-      if (ev.shiftKey) {
-        switch (mode) {
-          case "display":
-          case "code":
-            mode = "both";
-            break;
-          case "both":
-            mode = "code";
-            break;
-        }
-      } else {
-        switch (mode) {
-          case "display":
-          case "both":
-            mode = "code";
-            break;
-          case "code":
-            mode = "display";
-            break;
-        }
+          if (ev.shiftKey) {
+            switch (mode) {
+              case "display":
+              case "code":
+                mode = "both";
+                break;
+              case "both":
+                mode = "code";
+                break;
+            }
+          } else {
+            switch (mode) {
+              case "display":
+              case "both":
+                mode = "code";
+                break;
+              case "code":
+                mode = "display";
+                break;
+            }
+          }
+          break;
+
+        case "s":
+          ev.preventDefault();
+          saveLocal();
+          break;
+
+        case "o":
+          ev.preventDefault();
+          loadLocal();
+          break;
       }
 
       document.body.setAttribute("view-mode", mode);

@@ -1,11 +1,9 @@
 import passive from "./passive";
-
-import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
-
-import hljs from "highlight.js";
-
-import MD from "markdown-it";
 import { exportSourcesRegister, sourceTag } from "./sources";
+import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
+import hljs from "highlight.js";
+import MD from "markdown-it";
+
 const md = new MD("commonmark", {
   breaks: false,
   linkify: true,
@@ -81,7 +79,7 @@ codeEl.addEventListener(
   passive
 );
 
-export const triggerRender = () => {
+window["triggerRender"] = () => {
   render(codeEl.value);
   updateNavigation();
 };
