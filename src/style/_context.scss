@@ -30,6 +30,7 @@
 
     > * {
       padding: 2px 8px;
+      width: 100%;
       @include clickable;
     }
   }
