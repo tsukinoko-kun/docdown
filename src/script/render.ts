@@ -5,6 +5,7 @@ import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import hljs from "highlight.js";
 
 import MD from "markdown-it";
+import { exportSourcesRegister, sourceTag } from "./sources";
 const md = new MD("commonmark", {
   breaks: false,
   linkify: true,
@@ -24,21 +25,9 @@ const md = new MD("commonmark", {
   },
 });
 
-const codeEl = document.getElementById("code") as HTMLTextAreaElement | null;
-const displayEl = document.getElementById("display") as HTMLDivElement | null;
-const navEl = document.getElementById("nav") as HTMLOListElement | null;
-
-if (!codeEl) {
-  throw new Error("No code element found");
-}
-
-if (!displayEl) {
-  throw new Error("No display element found");
-}
-
-if (!navEl) {
-  throw new Error("No nav element found");
-}
+const codeEl = document.getElementById("code") as HTMLTextAreaElement;
+const displayEl = document.getElementById("display") as HTMLDivElement;
+const navEl = document.getElementById("nav") as HTMLOListElement;
 
 const updateNavigation = () => {
   for (const li of Array.from(navEl.children)) {
@@ -62,12 +51,19 @@ const updateNavigation = () => {
   }
 };
 
-const insertSvg = (svgCode: string) => {
-  displayEl.innerHTML = svgCode;
+const render = (markdown: string) => {
+  const sources = new Array<string>();
+  displayEl.innerHTML =
+    md.render(markdown).replace(sourceTag, (srcId) => {
+      const i = sources.indexOf(srcId);
+      if (i === -1) {
+        sources.push(srcId);
+        return `<sup>[${sources.length}]</sup>`;
+      } else {
+        return `<sup>[${i + 1}]</sup>`;
+      }
+    }) + exportSourcesRegister(sources);
 };
-
-const render = (graphDefinition: string) =>
-  insertSvg(md.render(graphDefinition));
 
 let renderDelayId: number | null = null;
 codeEl.addEventListener(
@@ -79,12 +75,16 @@ codeEl.addEventListener(
 
     renderDelayId = window.setTimeout(() => {
       renderDelayId = null;
-      render(codeEl.value);
-      updateNavigation();
+      triggerRender();
     }, 500);
   },
   passive
 );
+
+export const triggerRender = () => {
+  render(codeEl.value);
+  updateNavigation();
+};
 
 const favicon = (document.querySelector("link[rel*='icon']") as HTMLLinkElement)
   .href;
@@ -106,5 +106,4 @@ Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbache
 ![favicon](${favicon})
 `;
 
-render(codeEl.value);
-updateNavigation();
+triggerRender();

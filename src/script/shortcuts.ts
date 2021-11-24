@@ -1,9 +1,24 @@
+import { replaceSelectedText } from "./editor";
+import { triggerRender } from "./render";
+
 let mode: "code" | "display" | "both" = "both";
 
 document.body.setAttribute("view-mode", mode);
 
-const surroundChar = "*'\"`({[_~";
-const surroundCharB = "*'\"`)}]_~";
+const surroundChar = ["*", "'", '"', "Dead", "(", "{", "[", "_", "~"];
+const surroundCharB = [
+  ["*", "*"],
+  ["'", "'"],
+  ['"', '"'],
+  ["`", "`"],
+  ["(", ")"],
+  ["{", "}"],
+  ["[", "]"],
+  ["_", "_"],
+  ["~", "~"],
+];
+
+const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
 window.addEventListener(
   "keydown",
@@ -34,19 +49,26 @@ window.addEventListener(
       }
 
       document.body.setAttribute("view-mode", mode);
-    } else {
+    } else if (document.activeElement === codeEl) {
       let surroundCharIndex = surroundChar.indexOf(ev.key);
-      const selection = window.getSelection();
-      if (surroundCharIndex !== -1 && selection) {
-        ev.preventDefault();
 
-        document.execCommand(
-          "insertText",
-          true,
-          surroundChar.at(surroundCharIndex) +
-            selection.toString() +
-            surroundCharB.at(surroundCharIndex)
-        );
+      if (surroundCharIndex !== -1) {
+        const surroundLR = surroundCharB.at(surroundCharIndex);
+        if (!surroundLR) {
+          return;
+        }
+
+        if (
+          replaceSelectedText(
+            codeEl,
+            (t) => surroundLR[0] + t + surroundLR[1],
+            false
+          )
+        ) {
+          ev.preventDefault();
+        }
+
+        triggerRender();
       }
     }
   },
