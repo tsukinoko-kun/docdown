@@ -113,32 +113,34 @@ export class DataBase {
     type: K,
     listener: DatabaseEventMap[K]
   ) {
-    let unsubscribe: Unsubscribe;
+    enshureLoggedIn()
+      .then(() => {
+        let unsubscribe: Unsubscribe;
+        const dbRef = ref(db, this.path + "/" + path.join("/"));
 
-    const dbRef = ref(db, this.path + "/" + path.join("/"));
+        switch (type) {
+          case "value":
+            unsubscribe = onValue(dbRef, listener as any);
+            break;
+          case "child_added":
+            unsubscribe = onChildAdded(dbRef, listener as any);
+            break;
+          case "child_changed":
+            unsubscribe = onChildChanged(dbRef, listener as any);
+            break;
+          case "child_moved":
+            unsubscribe = onChildMoved(dbRef, listener as any);
+            break;
+          case "child_removed":
+            unsubscribe = onChildRemoved(dbRef, listener as any);
+            break;
+          default:
+            throw new Error(`Unknown event type "${type}"`);
+        }
 
-    switch (type) {
-      case "value":
-        unsubscribe = onValue(dbRef, listener as any);
-        break;
-      case "child_added":
-        unsubscribe = onChildAdded(dbRef, listener as any);
-        break;
-      case "child_changed":
-        unsubscribe = onChildChanged(dbRef, listener as any);
-        break;
-      case "child_moved":
-        unsubscribe = onChildMoved(dbRef, listener as any);
-        break;
-      case "child_removed":
-        unsubscribe = onChildRemoved(dbRef, listener as any);
-        break;
-      default:
-        throw new Error(`Unknown event type "${type}"`);
-    }
-
-    this.unsubscribes.push(unsubscribe);
-    return unsubscribe;
+        this.unsubscribes.push(unsubscribe);
+      })
+      .catch(alert);
   }
 
   unsubscribeAll() {
