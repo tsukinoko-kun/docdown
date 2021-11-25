@@ -100,7 +100,6 @@ window.addEventListener(
 
           triggerRender();
         } else if (ev.key === "#") {
-          console.debug(ev);
           if (
             replaceSelectedText(
               codeEl,

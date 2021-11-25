@@ -29,11 +29,11 @@ const tryStartSession = (sessionId: string, fromLocal = false) => {
     db.addEventListener(["session", sessionId], "value", (snapshot) => {
       if (snapshot.val()) {
         const data = snapshot.val();
+        session.active = true;
         session.title = data.title;
         session.id = sessionId;
         codeEl.value = data.code;
         importSourcesJSON(data.sources);
-        session.active = true;
       } else {
         alert(`Session "${sessionId}" not found`);
       }
@@ -71,27 +71,40 @@ document.body.addEventListener(
     ev.preventDefault();
     ev.stopPropagation();
 
-    context(ev, [
-      {
-        label: "Start new session",
-        action: () => {
-          form([
-            {
-              name: "title",
-              label: "Title",
-              placeholder: "Name of the document",
-              required: true,
-              type: "text",
-            },
-          ])
-            .then((data) => {
-              session.title = data.title;
-              tryStartSession(newSessionId());
-            })
-            .catch(() => {});
+    if (!session.active) {
+      context(ev, [
+        {
+          label: "Start new session",
+          action: () => {
+            form([
+              {
+                name: "title",
+                label: "Title",
+                placeholder: "Name of the document",
+                required: true,
+                type: "text",
+              },
+            ])
+              .then((data) => {
+                session.title = data.title;
+                tryStartSession(newSessionId(), true);
+              })
+              .catch(() => {});
+          },
         },
-      },
-    ]);
+      ]);
+    } else {
+      context(ev, [
+        {
+          label: "Stop session",
+          action: () => {
+            db.unsubscribeAll();
+            db.dropAt(["session", session.id]);
+            location.hash = "";
+          },
+        },
+      ]);
+    }
   },
   {
     passive: false,
@@ -129,7 +142,6 @@ export const loadLocal = () => {
     const reader = new FileReader();
     reader.onload = () => {
       const data = JSON.parse(reader.result as string);
-      console.debug("Loaded local data", data);
       codeEl.value = data.markdown;
       importSourcesJSON(data.sources);
       triggerRender();

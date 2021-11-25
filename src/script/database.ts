@@ -12,7 +12,12 @@ import {
   Unsubscribe,
 } from "firebase/database";
 
-import { getAuth, signInWithEmailAndPassword, User } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  getAuth,
+  signInWithEmailAndPassword,
+  User,
+} from "firebase/auth";
 import { alert, form } from "./alert";
 
 const firebaseConfig = {
@@ -30,6 +35,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth();
+auth.setPersistence(browserLocalPersistence);
 const db = getDatabase(app);
 
 const enshureLoggedIn = (): Promise<User> => {
@@ -57,7 +63,6 @@ const enshureLoggedIn = (): Promise<User> => {
       },
     ])
       .then((data) => {
-        console.debug("login", data);
         signInWithEmailAndPassword(auth, data.email, data.password)
           .then((uc) => {
             resolve(uc.user);
@@ -106,6 +111,10 @@ export class DataBase {
         })
         .catch(reject);
     });
+  }
+
+  dropAt(path: Array<string>) {
+    return this.setAt(path, null);
   }
 
   addEventListener<K extends keyof DatabaseEventMap>(

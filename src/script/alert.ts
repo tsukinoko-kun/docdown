@@ -71,7 +71,6 @@ export const form = <KEY extends string>(
       form,
       "submit",
       (ev) => {
-        console.debug("submit", ev);
         ev.preventDefault();
 
         const inputValues: {
