@@ -1,4 +1,4 @@
-import { replaceSelectedText } from "./editor";
+import { insertText, replaceSelectedText, textSelected } from "./editor";
 import { loadLocal, saveLocal } from "./session";
 
 let mode: "code" | "display" | "both" = "both";
@@ -24,7 +24,7 @@ window.addEventListener(
   "keydown",
   (ev) => {
     if (ev.ctrlKey || ev.metaKey) {
-      switch (ev.key) {
+      switch (ev.key.toLowerCase()) {
         case "e":
           ev.preventDefault();
 
@@ -64,25 +64,67 @@ window.addEventListener(
 
       document.body.setAttribute("view-mode", mode);
     } else if (document.activeElement === codeEl) {
-      let surroundCharIndex = surroundChar.indexOf(ev.key);
-
-      if (surroundCharIndex !== -1) {
-        const surroundLR = surroundCharB.at(surroundCharIndex);
-        if (!surroundLR) {
-          return;
+      if (ev.key === "Tab") {
+        ev.preventDefault();
+        if (textSelected(codeEl)) {
+          if (ev.shiftKey) {
+            replaceSelectedText(codeEl, (t) => t.replace(/^  /, ""));
+          } else {
+            replaceSelectedText(codeEl, (t) => "  " + t);
+          }
+        } else {
+          insertText(codeEl, "  ", false);
         }
-
-        if (
-          replaceSelectedText(
-            codeEl,
-            (t) => surroundLR[0] + t + surroundLR[1],
-            false
-          )
-        ) {
-          ev.preventDefault();
-        }
-
         triggerRender();
+      } else if (ev.key === "Enter") {
+        ev.preventDefault();
+        insertText(codeEl, "\n", false);
+        triggerRender();
+      } else {
+        let surroundCharIndex = surroundChar.indexOf(ev.key);
+        if (surroundCharIndex !== -1) {
+          const surroundLR = surroundCharB.at(surroundCharIndex);
+          if (!surroundLR) {
+            return;
+          }
+
+          if (
+            replaceSelectedText(
+              codeEl,
+              (t) => surroundLR[0] + t + surroundLR[1],
+              false
+            )
+          ) {
+            ev.preventDefault();
+          }
+
+          triggerRender();
+        } else if (ev.key === "#") {
+          console.debug(ev);
+          if (
+            replaceSelectedText(
+              codeEl,
+              (t) => {
+                if (ev.altKey) {
+                  if (t.startsWith("#")) {
+                    return t.substring(1);
+                  } else {
+                    return "#";
+                  }
+                } else {
+                  if (t.startsWith("#")) {
+                    return "#" + t;
+                  } else {
+                    return "# " + t;
+                  }
+                }
+              },
+              false
+            )
+          ) {
+            ev.preventDefault();
+          }
+        }
       }
     }
   },

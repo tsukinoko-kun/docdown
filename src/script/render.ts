@@ -81,6 +81,9 @@ codeEl.addEventListener(
 
 window["triggerRender"] = () => {
   render(codeEl.value);
+  // codeSyntaxEl.innerHTML = hljs.highlight(codeEl.value, {
+  //   language: "markdown",
+  // }).value;
   updateNavigation();
 };
 

@@ -1,6 +1,6 @@
 @import "theme";
 
-.context {
+.alert {
   position: fixed;
   top: 0;
   left: 0;
@@ -14,9 +14,16 @@
     list-style: none;
     position: fixed;
     margin: 0;
-    left: max(4px, var(--pos-x));
-    top: max(4px, var(--pos-y));
-    transform: translateY(-100%);
+    &.pos {
+      left: max(4px, var(--pos-x));
+      top: max(4px, var(--pos-y));
+      transform: translateY(-100%);
+    }
+    &:not(.pos) {
+      left: 50vw;
+      top: 50vh;
+      transform: translate(-50%, -50%);
+    }
     border: {
       width: 1px;
       style: solid;

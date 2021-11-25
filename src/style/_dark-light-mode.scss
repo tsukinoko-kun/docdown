@@ -26,7 +26,7 @@ a {
     color: $foreground;
   }
 
-  .context > * {
+  .alert > * {
     background-color: $background;
     color: $foreground;
   }
@@ -48,7 +48,7 @@ a {
     }
   }
 
-  .context > * {
+  .alert > * {
     background-color: $foreground;
     color: $background;
   }

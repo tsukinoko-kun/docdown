@@ -2,7 +2,7 @@ import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import passive from "./passive";
 
 export interface ContextOption {
-  display: string;
+  label: string;
   action: (ev: MouseEvent) => void;
 }
 
@@ -11,10 +11,11 @@ export const context = (
   options: Array<ContextOption>
 ) => {
   const ul = document.createElement("ul");
+  ul.classList.add("pos");
 
   for (const option of options) {
     const li = document.createElement("li");
-    li.textContent = option.display;
+    li.textContent = option.label;
     addDisposableEventListener(
       li,
       "click",
@@ -32,7 +33,7 @@ export const context = (
   }
 
   const ct = document.createElement("div");
-  ct.classList.add("context");
+  ct.classList.add("alert");
   ct.appendChild(ul);
   addDisposableEventListener(
     ct,

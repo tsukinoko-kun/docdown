@@ -8,15 +8,23 @@ const pdf = html2pdf().set({
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
-displayEl.addEventListener("contextmenu", (ev) => {
-  ev.preventDefault();
+displayEl.addEventListener(
+  "contextmenu",
+  (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
 
-  context(ev, [
-    {
-      display: "Export PDF",
-      action: () => {
-        pdf.from(displayEl.innerHTML).save();
+    context(ev, [
+      {
+        label: "Export PDF",
+        action: () => {
+          pdf.from(displayEl.innerHTML).save();
+        },
       },
-    },
-  ]);
-});
+    ]);
+  },
+  {
+    passive: false,
+    capture: true,
+  }
+);

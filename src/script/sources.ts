@@ -73,10 +73,12 @@ export const exportSourcesJSON = () => Array.from(sourcesRegister.values());
 export const importSourcesJSON = (sources: IterableIterator<ISourceData>) => {
   sourcesRegister.clear();
   sourcesEl.innerHTML = "";
-  for (const source of sources) {
-    sourcesRegister.set(source.id, source);
+  if (Array.isArray(sources)) {
+    for (const source of sources) {
+      sourcesRegister.set(source.id, source);
 
-    sourcesEl.appendChild(createLiFromSource(source));
+      sourcesEl.appendChild(createLiFromSource(source));
+    }
   }
 };
 
@@ -108,7 +110,7 @@ xxhash().then((xxh) => {
   }
 
   const contextOptionAdd: ContextOption = {
-    display: "Add New",
+    label: "Add New",
     action: () => {
       const sourceData = new SourceData(
         "Random Guy",
@@ -123,29 +125,37 @@ xxhash().then((xxh) => {
     },
   };
 
-  sourcesEl.addEventListener("contextmenu", (ev) => {
-    ev.preventDefault();
+  sourcesEl.addEventListener(
+    "contextmenu",
+    (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
 
-    let tEl = ev.target as HTMLElement | null;
-    while (tEl) {
-      if (tEl.tagName === "LI") {
-        context(ev, [
-          contextOptionAdd,
-          {
-            display: "Delete",
-            action: () => {
-              sourcesRegister.delete(tEl!.innerText);
-              tEl!.remove();
+      let tEl = ev.target as HTMLElement | null;
+      while (tEl) {
+        if (tEl.tagName === "LI") {
+          context(ev, [
+            contextOptionAdd,
+            {
+              label: "Delete",
+              action: () => {
+                sourcesRegister.delete(tEl!.innerText);
+                tEl!.remove();
+              },
             },
-          },
-        ]);
+          ]);
 
-        return;
+          return;
+        }
+
+        tEl = tEl.parentElement;
       }
 
-      tEl = tEl.parentElement;
+      context(ev, [contextOptionAdd]);
+    },
+    {
+      capture: true,
+      passive: false,
     }
-
-    context(ev, [contextOptionAdd]);
-  });
+  );
 });
