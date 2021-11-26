@@ -2,6 +2,8 @@ import { context, ContextOption } from "./context";
 import { insertText } from "./editor";
 import { addDisposableEventListener } from "@frank-mayer/magic/bin";
 import xxhash from "xxhash-wasm";
+import { form } from "./alert";
+import { getLocale, getLocalizedString } from "./local";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -10,27 +12,40 @@ interface ISourceData {
   id: string;
   author: string;
   title: string;
-  creationDate: string;
-  lastAccessed: string;
+  creationDate: number;
+  lastAccessed: number;
+  link: string;
 }
 
 const sourceDataToString = (
   sourceData: ISourceData,
   shorten: boolean = false
 ) => {
-  const str = `${sourceData.author} - ${sourceData.title}`;
   if (shorten) {
+    const str = `${sourceData.author} - ${sourceData.title}`;
     return str.length > 25 ? str.substring(0, 23) + "…" : str;
+  } else {
+    const lastAcc = new Date(sourceData.lastAccessed).toLocaleDateString(
+      getLocale()
+    );
+    const creationDate = new Date(sourceData.creationDate).toLocaleDateString(
+      getLocale()
+    );
+    return [
+      sourceData.author,
+      sourceData.title,
+      creationDate,
+      getLocalizedString("last_accessed_at") + " " + lastAcc,
+      sourceData.link,
+    ].join(", ");
   }
-
-  return str;
 };
 
 const sourcesRegister = new Map<string, ISourceData>();
 
 const useSource = (source: ISourceData) => {
   if (document.activeElement === codeEl) {
-    insertText(codeEl, `<source>${source.id}</source>`);
+    insertText(codeEl, `<src>${source.id}</src>`);
     triggerRender();
   }
 };
@@ -57,14 +72,14 @@ function createLiFromSource(sourceData: ISourceData) {
 export const exportSourcesRegister = (sources: Array<string>) =>
   sources.length === 0
     ? ""
-    : "<h1>Sources</h1><ol>" +
+    : `<h1>${getLocalizedString("sources")}</h1><ol>` +
       sources
         .map((sourceId) => {
           const sourceData = sourcesRegister.get(sourceId);
           if (sourceData) {
             return `<li>${sourceDataToString(sourceData)}</li>`;
           }
-          return "<li>Unknown source</li>";
+          return `<li>${getLocalizedString("unknown_source")}</li>`;
         })
         .join("") +
       "</ol>";
@@ -82,46 +97,92 @@ export const importSourcesJSON = (sources: IterableIterator<ISourceData>) => {
   }
 };
 
-export const sourceTag = /(?<=<source>)[0-9a-z]+(?=<\/source>)/g;
+export const sourceTag = /(?<=<src>)[0-9a-z]+(?=<\/src>)/g;
 
 xxhash().then((xxh) => {
   class SourceData implements ISourceData {
     id: string;
     author: string;
     title: string;
-    creationDate: string;
-    lastAccessed: string;
+    creationDate: number;
+    lastAccessed: number;
+    link: string;
 
     constructor(
       author: string,
       title: string,
-      creationDate: string,
-      lastAccessed: string
+      creationDate: number,
+      lastAccessed: number,
+      link: string
     ) {
       this.author = author;
       this.title = title;
       this.creationDate = creationDate;
       this.lastAccessed = lastAccessed;
+      this.link = link;
 
       this.id = Number.parseInt(
-        "0x" + xxh.h64(`${author}-${title}-${creationDate}-${lastAccessed}`)
+        "0x" +
+          xxh.h64(`${author}-${title}-${creationDate}-${lastAccessed}-${link}`)
       ).toString(36);
+    }
+
+    static from(data: {
+      author: string;
+      title: string;
+      creationDate: string;
+      lastAccessed: string;
+      link: string;
+    }) {
+      return new SourceData(
+        data.author,
+        data.title,
+        new Date(data.creationDate).getTime(),
+        new Date(data.lastAccessed).getTime(),
+        data.link
+      );
     }
   }
 
   const contextOptionAdd: ContextOption = {
-    label: "Add New",
+    label: getLocalizedString("add_source"),
     action: () => {
-      const sourceData = new SourceData(
-        "Random Guy",
-        "New super cool source",
-        new Date().toISOString(),
-        new Date().toISOString()
-      );
-
-      sourcesRegister.set(sourceData.id, sourceData);
-
-      sourcesEl.appendChild(createLiFromSource(sourceData));
+      form([
+        {
+          name: "author",
+          label: getLocalizedString("author"),
+          required: true,
+          type: "text",
+        },
+        {
+          name: "title",
+          label: getLocalizedString("title"),
+          required: true,
+          type: "text",
+        },
+        {
+          name: "creationDate",
+          label: getLocalizedString("creation_date"),
+          required: true,
+          type: "date",
+        },
+        {
+          name: "lastAccessed",
+          label: getLocalizedString("last_access"),
+          required: true,
+          type: "date",
+        },
+        {
+          name: "link",
+          label: getLocalizedString("link"),
+          required: true,
+          type: "string",
+        },
+      ]).then((data) => {
+        const sourceData = SourceData.from(data);
+        sourcesRegister.set(sourceData.id, sourceData);
+        sourcesEl.appendChild(createLiFromSource(sourceData));
+      });
     },
   };
 
@@ -129,7 +190,6 @@ xxhash().then((xxh) => {
     "contextmenu",
     (ev) => {
       ev.preventDefault();
-      ev.stopPropagation();
 
       let tEl = ev.target as HTMLElement | null;
       while (tEl) {
@@ -137,7 +197,7 @@ xxhash().then((xxh) => {
           context(ev, [
             contextOptionAdd,
             {
-              label: "Delete",
+              label: getLocalizedString("delete_source"),
               action: () => {
                 sourcesRegister.delete(tEl!.innerText);
                 tEl!.remove();

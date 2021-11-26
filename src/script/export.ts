@@ -1,5 +1,6 @@
 import { context } from "./context";
 import html2pdf from "html2pdf.js";
+import { getLocalizedString } from "./local";
 
 const pdf = html2pdf().set({
   margin: 1,
@@ -12,11 +13,10 @@ displayEl.addEventListener(
   "contextmenu",
   (ev) => {
     ev.preventDefault();
-    ev.stopPropagation();
 
     context(ev, [
       {
-        label: "Export PDF",
+        label: getLocalizedString("export_pdf"),
         action: () => {
           pdf.from(displayEl.innerHTML).save();
         },

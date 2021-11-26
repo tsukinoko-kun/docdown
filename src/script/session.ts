@@ -5,6 +5,7 @@ import {
 import { alert, form } from "./alert";
 import { context } from "./context";
 import { DataBase } from "./database";
+import { getLocalizedString } from "./local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -69,12 +70,11 @@ document.body.addEventListener(
   "contextmenu",
   (ev) => {
     ev.preventDefault();
-    ev.stopPropagation();
 
     if (!session.active) {
       context(ev, [
         {
-          label: "Start new session",
+          label: getLocalizedString("start_new_session"),
           action: () => {
             form([
               {
@@ -96,7 +96,7 @@ document.body.addEventListener(
     } else {
       context(ev, [
         {
-          label: "Stop session",
+          label: getLocalizedString("stop_session"),
           action: () => {
             db.unsubscribeAll();
             db.dropAt(["session", session.id]);
