@@ -1,4 +1,4 @@
-import { userAlert, userForm, userSelect } from "./alert";
+import { cancelAllAlerts, userAlert, userForm, userSelect } from "./alert";
 import {
   findInText,
   getSelectedText,
@@ -300,6 +300,14 @@ const switchLanguage = () => {
     });
 };
 
+const cancel = (target: EventTarget | null) => {
+  if (target && "blur" in target) {
+    (target as HTMLInputElement).blur();
+  }
+
+  cancelAllAlerts();
+};
+
 window.addEventListener(
   "keydown",
   (ev) => {
@@ -333,6 +341,9 @@ window.addEventListener(
           switchLanguage();
           break;
       }
+    } else if (ev.key === "Escape") {
+      ev.preventDefault();
+      cancel(ev.target);
     } else if (ev.key === "F1") {
       ev.preventDefault();
       showHelp();

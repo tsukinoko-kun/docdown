@@ -189,3 +189,9 @@ export const userSelect = <T extends any>(
       passive
     );
   });
+
+export const cancelAllAlerts = () => {
+  for (const el of Array.from(document.getElementsByClassName("alert"))) {
+    disposeNode(el, true);
+  }
+};
