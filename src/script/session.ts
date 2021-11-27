@@ -14,7 +14,7 @@ const db = new DataBase();
 
 const session = {
   active: false,
-  title: "untitled",
+  title: getLocalizedString("untitled"),
   id: "",
   getLocalData: () => {
     return {

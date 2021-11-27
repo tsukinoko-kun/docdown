@@ -32,6 +32,7 @@ interface ILanguageMap {
   shortcut: string;
   description: string;
   set_language: string;
+  untitled: string;
 }
 
 const localStringMap: { [key in language]: ILanguageMap } = {
@@ -67,6 +68,7 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     shortcut: "Tastenkürzel",
     description: "Beschreibung",
     set_language: "Sprache ändern",
+    untitled: "Unbenannt",
   },
   en: {
     sources: "Sources",
@@ -100,6 +102,7 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     shortcut: "Shortcut",
     description: "Description",
     set_language: "Set language",
+    untitled: "Untitled",
   },
 };
 

@@ -4,6 +4,7 @@ import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import hljs from "highlight.js";
 import MD from "markdown-it";
 import { findInText } from "./editor";
+import { getTitle } from "./session";
 
 const md = new MD("commonmark", {
   breaks: false,
@@ -133,6 +134,7 @@ const render = (markdown: string) => {
   disposeNode(displayEl, false);
 
   displayEl.innerHTML =
+    `<p class="title">${getTitle()}</p>` +
     '<ol id="toc"></ol><hr/>' +
     md.render(markdown).replace(sourceTag, (srcId) => {
       const i = sources.indexOf(srcId);
