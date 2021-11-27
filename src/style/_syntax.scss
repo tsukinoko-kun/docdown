@@ -1,0 +1,64 @@
+@import "theme";
+
+pre {
+  border: {
+    color: rgba($foreground, 0.25);
+    width: 1px;
+    style: solid;
+    radius: $radius;
+  }
+  padding: 4px 6px;
+
+  > code {
+    white-space: pre !important;
+    * {
+      color: $foreground;
+    }
+
+    .hljs-comment {
+      color: $comment !important;
+    }
+
+    .hljs-meta {
+      color: $pink !important;
+    }
+
+    .hljs-keyword {
+      color: $pink !important;
+    }
+
+    .hljs-literal {
+      color: $purple !important;
+    }
+
+    .hljs-string {
+      color: $yellow !important;
+    }
+
+    .hljs-type {
+      color: $cyan !important;
+    }
+
+    .hljs-title {
+      color: $green !important;
+    }
+
+    .class_ {
+      color: $cyan !important;
+    }
+
+    .hljs-params,
+    .hljs-property,
+    .hljs-function {
+      color: $foreground !important;
+    }
+
+    .hljs-attr {
+      color: $orange !important;
+    }
+
+    .hljs-number {
+      color: $purple !important;
+    }
+  }
+}

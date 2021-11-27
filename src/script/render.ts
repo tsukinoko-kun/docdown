@@ -13,7 +13,8 @@ const md = new MD("commonmark", {
   highlight: (str, lang) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return hljs.highlight(str, { language: lang }).value;
+        return hljs.highlight(str, { language: lang, ignoreIllegals: true })
+          .value;
       } catch {
         return "";
       }
@@ -118,7 +119,18 @@ Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas, similique na
 
 *foo* **bar**
 
-Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com/)
+\`\`\`cpp
+// C++ Hello World Program
+
+#include <iostream>
+
+int main() {
+    std::cout << "Hello World!";
+    return 0;
+}
+\`\`\`
+
+Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com)
 
 ![favicon](${favicon})
 `;

@@ -24,9 +24,8 @@ main {
   overflow-x: hidden;
 }
 
-@import "../../node_modules/highlight.js/scss/github.scss";
-
 @import "main";
 @import "alert";
 @import "dark-light-mode";
 @import "scrollbar";
+@import "syntax";
