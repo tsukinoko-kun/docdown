@@ -51,6 +51,8 @@ const updateNavigation = () => {
 
 const render = (markdown: string) => {
   const sources = new Array<string>();
+  disposeNode(displayEl, false);
+
   displayEl.innerHTML =
     md.render(markdown).replace(sourceTag, (srcId) => {
       const i = sources.indexOf(srcId);
@@ -61,6 +63,23 @@ const render = (markdown: string) => {
         return `<sup>[${i + 1}]</sup>`;
       }
     }) + exportSourcesRegister(sources);
+
+  for (const a of Array.from(displayEl.getElementsByTagName("a"))) {
+    addDisposableEventListener(
+      a,
+      "click",
+      (ev) => {
+        ev.preventDefault();
+        if (ev.ctrlKey || ev.metaKey) {
+          window.open(a.href, a.href)?.focus();
+        }
+      },
+      {
+        capture: true,
+        passive: false,
+      }
+    );
+  }
 };
 
 let renderDelayId: number | null = null;
@@ -81,9 +100,6 @@ codeEl.addEventListener(
 
 window["triggerRender"] = () => {
   render(codeEl.value);
-  // codeSyntaxEl.innerHTML = hljs.highlight(codeEl.value, {
-  //   language: "markdown",
-  // }).value;
   updateNavigation();
 };
 
