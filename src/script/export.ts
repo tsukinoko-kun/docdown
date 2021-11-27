@@ -7,6 +7,17 @@ const pdf = html2pdf().set({
   jsPDF: { unit: "cm", format: "A4", orientation: "portrait" },
 });
 
+const screen = document.querySelector(
+  'link[rel="stylesheet"][media="screen"]'
+) as HTMLLinkElement;
+const print = document.querySelector(
+  'link[rel="stylesheet"][media="print"]'
+) as HTMLLinkElement;
+const printMode = (value: boolean) => {
+  screen.disabled = value;
+  print.media = value ? "all" : "print";
+};
+
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
 displayEl.addEventListener(
@@ -18,7 +29,13 @@ displayEl.addEventListener(
       {
         label: getLocalizedString("export_pdf"),
         action: () => {
-          pdf.from(displayEl.innerHTML).save();
+          printMode(true);
+          setTimeout(() => {
+            pdf.from(displayEl.innerHTML).save();
+            setTimeout(() => {
+              printMode(false);
+            }, 200);
+          }, 100);
         },
       },
     ]);
