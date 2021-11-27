@@ -18,6 +18,7 @@ interface ILanguageMap {
   find: string;
   replace: string;
   replace_all: string;
+  find_and_replace: string;
   not_found: string;
   show_help: string;
   rename_file: string;
@@ -52,6 +53,7 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     find: "Suchen",
     replace: "Ersetzen",
     replace_all: "Alle ersetzen",
+    find_and_replace: "Suchen und ersetzen",
     not_found: "Nicht gefunden",
     show_help: "Hilfe anzeigen",
     rename_file: "Datei umbenennen",
@@ -84,6 +86,7 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     find: "Find",
     replace: "Replace",
     replace_all: "Replace all",
+    find_and_replace: "Find and replace",
     not_found: "Not found",
     show_help: "Show help",
     rename_file: "Rename file",

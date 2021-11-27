@@ -235,6 +235,10 @@ const showHelp = () => {
         "download_file"
       )}</td></tr>`,
       `<tr><td>CTRL&nbsp;P</td><td>${getLocalizedString("print")}</td></tr>`,
+      `<tr><td>CTRL&nbsp;F</td><td>${getLocalizedString("find")}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&#8679;&nbsp;F</td><td>${getLocalizedString(
+        "find_and_replace"
+      )}</td></tr>`,
       `<tr><td>CTRL&nbsp;E</td><td>${getLocalizedString(
         "switch_code_render"
       )}</td></tr>`,
