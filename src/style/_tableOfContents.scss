@@ -9,7 +9,7 @@
     }
 
     a {
-      color: $foreground !important;
+      color: var(--foreground) !important;
       text-decoration: none;
     }
   }

@@ -9,6 +9,11 @@
     color-scheme: dark;
   }
 
+  :root {
+    --background: $background;
+    --foreground: $foreground;
+  }
+
   a {
     &:not(:hover) {
       color: $cyan;
@@ -48,6 +53,11 @@
 @media (prefers-color-scheme: light) {
   * {
     color-scheme: light;
+  }
+
+  :root {
+    --background: $foreground;
+    --foreground: $background;
   }
 
   a {

@@ -6,17 +6,36 @@
   height: 10px;
 }
 
-// Track
-::-webkit-scrollbar-track {
-  background: $background;
+@media (prefers-color-scheme: dark) {
+  // Track
+  ::-webkit-scrollbar-track {
+    background: $background;
+  }
+
+  // Handle
+  ::-webkit-scrollbar-thumb {
+    background: rgba($foreground, 0.25);
+  }
+
+  // Handle on hover
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba($foreground, 0.5);
+  }
 }
 
-// Handle
-::-webkit-scrollbar-thumb {
-  background: rgba($foreground, 0.25);
-}
+@media (prefers-color-scheme: light) {
+  // Track
+  ::-webkit-scrollbar-track {
+    background: $foreground;
+  }
 
-// Handle on hover
-::-webkit-scrollbar-thumb:hover {
-  background: rgba($foreground, 0.5);
+  // Handle
+  ::-webkit-scrollbar-thumb {
+    background: rgba($background, 0.75);
+  }
+
+  // Handle on hover
+  ::-webkit-scrollbar-thumb:hover {
+    background: $background;
+  }
 }
