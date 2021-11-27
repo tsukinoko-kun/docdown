@@ -122,7 +122,7 @@ const replaceInCode = () => {
 const tab = (revert: boolean) => {
   if (textSelected(codeEl)) {
     if (revert) {
-      replaceSelectedText(codeEl, (t) => t.replace(/^  /, ""));
+      replaceSelectedText(codeEl, (t) => t.replace(/^ {1,2}/, ""));
     } else {
       replaceSelectedText(codeEl, (t) => "  " + t);
     }
