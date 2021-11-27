@@ -21,6 +21,7 @@ export const context = (
 
   ul.classList.add("pos");
   ul.classList.add("context");
+  ul.classList.add("interactable");
 
   for (const option of options) {
     if (contextOptions.has(option.label)) {

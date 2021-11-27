@@ -27,6 +27,7 @@
     border: {
       width: 1px;
       style: solid;
+      radius: $radius;
     }
     padding: 2px 0;
     display: flex;
@@ -35,10 +36,13 @@
     justify-content: flex-start;
     gap: 0.25em;
 
+    &.interactable > * {
+      @include clickable;
+    }
+
     > * {
       padding: 2px 8px;
       width: 100%;
-      @include clickable;
 
       > input {
         width: 100%;

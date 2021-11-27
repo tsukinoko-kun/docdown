@@ -19,6 +19,17 @@ interface ILanguageMap {
   replace: string;
   replace_all: string;
   not_found: string;
+  show_help: string;
+  rename_file: string;
+  open_local_file: string;
+  download_file: string;
+  print: string;
+  switch_code_render: string;
+  toggle_display_render: string;
+  zoom_in: string;
+  zoom_out: string;
+  shortcut: string;
+  description: string;
 }
 
 const localStringMap: { [key in language]: ILanguageMap } = {
@@ -41,6 +52,17 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     replace: "Ersetzen",
     replace_all: "Alle ersetzen",
     not_found: "Nicht gefunden",
+    show_help: "Hilfe anzeigen",
+    rename_file: "Datei umbenennen",
+    open_local_file: "Lokale Datei öffnen",
+    download_file: "Datei herunterladen",
+    print: "Drucken",
+    switch_code_render: "Wechsle zwischen Code- und Anzeigemodus",
+    toggle_display_render: "Schalte Anzeigemodus neben Codeanzeige an oder aus",
+    zoom_in: "Anzeige vergrößern",
+    zoom_out: "Anzeige verkleinern",
+    shortcut: "Tastenkürzel",
+    description: "Beschreibung",
   },
   en: {
     sources: "Sources",
@@ -61,6 +83,17 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     replace: "Replace",
     replace_all: "Replace all",
     not_found: "Not found",
+    show_help: "Show help",
+    rename_file: "Rename file",
+    open_local_file: "Open local file",
+    download_file: "Download file",
+    print: "Print",
+    switch_code_render: "Switch between code and display mode",
+    toggle_display_render: "Toggle display mode beside code on or off",
+    zoom_in: "Zoom in",
+    zoom_out: "Zoom out",
+    shortcut: "Shortcut",
+    description: "Description",
   },
 };
 

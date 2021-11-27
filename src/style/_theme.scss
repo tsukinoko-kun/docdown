@@ -11,11 +11,13 @@ $purple: #bd93f9;
 $red: #ff5555;
 $yellow: #f1fa8c;
 
+$radius: 2px;
+
 @mixin clickable {
   cursor: pointer;
 
   &:hover {
-    background-color: $current-line;
+    background-color: $comment;
     color: $foreground;
 
     * {

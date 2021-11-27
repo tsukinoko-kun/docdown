@@ -1,4 +1,4 @@
-import { form } from "./alert";
+import { alert, form } from "./alert";
 import {
   findInText,
   getSelectedText,
@@ -8,7 +8,7 @@ import {
   textSelected,
 } from "./editor";
 import { getLocalizedString } from "./local";
-import { loadLocal, saveLocal } from "./session";
+import { loadLocal, saveLocal, setTitle, getTitle } from "./session";
 
 let mode: "code" | "display" | "both" = "both";
 
@@ -216,6 +216,60 @@ const surround = (char: string, alt: boolean): boolean => {
   return false;
 };
 
+const showHelp = () => {
+  alert(
+    [
+      '<table class="help">',
+      `<tr><th>${getLocalizedString("shortcut")}</th><th>${getLocalizedString(
+        "description"
+      )}</th></tr>`,
+      `<tr><td>F1</td><td>${getLocalizedString("show_help")}</td></tr>`,
+      `<tr><td>F2</td><td>${getLocalizedString("rename_file")}</td></tr>`,
+      `<tr><td>CTRL&nbsp;O</td><td>${getLocalizedString(
+        "open_local_file"
+      )}</td></tr>`,
+      `<tr><td>CTRL&nbsp;S</td><td>${getLocalizedString(
+        "download_file"
+      )}</td></tr>`,
+      `<tr><td>CTRL&nbsp;P</td><td>${getLocalizedString("print")}</td></tr>`,
+      `<tr><td>CTRL&nbsp;E</td><td>${getLocalizedString(
+        "switch_code_render"
+      )}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&#8679;&nbsp;E</td><td>${getLocalizedString(
+        "toggle_display_render"
+      )}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&plus;</td><td>${getLocalizedString(
+        "zoom_in"
+      )}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&minus;</td><td>${getLocalizedString(
+        "zoom_out"
+      )}</td></tr>`,
+      "</table>",
+    ].join(""),
+    true
+  );
+};
+
+const renameFile = () => {
+  form([
+    {
+      name: "newName",
+      label: getLocalizedString("rename_file"),
+      required: true,
+      type: "text",
+      value: getTitle(),
+    },
+  ])
+    .then((result) => {
+      setTitle(result.newName);
+    })
+    .catch((err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+};
+
 window.addEventListener(
   "keydown",
   (ev) => {
@@ -243,7 +297,14 @@ window.addEventListener(
           } else {
             replaceInCode();
           }
+          break;
       }
+    } else if (ev.key === "F1") {
+      ev.preventDefault();
+      showHelp();
+    } else if (ev.key === "F2") {
+      ev.preventDefault();
+      renameFile();
     } else if (document.activeElement === codeEl) {
       if (ev.key === "Tab") {
         ev.preventDefault();

@@ -4,20 +4,35 @@ import {
 } from "@frank-mayer/magic/bin";
 import passive from "./passive";
 
-export const alert = (message: string) =>
+type IAlertOverload = {
+  (messageText: string, asHtml?: false): Promise<void>;
+  (messageHtml: string, asHtml: true): Promise<void>;
+};
+export const alert: IAlertOverload = (message: string, asHtml = false) =>
   new Promise<void>((resolve) => {
     const alert = document.createElement("div");
     alert.classList.add("alert");
 
     const p = document.createElement("p");
-    p.innerText = message;
     alert.appendChild(p);
+    if (asHtml) {
+      p.outerHTML = message;
+    } else {
+      p.innerText = message;
+    }
 
     document.body.appendChild(alert);
-    addDisposableEventListener(alert, "click", () => {
-      disposeNode(alert, true);
-      resolve();
-    });
+    addDisposableEventListener(
+      alert,
+      "click",
+      (ev) => {
+        if (ev.target === alert) {
+          disposeNode(alert, true);
+          resolve();
+        }
+      },
+      passive
+    );
   });
 
 export const form = <KEY extends string>(
@@ -36,6 +51,7 @@ export const form = <KEY extends string>(
     alert.classList.add("alert");
 
     const form = document.createElement("form");
+    form.classList.add("interactable");
 
     let first: HTMLInputElement | null = null;
 

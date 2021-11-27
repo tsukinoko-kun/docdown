@@ -25,10 +25,13 @@ const session = {
   },
 };
 
-const setTitle = (title: string) => {
+export const setTitle = (title: string) => {
   session.title = title;
-  document.title = title;
+  document.title = `MarkDownDoc - ${title}`;
 };
+setTitle(session.title);
+
+export const getTitle = () => session.title;
 
 const tryStartSession = (sessionId: string, fromLocal = false) => {
   const addEventListeners = () => {
