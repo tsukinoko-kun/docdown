@@ -1,6 +1,7 @@
 import { context } from "./context";
 import html2pdf from "html2pdf.js";
 import { getLocalizedString } from "./local";
+import { getTitle } from "./session";
 
 const pdf = html2pdf().set({
   margin: 1,
@@ -31,7 +32,7 @@ displayEl.addEventListener(
         action: () => {
           printMode(true);
           setTimeout(() => {
-            pdf.from(displayEl.innerHTML).save();
+            pdf.from(displayEl).save(getTitle() + ".pdf");
             setTimeout(() => {
               printMode(false);
             }, 200);
