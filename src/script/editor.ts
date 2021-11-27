@@ -1,3 +1,6 @@
+import { alert } from "./alert";
+import { getLocalizedString } from "./local";
+
 export const replaceSelectedText = (
   textEl: HTMLTextAreaElement,
   replacement: (selected: string, start: number, end: number) => string,
@@ -20,25 +23,107 @@ export const replaceSelectedText = (
   return true;
 };
 
-export const textSelected = (text: HTMLTextAreaElement): boolean => {
-  const start = text.selectionStart ?? 0;
-  const end = text.selectionEnd ?? start;
+export const textSelected = (textEl: HTMLTextAreaElement): boolean => {
+  const start = textEl.selectionStart ?? 0;
+  const end = textEl.selectionEnd ?? start;
   return start !== end;
 };
 
 export const insertText = (
-  text: HTMLTextAreaElement,
+  textEl: HTMLTextAreaElement,
   textToInsert: string,
   focusAfterInsert = true
 ) => {
-  const start = text.selectionStart ?? 0;
-  const end = text.selectionEnd ?? start;
-  text.value =
-    text.value.substring(0, start) + textToInsert + text.value.substring(end);
+  const start = textEl.selectionStart ?? 0;
+  const end = textEl.selectionEnd ?? start;
+  textEl.value =
+    textEl.value.substring(0, start) +
+    textToInsert +
+    textEl.value.substring(end);
   if (focusAfterInsert) {
-    text.selectionStart = start;
-    text.selectionEnd = start + textToInsert.length;
+    textEl.selectionStart = start;
+    textEl.selectionEnd = start + textToInsert.length;
   } else {
-    text.selectionEnd = text.selectionStart = start + textToInsert.length;
+    textEl.selectionEnd = textEl.selectionStart = start + textToInsert.length;
   }
+};
+
+export const deleteAllSubstringsInText = (
+  textEl: HTMLTextAreaElement,
+  del: string
+) => {
+  const start = textEl.selectionStart;
+  if (!start) {
+    textEl.value = textEl.value.split(del).join("");
+    return;
+  }
+
+  const end = textEl.selectionEnd ?? start;
+
+  const a = textEl.value.substring(0, start).split(del).join("");
+  const b = textEl.value.substring(start, end).split(del).join("");
+  const c = textEl.value.substring(end).split(del).join("");
+
+  textEl.value = a + b + c;
+
+  const newStart = a.length;
+  const newEnd = newStart + b.length;
+  textEl.selectionStart = newStart;
+  textEl.selectionEnd = newEnd;
+};
+
+export const replaceAllSubstringsInText = (
+  textEl: HTMLTextAreaElement,
+  searchValue: string,
+  replaceValue: string
+) => {
+  const start = textEl.selectionStart;
+  if (!start) {
+    textEl.value = textEl.value.split(searchValue).join(replaceValue);
+    return;
+  }
+
+  const end = textEl.selectionEnd ?? start;
+
+  const a = textEl.value
+    .substring(0, start)
+    .split(searchValue)
+    .join(replaceValue);
+  const b = textEl.value
+    .substring(start, end)
+    .split(searchValue)
+    .join(replaceValue);
+  const c = textEl.value.substring(end).split(searchValue).join(replaceValue);
+
+  textEl.value = a + b + c;
+
+  const newStart = a.length;
+  const newEnd = newStart + b.length;
+  textEl.selectionStart = newStart;
+  textEl.selectionEnd = newEnd;
+};
+
+export const findInText = (textEl: HTMLTextAreaElement, value: string) => {
+  const start = textEl.selectionStart ?? 0;
+  const end = textEl.selectionEnd ?? start;
+  const selected = textEl.value.substring(start, end);
+
+  const i =
+    value === selected
+      ? textEl.value.indexOf(value, end)
+      : textEl.value.indexOf(value);
+
+  if (i === -1) {
+    alert(getLocalizedString("not_found"));
+  } else {
+    textEl.focus();
+    textEl.selectionStart = i;
+    textEl.selectionEnd = i + value.length;
+  }
+};
+
+export const getSelectedText = (textEl: HTMLTextAreaElement): string => {
+  const start = textEl.selectionStart ?? 0;
+  const end = textEl.selectionEnd ?? start;
+  return textEl.value.substring(start, end);
 };
