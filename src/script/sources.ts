@@ -1,6 +1,9 @@
 import { context, ContextOption } from "./context";
-import { insertText } from "./editor";
-import { addDisposableEventListener } from "@frank-mayer/magic/bin";
+import { insertText, deleteAllSubstringsInText } from "./editor";
+import {
+  addDisposableEventListener,
+  disposeNode,
+} from "@frank-mayer/magic/bin";
 import xxhash from "xxhash-wasm";
 import { form } from "./alert";
 import { getLocale, getLocalizedString } from "./local";
@@ -54,16 +57,20 @@ function createLiFromSource(sourceData: ISourceData) {
   const li = document.createElement("li");
   li.innerText = sourceDataToString(sourceData, true);
   li.title = sourceDataToString(sourceData);
+  li.id = sourceData.id;
   addDisposableEventListener(
     li,
     "mousedown",
     (ev) => {
-      ev.preventDefault();
+      if (ev.button !== 0) {
+        return;
+      }
+
       useSource(sourceData);
     },
     {
+      passive: true,
       capture: true,
-      passive: false,
     }
   );
   return li;
@@ -178,11 +185,17 @@ xxhash().then((xxh) => {
           required: true,
           type: "string",
         },
-      ]).then((data) => {
-        const sourceData = SourceData.from(data);
-        sourcesRegister.set(sourceData.id, sourceData);
-        sourcesEl.appendChild(createLiFromSource(sourceData));
-      });
+      ])
+        .then((data) => {
+          const sourceData = SourceData.from(data);
+          sourcesRegister.set(sourceData.id, sourceData);
+          sourcesEl.appendChild(createLiFromSource(sourceData));
+        })
+        .catch((err) => {
+          if (err) {
+            console.error(err);
+          }
+        });
     },
   };
 
@@ -190,6 +203,7 @@ xxhash().then((xxh) => {
     "contextmenu",
     (ev) => {
       ev.preventDefault();
+      ev.stopPropagation();
 
       let tEl = ev.target as HTMLElement | null;
       while (tEl) {
@@ -199,8 +213,10 @@ xxhash().then((xxh) => {
             {
               label: getLocalizedString("delete_source"),
               action: () => {
-                sourcesRegister.delete(tEl!.innerText);
-                tEl!.remove();
+                sourcesRegister.delete(tEl!.id);
+                deleteAllSubstringsInText(codeEl, `<src>${tEl!.id}</src>`);
+                disposeNode(tEl!);
+                triggerRender();
               },
             },
           ]);
