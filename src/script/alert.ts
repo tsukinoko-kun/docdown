@@ -132,7 +132,11 @@ export const userForm = <KEY extends string>(
 
     document.body.appendChild(alert);
 
-    first?.focus();
+    if (first) {
+      first.focus();
+      first.selectionStart = 0;
+      first.selectionEnd = first.value.length;
+    }
   });
 
 interface ISelectOption<T> {
