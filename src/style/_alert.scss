@@ -39,6 +39,18 @@
       padding: 2px 8px;
       width: 100%;
       @include clickable;
+
+      > input {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        border: none;
+        background-color: transparent;
+        border-bottom: {
+          width: 1px;
+          style: solid;
+        }
+      }
     }
   }
 }

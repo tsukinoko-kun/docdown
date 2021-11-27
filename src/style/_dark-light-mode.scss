@@ -1,38 +1,24 @@
 @import "theme";
 
-a {
-  &:not(:hover) {
-    color: $cyan;
-  }
-
-  &:hover {
-    color: $purple;
-  }
-}
-
 ::selection {
   background-color: $current-line;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root,
-  body,
-  main {
-    background-color: $current-line;
+  * {
+    color-scheme: dark;
   }
 
-  main > * {
-    background-color: $background;
-    color: $foreground;
+  a {
+    &:not(:hover) {
+      color: $cyan;
+    }
+
+    &:hover {
+      color: $purple;
+    }
   }
 
-  .alert > * {
-    background-color: $background;
-    color: $foreground;
-  }
-}
-
-@media (prefers-color-scheme: light) {
   :root,
   body,
   main {
@@ -41,15 +27,61 @@ a {
 
   main {
     > #nav,
-    #code,
-    #display {
+    > #code,
+    > #sources,
+    > #display {
+      background-color: $background;
+      color: $foreground;
+    }
+  }
+
+  .alert * {
+    background-color: $background;
+    color: $foreground;
+
+    input {
+      border-bottom-color: $foreground;
+    }
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  * {
+    color-scheme: light;
+  }
+
+  a {
+    &:not(:hover) {
+      color: $blue;
+    }
+
+    &:hover {
+      color: $purple;
+    }
+  }
+
+  :root,
+  body,
+  main {
+    background-color: $current-line;
+  }
+
+  main {
+    > #nav,
+    > #code,
+    > #sources,
+    > #display {
       background-color: $foreground;
       color: $background;
     }
   }
 
-  .alert > * {
+  .alert * {
     background-color: $foreground;
     color: $background;
+
+    input {
+      border-bottom-color: $background;
+    }
   }
 }
