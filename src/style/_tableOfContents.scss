@@ -1,0 +1,16 @@
+@import "theme";
+
+#toc {
+  @for $i from 1 through 6 {
+    .h#{$i},
+    .h#{$i} * {
+      font-size: #{32 - $i * 2}px !important;
+      font-weight: #{max(100, 800 - $i * 200)} !important;
+    }
+
+    a {
+      color: $foreground !important;
+      text-decoration: none;
+    }
+  }
+}

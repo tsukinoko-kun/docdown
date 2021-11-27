@@ -3,6 +3,7 @@ import { exportSourcesRegister, sourceTag } from "./sources";
 import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import hljs from "highlight.js";
 import MD from "markdown-it";
+import { findInText } from "./editor";
 
 const md = new MD("commonmark", {
   breaks: false,
@@ -28,43 +29,7 @@ const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 const displayEl = document.getElementById("display") as HTMLDivElement;
 const navEl = document.getElementById("nav") as HTMLOListElement;
 
-const updateNavigation = () => {
-  for (const li of Array.from(navEl.children)) {
-    disposeNode(li, true);
-  }
-
-  for (const h of Array.from(
-    displayEl.querySelectorAll("h1, h2, h3, h4, h5, h6")
-  ) as [HTMLElement]) {
-    const li = document.createElement("li");
-    li.innerText = h.innerText;
-    addDisposableEventListener(li, "click", () => {
-      h.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "start",
-      });
-    });
-    li.classList.add(h.tagName.toLowerCase());
-    navEl.appendChild(li);
-  }
-};
-
-const render = (markdown: string) => {
-  const sources = new Array<string>();
-  disposeNode(displayEl, false);
-
-  displayEl.innerHTML =
-    md.render(markdown).replace(sourceTag, (srcId) => {
-      const i = sources.indexOf(srcId);
-      if (i === -1) {
-        sources.push(srcId);
-        return `<sup>[${sources.length}]</sup>`;
-      } else {
-        return `<sup>[${i + 1}]</sup>`;
-      }
-    }) + exportSourcesRegister(sources);
-
+const manipulateRenderedAnchors = () => {
   for (const a of Array.from(displayEl.getElementsByTagName("a"))) {
     addDisposableEventListener(
       a,
@@ -81,6 +46,106 @@ const render = (markdown: string) => {
       }
     );
   }
+};
+
+function createTableOfContents(
+  toc: HTMLOListElement,
+  headers: Array<HTMLElement>
+): void {
+  const lists = new Array<HTMLOListElement | HTMLUListElement>(toc);
+  for (const header of headers) {
+    const level = Number(header.tagName.slice(1)) - 1;
+
+    if (lists.length <= level) {
+      do {
+        const ul = document.createElement("ul");
+        lists[lists.length - 1]!.appendChild(ul);
+        lists.push(ul);
+      } while (lists.length <= level);
+    } else if (lists.length > level + 1) {
+      lists.length = level + 1;
+    }
+
+    const list = lists[level]!;
+
+    const li = document.createElement("li");
+    li.classList.add(header.tagName.toLowerCase());
+    const a = document.createElement("a");
+    header.id = header.innerText;
+    a.href = "#" + header.id;
+    a.textContent = header.textContent;
+    addDisposableEventListener(
+      a,
+      "click",
+      (ev) => {
+        ev.preventDefault();
+      },
+      {
+        capture: true,
+        passive: false,
+      }
+    );
+    li.appendChild(a);
+    list.appendChild(li);
+  }
+}
+
+const updateTableOfContents = () => {
+  // clear ui nav
+  for (const li of Array.from(navEl.children)) {
+    disposeNode(li, true);
+  }
+
+  const allHeaders = Array.from(
+    displayEl.querySelectorAll("h1, h2, h3, h4, h5, h6")
+  ) as [HTMLElement];
+
+  createTableOfContents(
+    document.getElementById("toc") as HTMLOListElement,
+    allHeaders
+  );
+
+  for (const h of allHeaders) {
+    // ui nav
+    const tag = h.tagName.toLowerCase();
+    h.id = h.innerText;
+
+    const li = document.createElement("li");
+    li.innerText = h.innerText;
+    addDisposableEventListener(li, "click", () => {
+      h.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "start",
+      });
+      findInText(
+        codeEl,
+        new RegExp("#+s+" + h.innerText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      );
+    });
+    li.classList.add(tag);
+    navEl.appendChild(li);
+  }
+};
+
+const render = (markdown: string) => {
+  const sources = new Array<string>();
+  disposeNode(displayEl, false);
+
+  displayEl.innerHTML =
+    '<ol id="toc"></ol><hr/>' +
+    md.render(markdown).replace(sourceTag, (srcId) => {
+      const i = sources.indexOf(srcId);
+      if (i === -1) {
+        sources.push(srcId);
+        return `<sup>[${sources.length}]</sup>`;
+      } else {
+        return `<sup>[${i + 1}]</sup>`;
+      }
+    }) +
+    exportSourcesRegister(sources);
+
+  manipulateRenderedAnchors();
 };
 
 let renderDelayId: number | null = null;
@@ -101,7 +166,7 @@ codeEl.addEventListener(
 
 window["triggerRender"] = () => {
   render(codeEl.value);
-  updateNavigation();
+  updateTableOfContents();
 };
 
 const favicon = (document.querySelector("link[rel*='icon']") as HTMLLinkElement)

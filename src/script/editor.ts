@@ -103,22 +103,40 @@ export const replaceAllSubstringsInText = (
   textEl.selectionEnd = newEnd;
 };
 
-export const findInText = (textEl: HTMLTextAreaElement, value: string) => {
+type IFindInTextOverloads = {
+  (textEl: HTMLTextAreaElement, value: string): void;
+  (textEl: HTMLTextAreaElement, value: RegExp): void;
+};
+export const findInText: IFindInTextOverloads = (
+  textEl: HTMLTextAreaElement,
+  value: string | RegExp
+) => {
   const start = textEl.selectionStart ?? 0;
   const end = textEl.selectionEnd ?? start;
   const selected = textEl.value.substring(start, end);
 
-  const i =
-    value === selected
-      ? textEl.value.indexOf(value, end)
-      : textEl.value.indexOf(value);
+  if (typeof value === "string") {
+    const i =
+      value === selected
+        ? textEl.value.indexOf(value, end)
+        : textEl.value.indexOf(value);
 
-  if (i === -1) {
-    userAlert(getLocalizedString("not_found"));
+    if (i === -1) {
+      userAlert(getLocalizedString("not_found"));
+    } else {
+      textEl.focus();
+      textEl.selectionStart = i;
+      textEl.selectionEnd = i + value.length;
+    }
   } else {
-    textEl.focus();
-    textEl.selectionStart = i;
-    textEl.selectionEnd = i + value.length;
+    const regexExecArr = value.exec(selected);
+    if (!regexExecArr || regexExecArr.length === 0) {
+      userAlert(getLocalizedString("not_found"));
+    } else {
+      textEl.focus();
+      textEl.selectionStart = regexExecArr.index;
+      textEl.selectionEnd = regexExecArr.index + regexExecArr[0]!.length;
+    }
   }
 };
 
