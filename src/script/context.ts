@@ -35,7 +35,10 @@ export const context = (
       "click",
       (ev) => {
         option.action(ev);
-        disposeNode(ct, true);
+        const ct = document.querySelector("div.alert");
+        if (ct) {
+          disposeNode(ct, true);
+        }
         contextOptions.clear();
       },
       {
