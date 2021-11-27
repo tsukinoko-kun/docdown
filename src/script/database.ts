@@ -71,7 +71,11 @@ const enshureLoggedIn = (): Promise<User> => {
             reject(error);
           });
       })
-      .catch(alert);
+      .catch((err) => {
+        if (err) {
+          alert(err);
+        }
+      });
   });
 };
 
