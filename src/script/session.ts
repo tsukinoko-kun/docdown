@@ -5,7 +5,7 @@ import {
 import { userAlert, userForm } from "./alert";
 import { context } from "./context";
 import { DataBase } from "./database";
-import { getLocalizedString } from "./local";
+import { getLocale, getLocalizedString, setLocale } from "./local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -21,6 +21,7 @@ const session = {
       title: session.title,
       code: codeEl.value,
       sources: exportSourcesJSON(),
+      language: getLocale(),
     };
   },
 };
@@ -159,6 +160,7 @@ export const loadLocal = () => {
     reader.onload = () => {
       const data = JSON.parse(reader.result as string);
       setTitle(data.title);
+      setLocale(data.language);
       codeEl.value = data.code;
       importSourcesJSON(data.sources);
       triggerRender();

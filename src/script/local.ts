@@ -108,7 +108,11 @@ let currentLanguage: language = navigator.language.includes("de") ? "de" : "en";
 export const getLocale = (): language => currentLanguage;
 
 export const setLocale = (language: language): void => {
-  currentLanguage = language;
+  if (language in localStringMap) {
+    currentLanguage = language;
+  } else {
+    console.error(`Language ${language} not supported`);
+  }
 };
 
 export const getLocalizedString = (text: keyof ILanguageMap) =>
