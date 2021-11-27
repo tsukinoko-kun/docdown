@@ -25,13 +25,18 @@ const session = {
   },
 };
 
+const setTitle = (title: string) => {
+  session.title = title;
+  document.title = title;
+};
+
 const tryStartSession = (sessionId: string, fromLocal = false) => {
   const addEventListeners = () => {
     db.addEventListener(["session", sessionId], "value", (snapshot) => {
       if (snapshot.val()) {
         const data = snapshot.val();
         session.active = true;
-        session.title = data.title;
+        setTitle(data.title);
         session.id = sessionId;
         codeEl.value = data.code;
         importSourcesJSON(data.sources);
@@ -86,10 +91,14 @@ document.body.addEventListener(
               },
             ])
               .then((data) => {
-                session.title = data.title;
+                setTitle(data.title);
                 tryStartSession(newSessionId(), true);
               })
-              .catch(() => {});
+              .catch((err) => {
+                if (err) {
+                  console.error(err);
+                }
+              });
           },
         },
       ]);
@@ -132,6 +141,7 @@ export const loadLocal = () => {
   const upload = document.createElement("input");
   upload.setAttribute("type", "file");
   upload.setAttribute("accept", ".mdd");
+  upload.style.display = "none";
   addDisposableEventListener(upload, "change", () => {
     if (!upload.files || upload.files.length === 0) {
       disposeNode(upload, true);
@@ -142,7 +152,8 @@ export const loadLocal = () => {
     const reader = new FileReader();
     reader.onload = () => {
       const data = JSON.parse(reader.result as string);
-      codeEl.value = data.markdown;
+      setTitle(data.title);
+      codeEl.value = data.code;
       importSourcesJSON(data.sources);
       triggerRender();
       disposeNode(upload, true);
