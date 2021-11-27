@@ -52,13 +52,13 @@ function createTableOfContents(
   toc: HTMLOListElement,
   headers: Array<HTMLElement>
 ): void {
-  const lists = new Array<HTMLOListElement | HTMLUListElement>(toc);
+  const lists = new Array<HTMLOListElement>(toc);
   for (const header of headers) {
     const level = Number(header.tagName.slice(1)) - 1;
 
     if (lists.length <= level) {
       do {
-        const ul = document.createElement("ul");
+        const ul = document.createElement("ol");
         lists[lists.length - 1]!.appendChild(ul);
         lists.push(ul);
       } while (lists.length <= level);
