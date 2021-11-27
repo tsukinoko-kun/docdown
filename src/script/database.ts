@@ -18,7 +18,7 @@ import {
   signInWithEmailAndPassword,
   User,
 } from "firebase/auth";
-import { alert, form } from "./alert";
+import { userAlert, userForm } from "./alert";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCSv8c1dqMYtGVxsrfGY_BYFOKHn3oP9bc",
@@ -44,7 +44,7 @@ const enshureLoggedIn = (): Promise<User> => {
       resolve(auth.currentUser);
     }
 
-    form([
+    userForm([
       {
         name: "email",
         label: "E-Mail",
@@ -73,7 +73,7 @@ const enshureLoggedIn = (): Promise<User> => {
       })
       .catch((err) => {
         if (err) {
-          alert(err);
+          userAlert(err);
         }
       });
   });
@@ -153,7 +153,7 @@ export class DataBase {
 
         this.unsubscribes.push(unsubscribe);
       })
-      .catch(alert);
+      .catch(userAlert);
   }
 
   unsubscribeAll() {

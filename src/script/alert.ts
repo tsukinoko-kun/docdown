@@ -8,7 +8,7 @@ type IAlertOverload = {
   (messageText: string, asHtml?: false): Promise<void>;
   (messageHtml: string, asHtml: true): Promise<void>;
 };
-export const alert: IAlertOverload = (message: string, asHtml = false) =>
+export const userAlert: IAlertOverload = (message: string, asHtml = false) =>
   new Promise<void>((resolve) => {
     const alert = document.createElement("div");
     alert.classList.add("alert");
@@ -35,7 +35,7 @@ export const alert: IAlertOverload = (message: string, asHtml = false) =>
     );
   });
 
-export const form = <KEY extends string>(
+export const userForm = <KEY extends string>(
   query: Array<{
     label: string;
     name: KEY;
@@ -133,4 +133,55 @@ export const form = <KEY extends string>(
     document.body.appendChild(alert);
 
     first?.focus();
+  });
+
+interface ISelectOption<T> {
+  label: string;
+  value: T;
+}
+export const userSelect = <T extends any>(
+  title: string,
+  ...options: Array<ISelectOption<T>>
+): Promise<T> =>
+  new Promise((resolve, reject) => {
+    const alert = document.createElement("div");
+    alert.classList.add("alert");
+
+    const ul = document.createElement("ul");
+    ul.classList.add("interactable");
+
+    const titleEl = document.createElement("p");
+    titleEl.innerText = title + ":";
+    titleEl.style.pointerEvents = "none";
+    ul.appendChild(titleEl);
+
+    for (const option of options) {
+      const li = document.createElement("li");
+      li.innerText = option.label;
+      ul.appendChild(li);
+      addDisposableEventListener(
+        li,
+        "click",
+        () => {
+          resolve(option.value);
+          disposeNode(alert, true);
+        },
+        passive
+      );
+    }
+
+    alert.appendChild(ul);
+    document.body.appendChild(alert);
+
+    addDisposableEventListener(
+      alert,
+      "click",
+      (ev) => {
+        if (ev.target === alert) {
+          disposeNode(alert, true);
+          reject();
+        }
+      },
+      passive
+    );
   });

@@ -1,4 +1,4 @@
-import { alert, form } from "./alert";
+import { userAlert, userForm, userSelect } from "./alert";
 import {
   findInText,
   getSelectedText,
@@ -7,7 +7,7 @@ import {
   replaceSelectedText,
   textSelected,
 } from "./editor";
-import { getLocalizedString } from "./local";
+import { getLocalizedString, language, setLocale } from "./local";
 import { loadLocal, saveLocal, setTitle, getTitle } from "./session";
 
 let mode: "code" | "display" | "both" = "both";
@@ -55,7 +55,7 @@ const toggleViewMode = (splitVertical: boolean) => {
 };
 
 const findInCode = () => {
-  form([
+  userForm([
     {
       name: "searchValue",
       label: getLocalizedString("find"),
@@ -76,7 +76,7 @@ const findInCode = () => {
 };
 
 const replaceInCode = () => {
-  form([
+  userForm([
     {
       name: "searchValue",
       label: getLocalizedString("find"),
@@ -217,7 +217,7 @@ const surround = (char: string, alt: boolean): boolean => {
 };
 
 const showHelp = () => {
-  alert(
+  userAlert(
     [
       '<table class="help">',
       `<tr><th>${getLocalizedString("shortcut")}</th><th>${getLocalizedString(
@@ -225,6 +225,9 @@ const showHelp = () => {
       )}</th></tr>`,
       `<tr><td>F1</td><td>${getLocalizedString("show_help")}</td></tr>`,
       `<tr><td>F2</td><td>${getLocalizedString("rename_file")}</td></tr>`,
+      `<tr><td>CTRL&nbsp;L</td><td>${getLocalizedString(
+        "set_language"
+      )}</td></tr>`,
       `<tr><td>CTRL&nbsp;O</td><td>${getLocalizedString(
         "open_local_file"
       )}</td></tr>`,
@@ -251,7 +254,7 @@ const showHelp = () => {
 };
 
 const renameFile = () => {
-  form([
+  userForm([
     {
       name: "newName",
       label: getLocalizedString("rename_file"),
@@ -262,6 +265,29 @@ const renameFile = () => {
   ])
     .then((result) => {
       setTitle(result.newName);
+    })
+    .catch((err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
+};
+
+const switchLanguage = () => {
+  userSelect<language>(
+    getLocalizedString("set_language"),
+    {
+      label: "Deutsch",
+      value: "de",
+    },
+    {
+      label: "English",
+      value: "en",
+    }
+  )
+    .then((result) => {
+      setLocale(result);
+      triggerRender();
     })
     .catch((err) => {
       if (err) {
@@ -297,6 +323,10 @@ window.addEventListener(
           } else {
             replaceInCode();
           }
+          break;
+        case "l":
+          ev.preventDefault();
+          switchLanguage();
           break;
       }
     } else if (ev.key === "F1") {

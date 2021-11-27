@@ -1,4 +1,4 @@
-type language = "en" | "de";
+export type language = "en" | "de";
 
 interface ILanguageMap {
   sources: string;
@@ -30,6 +30,7 @@ interface ILanguageMap {
   zoom_out: string;
   shortcut: string;
   description: string;
+  set_language: string;
 }
 
 const localStringMap: { [key in language]: ILanguageMap } = {
@@ -63,6 +64,7 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     zoom_out: "Anzeige verkleinern",
     shortcut: "Tastenkürzel",
     description: "Beschreibung",
+    set_language: "Sprache ändern",
   },
   en: {
     sources: "Sources",
@@ -94,14 +96,17 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     zoom_out: "Zoom out",
     shortcut: "Shortcut",
     description: "Description",
+    set_language: "Set language",
   },
 };
 
-const currentLanguage: language = navigator.language.includes("de")
-  ? "de"
-  : "en";
+let currentLanguage: language = navigator.language.includes("de") ? "de" : "en";
 
 export const getLocale = (): language => currentLanguage;
+
+export const setLocale = (language: language): void => {
+  currentLanguage = language;
+};
 
 export const getLocalizedString = (text: keyof ILanguageMap) =>
   localStringMap[currentLanguage][text];

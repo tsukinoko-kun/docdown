@@ -1,4 +1,4 @@
-import { alert } from "./alert";
+import { userAlert } from "./alert";
 import { getLocalizedString } from "./local";
 
 export const replaceSelectedText = (
@@ -114,7 +114,7 @@ export const findInText = (textEl: HTMLTextAreaElement, value: string) => {
       : textEl.value.indexOf(value);
 
   if (i === -1) {
-    alert(getLocalizedString("not_found"));
+    userAlert(getLocalizedString("not_found"));
   } else {
     textEl.focus();
     textEl.selectionStart = i;

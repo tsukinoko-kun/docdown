@@ -5,7 +5,7 @@ import {
   disposeNode,
 } from "@frank-mayer/magic/bin";
 import xxhash from "xxhash-wasm";
-import { form } from "./alert";
+import { userForm } from "./alert";
 import { getLocale, getLocalizedString } from "./local";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
@@ -154,7 +154,7 @@ xxhash().then((xxh) => {
   const contextOptionAdd: ContextOption = {
     label: getLocalizedString("add_source"),
     action: () => {
-      form([
+      userForm([
         {
           name: "author",
           label: getLocalizedString("author"),

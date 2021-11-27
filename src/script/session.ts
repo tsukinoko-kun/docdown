@@ -2,7 +2,7 @@ import {
   addDisposableEventListener,
   disposeNode,
 } from "@frank-mayer/magic/bin";
-import { alert, form } from "./alert";
+import { userAlert, userForm } from "./alert";
 import { context } from "./context";
 import { DataBase } from "./database";
 import { getLocalizedString } from "./local";
@@ -25,11 +25,14 @@ const session = {
   },
 };
 
-export const setTitle = (title: string) => {
+export const setTitle = (title: string, render = true) => {
   session.title = title;
   document.title = `MarkDownDoc - ${title}`;
+  if (render) {
+    triggerRender();
+  }
 };
-setTitle(session.title);
+setTitle(session.title, false);
 
 export const getTitle = () => session.title;
 
@@ -44,7 +47,7 @@ const tryStartSession = (sessionId: string, fromLocal = false) => {
         codeEl.value = data.code;
         importSourcesJSON(data.sources);
       } else {
-        alert(`Session "${sessionId}" not found`);
+        userAlert(`Session "${sessionId}" not found`);
       }
     });
   };
@@ -52,7 +55,7 @@ const tryStartSession = (sessionId: string, fromLocal = false) => {
   if (fromLocal) {
     db.setAt(["session", sessionId], session.getLocalData())
       .catch((e) => {
-        alert(e);
+        userAlert(e);
       })
       .then(() => {
         session.id = sessionId;
@@ -72,9 +75,9 @@ if (window.location.hash.length > 1) {
 
 const newSessionId = () =>
   Date.now().toString(36) +
-  Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(36);
+  Math.floor(Math.random() * Number.MAX_VALUE).toString(36);
 
-document.body.addEventListener(
+document.addEventListener(
   "contextmenu",
   (ev) => {
     ev.preventDefault();
@@ -84,7 +87,7 @@ document.body.addEventListener(
         {
           label: getLocalizedString("start_new_session"),
           action: () => {
-            form([
+            userForm([
               {
                 name: "title",
                 label: "Title",
