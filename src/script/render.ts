@@ -134,7 +134,7 @@ const render = (markdown: string) => {
 
   displayEl.innerHTML =
     `<p class="title">${getTitle()}</p>` +
-    '<ol id="toc"></ol><hr/>' +
+    '<ol id="toc"></ol>' +
     md.render(markdown).replace(sourceTag, (srcId) => {
       const i = sources.indexOf(srcId);
       if (i === -1) {
