@@ -22,6 +22,7 @@ const session = {
       code: codeEl.value,
       sources: exportSourcesJSON(),
       language: getLocale(),
+      lastUpdate: Date.now(),
     };
   },
 };
@@ -36,6 +37,14 @@ export const setTitle = (title: string, render = true) => {
 setTitle(session.title, false);
 
 export const getTitle = () => session.title;
+
+export const tryPushLocalToDatabase = () => {
+  if (session.active) {
+    db.setAt(["session", session.id], session.getLocalData()).catch((e) => {
+      userAlert(e);
+    });
+  }
+};
 
 const tryStartSession = (sessionId: string, fromLocal = false) => {
   const addEventListeners = () => {
@@ -75,8 +84,7 @@ if (window.location.hash.length > 1) {
 }
 
 const newSessionId = () =>
-  Date.now().toString(36) +
-  Math.floor(Math.random() * Number.MAX_VALUE).toString(36);
+  Date.now().toString(36) + Math.floor(Math.random() * 0xffff).toString(36);
 
 document.addEventListener(
   "contextmenu",

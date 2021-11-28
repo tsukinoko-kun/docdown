@@ -134,8 +134,10 @@ export const userForm = <KEY extends string>(
 
     if (first) {
       first.focus();
-      first.selectionStart = 0;
-      first.selectionEnd = first.value.length;
+      if (first.value.length > 0) {
+        first.selectionStart = 0;
+        first.selectionEnd = first.value.length;
+      }
     }
   });
 
