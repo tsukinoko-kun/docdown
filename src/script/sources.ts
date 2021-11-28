@@ -1,4 +1,4 @@
-import { context, ContextOption } from "./context";
+import { context } from "./context";
 import { insertText, deleteAllSubstringsInText } from "./editor";
 import {
   addDisposableEventListener,
@@ -8,6 +8,9 @@ import xxhash from "xxhash-wasm";
 import { userForm } from "./alert";
 import { getLocale, getLocalizedString } from "./local";
 
+import type { ContextOption } from "./context";
+import { escapeHtml } from "./escape";
+
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
@@ -15,7 +18,7 @@ interface ISourceData {
   id: string;
   author: string;
   title: string;
-  creationDate: number;
+  creationDate: number | null;
   lastAccessed: number;
   link: string;
 }
@@ -31,16 +34,19 @@ const sourceDataToString = (
     const lastAcc = new Date(sourceData.lastAccessed).toLocaleDateString(
       getLocale()
     );
-    const creationDate = new Date(sourceData.creationDate).toLocaleDateString(
-      getLocale()
+    const creationDate = sourceData.creationDate
+      ? new Date(sourceData.creationDate).toLocaleDateString(getLocale())
+      : getLocalizedString("unknown");
+    return (
+      escapeHtml(
+        [
+          sourceData.author,
+          sourceData.title,
+          getLocalizedString("creation_date") + " " + creationDate,
+          getLocalizedString("last_accessed_at") + " " + lastAcc,
+        ].join(", ")
+      ) + `, <a href="${sourceData.link}">${escapeHtml(sourceData.link)}</a>`
     );
-    return [
-      sourceData.author,
-      sourceData.title,
-      creationDate,
-      getLocalizedString("last_accessed_at") + " " + lastAcc,
-      sourceData.link,
-    ].join(", ");
   }
 };
 
@@ -111,14 +117,14 @@ xxhash().then((xxh) => {
     id: string;
     author: string;
     title: string;
-    creationDate: number;
+    creationDate: number | null;
     lastAccessed: number;
     link: string;
 
     constructor(
       author: string,
       title: string,
-      creationDate: number,
+      creationDate: number | null,
       lastAccessed: number,
       link: string
     ) {
@@ -137,14 +143,14 @@ xxhash().then((xxh) => {
     static from(data: {
       author: string;
       title: string;
-      creationDate: string;
+      creationDate: string | null;
       lastAccessed: string;
       link: string;
     }) {
       return new SourceData(
         data.author,
         data.title,
-        new Date(data.creationDate).getTime(),
+        data.creationDate ? new Date(data.creationDate).getTime() : null,
         new Date(data.lastAccessed).getTime(),
         data.link
       );
@@ -170,7 +176,7 @@ xxhash().then((xxh) => {
         {
           name: "creationDate",
           label: getLocalizedString("creation_date"),
-          required: true,
+          required: false,
           type: "date",
         },
         {

@@ -33,6 +33,7 @@ interface ILanguageMap {
   description: string;
   set_language: string;
   untitled: string;
+  unknown: string;
 }
 
 const localStringMap: { [key in language]: ILanguageMap } = {
@@ -69,6 +70,7 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     description: "Beschreibung",
     set_language: "Sprache ändern",
     untitled: "Unbenannt",
+    unknown: "unbekannt",
   },
   en: {
     sources: "Sources",
@@ -103,6 +105,7 @@ const localStringMap: { [key in language]: ILanguageMap } = {
     description: "Description",
     set_language: "Set language",
     untitled: "Untitled",
+    unknown: "unknown",
   },
 };
 

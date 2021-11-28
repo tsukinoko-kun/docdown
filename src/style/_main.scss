@@ -62,7 +62,7 @@ main {
     padding: 0.5em;
     grid-area: code;
     resize: none !important;
-    font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono",
+    font-family: "JetBrainsMono", "SFMono-Regular", Consolas, "Liberation Mono",
       monospace !important;
   }
 
@@ -77,7 +77,7 @@ main {
 
     code,
     code * {
-      font-family: "JetBrains Mono", "SFMono-Regular", Consolas,
+      font-family: "JetBrainsMono", "SFMono-Regular", Consolas,
         "Liberation Mono", monospace !important;
     }
   }

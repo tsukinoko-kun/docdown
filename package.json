@@ -21,10 +21,11 @@
   },
   "dependencies": {
     "@frank-mayer/magic": "^1.1.9",
+    "@types/pdfmake": "^0.1.19",
     "firebase": "^9.5.0",
     "highlight.js": "^11.3.1",
-    "html2pdf.js": "^0.10.1",
     "markdown-it": "^12.2.0",
+    "pdfmake": "^0.2.4",
     "xxhash-wasm": "^0.4.2"
   }
 }

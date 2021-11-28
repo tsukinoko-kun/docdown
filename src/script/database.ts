@@ -1,24 +1,25 @@
 import { initializeApp } from "firebase/app";
+
 import {
   getDatabase,
   ref,
   set,
   onValue,
-  DataSnapshot,
   onChildAdded,
   onChildChanged,
   onChildMoved,
   onChildRemoved,
-  Unsubscribe,
 } from "firebase/database";
 
 import {
   browserLocalPersistence,
   getAuth,
   signInWithEmailAndPassword,
-  User,
 } from "firebase/auth";
 import { userAlert, userForm } from "./alert";
+
+import type { DataSnapshot, Unsubscribe } from "firebase/database";
+import type { User } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCSv8c1dqMYtGVxsrfGY_BYFOKHn3oP9bc",

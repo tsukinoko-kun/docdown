@@ -5,6 +5,7 @@ import hljs from "highlight.js";
 import MD from "markdown-it";
 import { findInText } from "./editor";
 import { getTitle } from "./session";
+import { escapeRegExp } from "./escape";
 
 const md = new MD("commonmark", {
   breaks: false,
@@ -119,10 +120,7 @@ const updateTableOfContents = () => {
         block: "center",
         inline: "start",
       });
-      findInText(
-        codeEl,
-        new RegExp("#+s+" + h.innerText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-      );
+      findInText(codeEl, new RegExp("#+s+" + escapeRegExp(h.innerText)));
     });
     li.classList.add(tag);
     navEl.appendChild(li);
