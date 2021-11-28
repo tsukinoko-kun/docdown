@@ -7,6 +7,7 @@ import {
   replaceSelectedText,
   textSelected,
 } from "./editor";
+import { createPdf } from "./export";
 import { getLocalizedString, language, setLocale } from "./local";
 import { loadLocal, saveLocal, setTitle, getTitle } from "./session";
 
@@ -339,6 +340,10 @@ window.addEventListener(
         case "l":
           ev.preventDefault();
           switchLanguage();
+          break;
+        case "p":
+          ev.preventDefault();
+          createPdf().print();
           break;
       }
     } else if (ev.key === "Escape") {

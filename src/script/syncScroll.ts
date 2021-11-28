@@ -5,7 +5,8 @@ const displayEl = document.getElementById("display") as HTMLDivElement;
 
 let currentScrollEl: Element | undefined = undefined;
 
-const syncScroll = (a: Element, b: Element) => {
+export const syncScroll = (a: Element, b: Element) => {
+  currentScrollEl = a;
   b.scrollTop =
     (b.scrollHeight - b.clientHeight) *
     (a.scrollTop / (a.scrollHeight - a.clientHeight));

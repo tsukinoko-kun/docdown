@@ -5,11 +5,10 @@ import {
   disposeNode,
 } from "@frank-mayer/magic/bin";
 import xxhash from "xxhash-wasm";
-import { userForm } from "./alert";
+import { userAlert, userForm } from "./alert";
 import { getLocale, getLocalizedString } from "./local";
 
 import type { ContextOption } from "./context";
-import { escapeHtml } from "./escape";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -37,16 +36,13 @@ const sourceDataToString = (
     const creationDate = sourceData.creationDate
       ? new Date(sourceData.creationDate).toLocaleDateString(getLocale())
       : getLocalizedString("unknown");
-    return (
-      escapeHtml(
-        [
-          sourceData.author,
-          sourceData.title,
-          getLocalizedString("creation_date") + " " + creationDate,
-          getLocalizedString("last_accessed_at") + " " + lastAcc,
-        ].join(", ")
-      ) + `, <a href="${sourceData.link}">${escapeHtml(sourceData.link)}</a>`
-    );
+    return [
+      sourceData.author,
+      sourceData.title,
+      getLocalizedString("creation_date") + " " + creationDate,
+      getLocalizedString("last_accessed_at") + " " + lastAcc,
+      sourceData.link,
+    ].join(", ");
   }
 };
 
@@ -62,7 +58,7 @@ const useSource = (source: ISourceData) => {
 function createLiFromSource(sourceData: ISourceData) {
   const li = document.createElement("li");
   li.innerText = sourceDataToString(sourceData, true);
-  li.title = sourceDataToString(sourceData);
+  li.title = sourceDataToString(sourceData, false);
   li.id = sourceData.id;
   addDisposableEventListener(
     li,
@@ -82,20 +78,64 @@ function createLiFromSource(sourceData: ISourceData) {
   return li;
 }
 
-export const exportSourcesRegister = (sources: Array<string>) =>
-  sources.length === 0
-    ? ""
-    : `<h1>${getLocalizedString("sources")}</h1><ol>` +
-      sources
-        .map((sourceId) => {
-          const sourceData = sourcesRegister.get(sourceId);
-          if (sourceData) {
-            return `<li>${sourceDataToString(sourceData)}</li>`;
-          }
-          return `<li>${getLocalizedString("unknown_source")}</li>`;
+let usedSources = new Array<string>();
+export const setUsedSources = (sources: string[]) => {
+  usedSources = sources;
+};
+
+export const hasSources = () => usedSources.length > 0;
+
+interface ISourceExport {
+  author: string;
+  title: string;
+  creationDate: string;
+  lastAccessed: string;
+  link: string;
+  id: string;
+}
+export const mapSources = <T>(callbackfn: (data: ISourceExport) => T): T[] => {
+  const returnValue = new Array<T>();
+
+  for (const sourceId of usedSources) {
+    const sourceData = sourcesRegister.get(sourceId);
+    if (sourceData) {
+      returnValue.push(
+        callbackfn({
+          author: sourceData.author,
+          title: sourceData.title,
+          creationDate:
+            getLocalizedString("creation_date") +
+            " " +
+            (sourceData.creationDate
+              ? new Date(sourceData.creationDate).toLocaleDateString(
+                  getLocale()
+                )
+              : getLocalizedString("unknown")),
+          lastAccessed:
+            getLocalizedString("last_accessed_at") +
+            " " +
+            new Date(sourceData.lastAccessed).toLocaleDateString(getLocale()),
+          link: sourceData.link,
+          id: sourceData.id,
         })
-        .join("") +
-      "</ol>";
+      );
+    } else {
+      userAlert(`${getLocalizedString("unknown_source")} "${sourceId}"`);
+      returnValue.push(
+        callbackfn({
+          author: "",
+          title: "",
+          creationDate: "",
+          lastAccessed: "",
+          link: "",
+          id: sourceId,
+        })
+      );
+    }
+  }
+
+  return returnValue;
+};
 
 export const exportSourcesJSON = () => Array.from(sourcesRegister.values());
 export const importSourcesJSON = (sources: IterableIterator<ISourceData>) => {

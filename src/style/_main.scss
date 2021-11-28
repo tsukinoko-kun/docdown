@@ -1,7 +1,6 @@
 @use "sass:math";
 
 @import "theme";
-@import "tableOfContents";
 
 $gap: 4px;
 
@@ -33,7 +32,7 @@ main {
         cursor: pointer;
 
         &.h#{$i} {
-          font-size: #{24 - $i * 2}px;
+          font-size: #{18 - $i}px;
           font-weight: #{max(100, 800 - $i * 200)} !important;
         }
       }

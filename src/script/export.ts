@@ -1,134 +1,391 @@
 import { context } from "./context";
 import * as pdfMake from "pdfmake/build/pdfmake";
-import { getLocalizedString } from "./local";
+import { getLocale, getLocalizedString } from "./local";
 import { getTitle } from "./session";
-import type {
-  Content,
-  TDocumentDefinitions,
-  TFontDictionary,
-} from "pdfmake/interfaces";
-
-import NotoSansRegular from "../font/Noto_Sans/NotoSans-Regular.ttf";
-import NotoSansBold from "../font/Noto_Sans/NotoSans-Bold.ttf";
-import NotoSansItalic from "../font/Noto_Sans/NotoSans-Italic.ttf";
-import NotoSansBoldItalic from "../font/Noto_Sans/NotoSans-BoldItalic.ttf";
-
-import JetBrainsMonoRegular from "../font/JetBrainsMono/JetBrainsMono-Regular.ttf";
-import JetBrainsMonoBold from "../font/JetBrainsMono/JetBrainsMono-Bold.ttf";
-import JetBrainsMonoItalic from "../font/JetBrainsMono/JetBrainsMono-Italic.ttf";
-import JetBrainsMonoBoldItalic from "../font/JetBrainsMono/JetBrainsMono-BoldItalic.ttf";
+import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
+import { defaultStyle, fonts, styles, syntaxStyles } from "./pdfStylesheet";
+import { getUser } from "./database";
+import { hasSources, mapSources } from "./sources";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
-const fonts: TFontDictionary = {
-  NotoSans: {
-    normal: NotoSansRegular,
-    bold: NotoSansBold,
-    italics: NotoSansItalic,
-    bolditalics: NotoSansBoldItalic,
-  },
-  JetBrainsMono: {
-    normal: JetBrainsMonoRegular,
-    bold: JetBrainsMonoBold,
-    italics: JetBrainsMonoItalic,
-    bolditalics: JetBrainsMonoBoldItalic,
-  },
+const getBase64Image = (img: HTMLImageElement) => {
+  // Create an empty canvas element
+  const canvas = document.createElement("canvas");
+  const rect = img.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+
+  // Copy the image contents to the canvas
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("Could not get context for canvas");
+  }
+
+  ctx.drawImage(img, 0, 0);
+
+  const dataUrl = canvas.toDataURL();
+
+  canvas.remove();
+
+  return dataUrl;
 };
 
-const mapDomToPdfContent = (el: Element): Content => {
-  switch (el.tagName) {
-    case "H1":
-      const h1 = el as HTMLHeadingElement;
-      return { text: h1.innerText, style: "header" };
-    case "H2":
-      const h2 = el as HTMLHeadingElement;
-      return { text: h2.innerText, style: "header2" };
-    case "H3":
-      const h3 = el as HTMLHeadingElement;
-      return { text: h3.innerText, style: "header3" };
-    case "H4":
-      const h4 = el as HTMLHeadingElement;
-      return { text: h4.innerText, style: "header4" };
-    case "H5":
-      const h5 = el as HTMLHeadingElement;
-      return { text: h5.innerText, style: "header5" };
-    case "H6":
-      const h6 = el as HTMLHeadingElement;
-      return { text: h6.innerText, style: "header6" };
-    case "P":
-      const p = el as HTMLParagraphElement;
-      return { text: p.innerText, style: "paragraph" };
-    case "UL":
-      const ul = el as HTMLUListElement;
+const parseStyleData = (el: Element) => {
+  const styleData = window.getComputedStyle(el);
+  return {
+    fontSize: parseFloat(styleData.fontSize),
+    color: styleData.color,
+  };
+};
+
+const mapSyntaxToPdfContent = (el: Node): Content => {
+  if (el instanceof HTMLElement) {
+    if (el.children.length === 0) {
+      const classes = Array.from(el.classList);
+      for (const cls of classes) {
+        const classStyle = syntaxStyles.get(cls);
+        if (classStyle) {
+          return {
+            text: el.innerText,
+            style: classStyle,
+          };
+        }
+      }
+
       return {
-        ul: Array.from(ul.querySelectorAll("li")).map((li) => {
-          return { text: li.innerText, style: "list" };
-        }),
+        text: el.innerText,
+        style: "code",
       };
-    case "OL":
-      const ol = el as HTMLOListElement;
-      return {
-        ol: Array.from(ol.querySelectorAll("li")).map((li) => {
-          return { text: li.innerText, style: "list" };
-        }),
-      };
-    case "PRE":
-      const pre = el as HTMLPreElement;
-      return { text: pre.innerText, style: "code" };
-    case "BLOCKQUOTE":
-      const blockquote = el as HTMLQuoteElement;
-      return { text: blockquote.innerText, style: "blockquote" };
-    case "IMG":
-      const img = el as HTMLImageElement;
-      return { image: img.src, fit: [img.width, img.height] };
-    case "TABLE":
-      const table = el as HTMLTableElement;
-      return {
-        table: {
-          widths: Array.from(table.querySelectorAll("col")).map((col) => {
-            return col.width;
-          }),
-          body: Array.from(table.querySelectorAll("tr")).map((tr) => {
-            return Array.from(tr.querySelectorAll("td")).map((td) => {
-              return { text: td.innerText, style: "table" };
-            });
-          }),
-        },
-      };
-    case "A":
-      const a = el as HTMLAnchorElement;
-      return { text: a.innerText, link: a.href };
-    case "CODE":
-      const code = el as HTMLElement;
-      return { text: code.innerText, style: "code" };
-    case "SPAN":
-      const span = el as HTMLSpanElement;
-      return { text: span.innerText, style: "span" };
-    case "DIV":
-      const div = el as HTMLDivElement;
-      return { text: div.innerText, style: "div" };
-    case "BR":
-      return { text: "\n" };
-    case "HR":
-      return { text: "\n" };
-    default:
-      return { text: el.innerHTML, style: "paragraph" };
+    } else {
+      return Array.from(el.childNodes).map(mapSyntaxToPdfContent).flat();
+    }
+  } else {
+    if (!el.textContent) {
+      return [];
+    }
+
+    const classes = Array.from(el.parentElement!.classList);
+    for (const cls of classes) {
+      const classStyle = syntaxStyles.get(cls);
+      if (classStyle) {
+        return {
+          text: el.textContent,
+          style: classStyle,
+        };
+      }
+    }
+
+    return {
+      text: el.textContent,
+      style: "code",
+    };
   }
+};
+
+const mapDomToPdfContent = (el: Node): Content => {
+  if (el instanceof Element) {
+    switch (el.tagName) {
+      case "H1":
+        const h1 = el as HTMLHeadingElement;
+        return {
+          text: h1.innerText,
+          style: "h1",
+          tocItem: "mainToc",
+          tocStyle: "toc_h1",
+        };
+      case "H2":
+        const h2 = el as HTMLHeadingElement;
+        return {
+          text: h2.innerText,
+          style: "h2",
+          tocItem: "mainToc",
+          tocStyle: "toc_h2",
+          tocMargin: [20, 0, 0, 0],
+        };
+      case "H3":
+        const h3 = el as HTMLHeadingElement;
+        return {
+          text: h3.innerText,
+          style: "h3",
+          tocItem: "mainToc",
+          tocStyle: "toc_h3",
+          tocMargin: [40, 0, 0, 0],
+        };
+      case "H4":
+        const h4 = el as HTMLHeadingElement;
+        return {
+          text: h4.innerText,
+          style: "h4",
+        };
+      case "H5":
+        const h5 = el as HTMLHeadingElement;
+        return {
+          text: h5.innerText,
+          style: "h5",
+        };
+      case "H6":
+        const h6 = el as HTMLHeadingElement;
+        return {
+          text: h6.innerText,
+          style: "h6",
+        };
+      case "UL":
+        const ul = el as HTMLUListElement;
+        return {
+          ul: Array.from(ul.getElementsByTagName("li")).map((li) => {
+            if (li.children.length === 0) {
+              return {
+                text: li.innerText,
+                style: "list",
+                ...parseStyleData(li),
+              };
+            } else {
+              return mapDomToPdfContent(li);
+            }
+          }),
+        };
+      case "OL":
+        const ol = el as HTMLOListElement;
+        return {
+          ol: Array.from(ol.getElementsByTagName("li")).map((li) => {
+            if (li.children.length === 0) {
+              return {
+                text: li.innerText,
+                style: "list",
+                ...parseStyleData(li),
+              };
+            } else {
+              return mapDomToPdfContent(li);
+            }
+          }),
+        };
+      case "PRE":
+        const pre = el as HTMLPreElement;
+        if (pre.children.length === 0) {
+          return {
+            text: pre.innerText,
+            style: "code",
+            font: "JetBrainsMono",
+          };
+        } else {
+          return Array.from(pre.childNodes).map((el) => mapDomToPdfContent(el));
+        }
+      case "BLOCKQUOTE":
+        const blockquote = el as HTMLQuoteElement;
+        return {
+          text: blockquote.innerText,
+          style: "blockquote",
+        };
+      case "IMG":
+        const img = el as HTMLImageElement;
+        try {
+          return {
+            image: getBase64Image(img),
+            fit: [img.width, img.height],
+            style: "image",
+          };
+        } catch {
+          return img.alt ? { text: img.alt, style: "span" } : [];
+        }
+      case "TABLE":
+        const table = el as HTMLTableElement;
+        return {
+          table: {
+            widths: Array.from(table.querySelectorAll("col")).map((col) => {
+              return col.width;
+            }),
+            body: Array.from(table.querySelectorAll("tr")).map((tr) => {
+              return Array.from(tr.querySelectorAll("td")).map((td) => {
+                return {
+                  text: td.innerText,
+                  style: "table",
+                  ...parseStyleData(td),
+                };
+              });
+            }),
+          },
+        };
+      case "A":
+        const a = el as HTMLAnchorElement;
+        if (a.children.length === 0) {
+          return {
+            text: a.innerText,
+            link: a.href,
+            style: "a",
+          };
+        } else {
+          return Array.from(a.childNodes)
+            .map((el) => mapDomToPdfContent(el))
+            .flat();
+        }
+      case "CODE":
+        const code = el as HTMLElement;
+        if (code.children.length === 0) {
+          return {
+            text: code.innerText,
+            style: "code",
+            font: "JetBrainsMono",
+          };
+        } else {
+          return {
+            text: Array.from(code.childNodes)
+              .map((el) => mapSyntaxToPdfContent(el))
+              .flat(),
+          };
+        }
+      case "SUP":
+        const sup = el as HTMLElement;
+        const src = sup.getAttribute("src");
+        if (src) {
+          return {
+            text: sup.innerText,
+            style: "src",
+            linkToDestination: src,
+          };
+        } else {
+          return {
+            text: sup.innerText,
+            style: "sup",
+          };
+        }
+      case "SUB":
+        const sub = el as HTMLElement;
+        return {
+          text: sub.innerText,
+          style: "sub",
+        };
+      case "BR":
+        return { text: "\n" };
+      case "HR":
+        return {
+          margin: [0, 12, 0, 0],
+          canvas: [
+            {
+              type: "line",
+              x1: 0,
+              y1: 0,
+              x2: 514,
+              y2: 0,
+              lineWidth: 0.5,
+              lineColor: "#BDBDBD",
+            },
+          ],
+        };
+      default:
+        if (el.children.length === 0) {
+          if ("innerText" in el) {
+            return {
+              text: (el as HTMLElement).innerText,
+            };
+          } else {
+            if (el.textContent) {
+              return {
+                text: el.textContent,
+              };
+            } else {
+              return [];
+            }
+          }
+        } else {
+          return {
+            text: Array.from(el.childNodes)
+              .map((el) => mapDomToPdfContent(el))
+              .flat(),
+          };
+        }
+    }
+  } else {
+    if (el.textContent) {
+      return {
+        text: el.textContent,
+      };
+    } else {
+      return [];
+    }
+  }
+};
+
+const toc: Content = {
+  toc: {
+    id: "mainToc",
+    title: { text: getLocalizedString("table_of_contents"), style: "h1" },
+  },
+  pageBreak: "after",
+};
+
+const title = (): Content => {
+  return {
+    text: getTitle() + "\n",
+    style: "title",
+  };
+};
+
+const sources = (): Content => {
+  if (!hasSources()) {
+    return [];
+  }
+
+  return [
+    {
+      pageBreak: "before",
+      text: getLocalizedString("sources"),
+      style: "h1",
+      tocItem: "mainToc",
+    },
+    {
+      ol: mapSources<Content>((s) => {
+        return {
+          text: [
+            `${s.author}, ${s.title}, ${s.creationDate}, ${s.lastAccessed}, `,
+            {
+              text: s.link,
+              link: s.link,
+              style: "a",
+            },
+          ],
+          style: "list",
+          id: s.id,
+        };
+      }),
+    },
+  ];
 };
 
 const createDocDefinition = (): TDocumentDefinitions => {
   const docDefinition: TDocumentDefinitions = {
     info: {
       title: getTitle(),
+      subject: getTitle(),
       creationDate: new Date(),
+      author: getUser(),
+      creator: getUser(),
     },
-    defaultStyle: {
-      font: "NotoSans",
+    defaultStyle,
+    styles,
+    pageMargins: [80, 60, 80, 60],
+    header: {
+      text: `${getTitle()} - ${new Date().toLocaleDateString(getLocale())}`,
+      margin: [80, 20],
     },
-    content: Array.from(displayEl.children).map(mapDomToPdfContent),
+    content: [
+      title(),
+      toc,
+      ...Array.from(displayEl.childNodes).map(mapDomToPdfContent),
+      sources(),
+    ],
+    footer: (currentPage, pageCount) =>
+      currentPage === 1
+        ? []
+        : {
+            text: `${currentPage - 1}/${pageCount - 1}`,
+            alignment: "right",
+            margin: [40, 20],
+          },
     compress: true,
     pageSize: "A4",
     pageOrientation: "portrait",
+    images: {},
     permissions: {
       annotating: true,
       contentAccessibility: true,
@@ -141,12 +398,10 @@ const createDocDefinition = (): TDocumentDefinitions => {
   return docDefinition;
 };
 
-const createPdf = () => {
-  const doc = pdfMake.createPdf(createDocDefinition(), undefined, fonts);
-  doc.download(getTitle() + ".pdf");
-};
+export const createPdf = () =>
+  pdfMake.createPdf(createDocDefinition(), undefined, fonts);
 
-displayEl.addEventListener(
+document.body.addEventListener(
   "contextmenu",
   (ev) => {
     ev.preventDefault();
@@ -155,7 +410,19 @@ displayEl.addEventListener(
       {
         label: getLocalizedString("export_pdf"),
         action: () => {
-          createPdf();
+          createPdf().open();
+        },
+      },
+      {
+        label: getLocalizedString("download_pdf"),
+        action: () => {
+          createPdf().download(getTitle() + ".pdf");
+        },
+      },
+      {
+        label: getLocalizedString("print"),
+        action: () => {
+          createPdf().print();
         },
       },
     ]);
