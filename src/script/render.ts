@@ -120,6 +120,7 @@ const updateTableOfContents = () => {
         block: "center",
         inline: "start",
       });
+      console.debug("#+s+" + escapeRegExp(h.innerText));
       findInText(codeEl, new RegExp("#+s+" + escapeRegExp(h.innerText)));
     });
     li.classList.add(tag);

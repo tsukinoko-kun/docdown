@@ -1,10 +1,6 @@
 # parcel
 .parcel-cache/
-dist/**/*.js
-dist/**/*.svg
-dist/**/*.map
-dist/**/*.css
-dist/**/*.html
+dist/
 
 # Logs
 logs

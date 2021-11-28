@@ -8,23 +8,30 @@ import type {
   TFontDictionary,
 } from "pdfmake/interfaces";
 
-const displayEl = document.getElementById("display") as HTMLDivElement;
+import NotoSansRegular from "../font/Noto_Sans/NotoSans-Regular.ttf";
+import NotoSansBold from "../font/Noto_Sans/NotoSans-Bold.ttf";
+import NotoSansItalic from "../font/Noto_Sans/NotoSans-Italic.ttf";
+import NotoSansBoldItalic from "../font/Noto_Sans/NotoSans-BoldItalic.ttf";
 
-const serverBase = location.protocol + "//" + location.host + "/";
+import JetBrainsMonoRegular from "../font/JetBrainsMono/JetBrainsMono-Regular.ttf";
+import JetBrainsMonoBold from "../font/JetBrainsMono/JetBrainsMono-Bold.ttf";
+import JetBrainsMonoItalic from "../font/JetBrainsMono/JetBrainsMono-Italic.ttf";
+import JetBrainsMonoBoldItalic from "../font/JetBrainsMono/JetBrainsMono-BoldItalic.ttf";
+
+const displayEl = document.getElementById("display") as HTMLDivElement;
 
 const fonts: TFontDictionary = {
   NotoSans: {
-    normal: serverBase + "static/Noto_Sans/NotoSans-Regular.ttf",
-    bold: serverBase + "static/Noto_Sans/NotoSans-Bold.ttf",
-    italics: serverBase + "static/Noto_Sans/NotoSans-Italic.ttf",
-    bolditalics: serverBase + "static/Noto_Sans/NotoSans-BoldItalic.ttf",
+    normal: NotoSansRegular,
+    bold: NotoSansBold,
+    italics: NotoSansItalic,
+    bolditalics: NotoSansBoldItalic,
   },
   JetBrainsMono: {
-    normal: serverBase + "static/JetBrainsMono/JetBrainsMono-Regular.ttf",
-    bold: serverBase + "static/JetBrainsMono/JetBrainsMono-Bold.ttf",
-    italics: serverBase + "static/JetBrainsMono/JetBrainsMono-Italic.ttf",
-    bolditalics:
-      serverBase + "static/JetBrainsMono/JetBrainsMono-BoldItalic.ttf",
+    normal: JetBrainsMonoRegular,
+    bold: JetBrainsMonoBold,
+    italics: JetBrainsMonoItalic,
+    bolditalics: JetBrainsMonoBoldItalic,
   },
 };
 
