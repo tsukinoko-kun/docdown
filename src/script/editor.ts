@@ -129,7 +129,7 @@ export const findInText: IFindInTextOverloads = (
       textEl.selectionEnd = i + value.length;
     }
   } else {
-    const regexExecArr = value.exec(selected);
+    const regexExecArr = value.exec(textEl.value);
     if (!regexExecArr || regexExecArr.length === 0) {
       userAlert(getLocalizedString("not_found"));
     } else {
