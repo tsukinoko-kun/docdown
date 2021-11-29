@@ -21,6 +21,11 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba($foreground, 0.5);
   }
+
+  // Corner
+  ::-webkit-scrollbar-corner {
+    background: $background;
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -37,5 +42,10 @@
   // Handle on hover
   ::-webkit-scrollbar-thumb:hover {
     background: $background;
+  }
+
+  // Corner
+  ::-webkit-scrollbar-corner {
+    background: $foreground;
   }
 }
