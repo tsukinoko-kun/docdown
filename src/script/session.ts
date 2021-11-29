@@ -5,7 +5,7 @@ import {
 import { userAlert, userForm } from "./alert";
 import { context } from "./context";
 import { DataBase } from "./database";
-import { getLocale, getLocalizedString, setLocale } from "./local";
+import { getLocale, getText, setLocale, textId } from "./local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -14,7 +14,7 @@ const db = new DataBase();
 
 const session = {
   active: false,
-  title: getLocalizedString("untitled"),
+  title: getText(textId.untitled),
   id: "",
   getLocalData: () => {
     return {
@@ -94,15 +94,15 @@ document.addEventListener(
     if (!session.active) {
       context(ev, [
         {
-          label: getLocalizedString("start_new_session"),
+          label: getText(textId.start_new_session),
           action: () => {
             userForm([
               {
                 name: "title",
-                label: "Title",
-                placeholder: "Name of the document",
+                label: getText(textId.title),
                 required: true,
                 type: "text",
+                value: getTitle(),
               },
             ])
               .then((data) => {
@@ -120,7 +120,7 @@ document.addEventListener(
     } else {
       context(ev, [
         {
-          label: getLocalizedString("stop_session"),
+          label: getText(textId.stop_session),
           action: () => {
             db.unsubscribeAll();
             db.dropAt(["session", session.id]);

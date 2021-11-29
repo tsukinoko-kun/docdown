@@ -1,4 +1,4 @@
-import { getLocalizedString } from "./local";
+import { getText, textId } from "./local";
 import passive from "./passive";
 
 const displayEl = document.getElementById("display") as HTMLElement;
@@ -9,24 +9,24 @@ const cursorEl = document.getElementById("cursor") as HTMLElement;
 export const countWords = () => {
   const words = displayEl.innerText.match(/[\w\d]+/g)?.length ?? 0;
 
-  wordCountEl.innerText = `${words} ${getLocalizedString("words")}`;
+  wordCountEl.innerText = `${words} ${getText(textId.words)}`;
 };
 
 const updateCursor = () => {
   const { selectionStart, selectionEnd } = codeEl;
 
   const line = codeEl.value.substring(0, selectionStart).split("\n").length;
-  const lineStr = `${getLocalizedString("line")} ${line}`;
+  const lineStr = `${getText(textId.line)} ${line}`;
 
   const column =
     selectionStart -
     codeEl.value.lastIndexOf("\n", Math.max(0, selectionStart - 1));
-  const columnStr = `${getLocalizedString("column")} ${column}`;
+  const columnStr = `${getText(textId.column)} ${column}`;
 
   const selection = selectionEnd - selectionStart;
 
   if (selection > 0) {
-    const selectionStr = `${selection} ${getLocalizedString("selected")}`;
+    const selectionStr = `${selection} ${getText(textId.selected)}`;
 
     cursorEl.innerText = `${lineStr}, ${columnStr} (${selectionStr})`;
   } else {

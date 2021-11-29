@@ -20,7 +20,7 @@ import { userAlert, userForm } from "./alert";
 
 import type { DataSnapshot, Unsubscribe } from "firebase/database";
 import type { User } from "firebase/auth";
-import { getLocalizedString } from "./local";
+import { getText, textId } from "./local";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCSv8c1dqMYtGVxsrfGY_BYFOKHn3oP9bc",
@@ -45,7 +45,7 @@ export const getUser = (): string => {
   if (user) {
     return user.displayName ?? user.email ?? user.uid;
   }
-  return getLocalizedString("guest_user");
+  return getText(textId.guest_user);
 };
 
 const enshureLoggedIn = (): Promise<User> => {

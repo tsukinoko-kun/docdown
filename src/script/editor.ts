@@ -1,5 +1,5 @@
 import { userAlert } from "./alert";
-import { getLocalizedString } from "./local";
+import { getText, textId } from "./local";
 
 export const replaceSelectedText = (
   textEl: HTMLTextAreaElement,
@@ -122,7 +122,7 @@ export const findInText: IFindInTextOverloads = (
         : textEl.value.indexOf(value);
 
     if (i === -1) {
-      userAlert(getLocalizedString("not_found"));
+      userAlert(getText(textId.not_found));
     } else {
       textEl.focus();
       textEl.selectionStart = i;
@@ -131,7 +131,7 @@ export const findInText: IFindInTextOverloads = (
   } else {
     const regexExecArr = value.exec(textEl.value);
     if (!regexExecArr || regexExecArr.length === 0) {
-      userAlert(getLocalizedString("not_found"));
+      userAlert(getText(textId.not_found));
     } else {
       textEl.focus();
       textEl.selectionStart = regexExecArr.index;

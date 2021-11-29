@@ -1,6 +1,6 @@
 import { context } from "./context";
 import * as pdfMake from "pdfmake/build/pdfmake";
-import { getLocale, getLocalizedString } from "./local";
+import { getLocale, getText, textId } from "./local";
 import { getTitle } from "./session";
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import { defaultStyle, fonts, styles, syntaxStyles } from "./pdfStylesheet";
@@ -309,7 +309,7 @@ const mapDomToPdfContent = (el: Node): Content => {
 const toc: Content = {
   toc: {
     id: "mainToc",
-    title: { text: getLocalizedString("table_of_contents"), style: "h1" },
+    title: { text: getText(textId.table_of_contents), style: "h1" },
   },
   pageBreak: "after",
 };
@@ -329,7 +329,7 @@ const sources = (): Content => {
   return [
     {
       pageBreak: "before",
-      text: getLocalizedString("sources"),
+      text: getText(textId.sources),
       style: "h1",
       tocItem: "mainToc",
       tocStyle: "toc_h1",
@@ -409,19 +409,19 @@ document.body.addEventListener(
 
     context(ev, [
       {
-        label: getLocalizedString("export_pdf"),
+        label: getText(textId.export_pdf),
         action: () => {
           createPdf().open();
         },
       },
       {
-        label: getLocalizedString("download_pdf"),
+        label: getText(textId.download_pdf),
         action: () => {
           createPdf().download(getTitle() + ".pdf");
         },
       },
       {
-        label: getLocalizedString("print"),
+        label: getText(textId.print),
         action: () => {
           createPdf().print();
         },

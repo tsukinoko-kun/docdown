@@ -6,7 +6,7 @@ import {
 } from "@frank-mayer/magic/bin";
 import { h64 } from "xxhashjs";
 import { userAlert, userForm } from "./alert";
-import { getLocale, getLocalizedString } from "./local";
+import { getLocale, getText, textId } from "./local";
 
 import type { ContextOption } from "./context";
 
@@ -37,12 +37,12 @@ const sourceDataToString = (
     );
     const creationDate = sourceData.creationDate
       ? new Date(sourceData.creationDate).toLocaleDateString(getLocale())
-      : getLocalizedString("unknown");
+      : getText(textId.unknown);
     return [
       sourceData.author,
       sourceData.title,
-      getLocalizedString("creation_date") + " " + creationDate,
-      getLocalizedString("last_accessed_at") + " " + lastAcc,
+      getText(textId.creation_date) + " " + creationDate,
+      getText(textId.last_accessed_at) + " " + lastAcc,
       sourceData.link,
     ].join(", ");
   }
@@ -106,15 +106,15 @@ export const mapSources = <T>(callbackfn: (data: ISourceExport) => T): T[] => {
           author: sourceData.author,
           title: sourceData.title,
           creationDate:
-            getLocalizedString("creation_date") +
+            getText(textId.creation_date) +
             " " +
             (sourceData.creationDate
               ? new Date(sourceData.creationDate).toLocaleDateString(
                   getLocale()
                 )
-              : getLocalizedString("unknown")),
+              : getText(textId.unknown)),
           lastAccessed:
-            getLocalizedString("last_accessed_at") +
+            getText(textId.last_accessed_at) +
             " " +
             new Date(sourceData.lastAccessed).toLocaleDateString(getLocale()),
           link: sourceData.link,
@@ -122,7 +122,7 @@ export const mapSources = <T>(callbackfn: (data: ISourceExport) => T): T[] => {
         })
       );
     } else {
-      userAlert(`${getLocalizedString("unknown_source")} "${sourceId}"`);
+      userAlert(`${getText(textId.unknown_source)} "${sourceId}"`);
       returnValue.push(
         callbackfn({
           author: "",
@@ -199,36 +199,36 @@ class SourceData implements ISourceData {
 }
 
 const contextOptionAdd: ContextOption = {
-  label: getLocalizedString("add_source"),
+  label: getText(textId.add_source),
   action: () => {
     userForm([
       {
         name: "author",
-        label: getLocalizedString("author"),
+        label: getText(textId.author),
         required: true,
         type: "text",
       },
       {
         name: "title",
-        label: getLocalizedString("title"),
+        label: getText(textId.title),
         required: true,
         type: "text",
       },
       {
         name: "creationDate",
-        label: getLocalizedString("creation_date"),
+        label: getText(textId.creation_date),
         required: false,
         type: "date",
       },
       {
         name: "lastAccessed",
-        label: getLocalizedString("last_access"),
+        label: getText(textId.last_access),
         required: true,
         type: "date",
       },
       {
         name: "link",
-        label: getLocalizedString("link"),
+        label: getText(textId.link),
         required: true,
         type: "string",
       },
@@ -258,7 +258,7 @@ sourcesEl.addEventListener(
         context(ev, [
           contextOptionAdd,
           {
-            label: getLocalizedString("delete_source"),
+            label: getText(textId.delete_source),
             action: () => {
               sourcesRegister.delete(tEl!.id);
               deleteAllSubstringsInText(codeEl, `<src>${tEl!.id}</src>`);

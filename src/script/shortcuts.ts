@@ -8,7 +8,7 @@ import {
   textSelected,
 } from "./editor";
 import { createPdf } from "./export";
-import { getLocalizedString, language, setLocale } from "./local";
+import { getText, language, setLocale, textId } from "./local";
 import { loadLocal, saveLocal, setTitle, getTitle } from "./session";
 
 let mode: "code" | "display" | "both" = "both";
@@ -59,7 +59,7 @@ const findInCode = () => {
   userForm([
     {
       name: "searchValue",
-      label: getLocalizedString("find"),
+      label: getText(textId.find),
       required: true,
       type: "text",
       value: getSelectedText(codeEl),
@@ -80,20 +80,20 @@ const replaceInCode = () => {
   userForm([
     {
       name: "searchValue",
-      label: getLocalizedString("find"),
+      label: getText(textId.find),
       required: true,
       type: "text",
       value: getSelectedText(codeEl),
     },
     {
       name: "replaceValue",
-      label: getLocalizedString("replace"),
+      label: getText(textId.replace),
       required: true,
       type: "text",
     },
     {
       name: "replaceAll",
-      label: getLocalizedString("replace_all"),
+      label: getText(textId.replace_all),
       required: false,
       type: "checkbox",
     },
@@ -221,37 +221,21 @@ const showHelp = () => {
   userAlert(
     [
       '<table class="help">',
-      `<tr><th>${getLocalizedString("shortcut")}</th><th>${getLocalizedString(
-        "description"
-      )}</th></tr>`,
-      `<tr><td>F1</td><td>${getLocalizedString("show_help")}</td></tr>`,
-      `<tr><td>F2</td><td>${getLocalizedString("rename_file")}</td></tr>`,
-      `<tr><td>CTRL&nbsp;L</td><td>${getLocalizedString(
-        "set_language"
+      `<tr><th>${getText(textId.shortcut)}</th><th>${getText(textId.description)}</th></tr>`,
+      `<tr><td>F1</td><td>${getText(textId.show_help)}</td></tr>`,
+      `<tr><td>F2</td><td>${getText(textId.rename_file)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;L</td><td>${getText(textId.set_language)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;O</td><td>${getText(textId.open_local_file)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;S</td><td>${getText(textId.download_file)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;P</td><td>${getText(textId.print)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;F</td><td>${getText(textId.find)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&#8679;&nbsp;F</td><td>${getText(textId.find_and_replace
       )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;O</td><td>${getLocalizedString(
-        "open_local_file"
+      `<tr><td>CTRL&nbsp;E</td><td>${getText(textId.switch_code_render)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&#8679;&nbsp;E</td><td>${getText(textId.toggle_display_render
       )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;S</td><td>${getLocalizedString(
-        "download_file"
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;P</td><td>${getLocalizedString("print")}</td></tr>`,
-      `<tr><td>CTRL&nbsp;F</td><td>${getLocalizedString("find")}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&#8679;&nbsp;F</td><td>${getLocalizedString(
-        "find_and_replace"
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;E</td><td>${getLocalizedString(
-        "switch_code_render"
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&#8679;&nbsp;E</td><td>${getLocalizedString(
-        "toggle_display_render"
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&plus;</td><td>${getLocalizedString(
-        "zoom_in"
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&minus;</td><td>${getLocalizedString(
-        "zoom_out"
-      )}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&plus;</td><td>${getText(textId.zoom_in)}</td></tr>`,
+      `<tr><td>CTRL&nbsp;&minus;</td><td>${getText(textId.zoom_out)}</td></tr>`,
       "</table>",
     ].join(""),
     true
@@ -262,7 +246,7 @@ const renameFile = () => {
   userForm([
     {
       name: "newName",
-      label: getLocalizedString("rename_file"),
+      label: getText(textId.rename_file),
       required: true,
       type: "text",
       value: getTitle(),
@@ -280,7 +264,7 @@ const renameFile = () => {
 
 const switchLanguage = () => {
   userSelect<language>(
-    getLocalizedString("set_language"),
+    getText(textId.set_language),
     {
       label: "Deutsch",
       value: "de",
