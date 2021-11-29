@@ -36,7 +36,11 @@ type localTextID =
   | "untitled"
   | "unknown"
   | "table_of_contents"
-  | "guest_user";
+  | "guest_user"
+  | "line"
+  | "column"
+  | "selected"
+  | "words";
 
 const localStringMap: { [key in language]: { [key in localTextID]: string } } =
   {
@@ -78,6 +82,10 @@ const localStringMap: { [key in language]: { [key in localTextID]: string } } =
       unknown: "unbekannt",
       table_of_contents: "Inhaltsverzeichnis",
       guest_user: "Gastbenutzer",
+      line: "Zeile",
+      column: "Spalte",
+      selected: "Ausgewählt",
+      words: "Wörter",
     },
     en: {
       sources: "Sources",
@@ -116,6 +124,10 @@ const localStringMap: { [key in language]: { [key in localTextID]: string } } =
       unknown: "unknown",
       table_of_contents: "Table of contents",
       guest_user: "Guest user",
+      line: "Line",
+      column: "Column",
+      selected: "Selected",
+      words: "Words",
     },
   };
 

@@ -8,12 +8,12 @@ main {
   height: calc(100vh - #{2 * $gap});
   width: calc(100vw - #{2 * $gap});
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr 1fr auto;
   gap: $gap;
   margin: $gap;
   grid-auto-flow: row;
 
-  > *:not(#nav, #sources, #code, #display) {
+  > *:not(#nav, #sources, #code, #display, #statistics) {
     display: none !important;
   }
 
@@ -65,6 +65,18 @@ main {
       monospace !important;
   }
 
+  > #statistics {
+    user-select: none;
+    grid-area: statistics;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 $gap;
+    gap: 32px;
+    font-size: 0.8em;
+  }
+
   > #display {
     padding: 0.5em;
     grid-area: display;
@@ -86,14 +98,16 @@ body[view-mode="both"] > main {
   grid-template-columns: auto 1fr 1fr;
   grid-template-areas:
     "nav code display"
-    "sources code display";
+    "sources code display"
+    "statistics statistics statistics";
 }
 
 body[view-mode="code"] > main {
   grid-template-columns: auto 1fr;
   grid-template-areas:
     "nav code"
-    "sources code";
+    "sources code"
+    "statistics statistics";
 
   > #display {
     display: none;
@@ -102,11 +116,11 @@ body[view-mode="code"] > main {
 
 body[view-mode="display"] > main {
   grid-template-columns: auto 1fr;
-  grid-template-areas:
-    "nav display"
-    "sources display";
+  grid-template-areas: "nav display" "nav display" "statistics statistics";
 
-  > #code {
+  > #code,
+  > #sources,
+  > #statistics > #cursor {
     display: none;
   }
 }

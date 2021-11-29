@@ -5,6 +5,7 @@ import hljs from "highlight.js";
 import MD from "markdown-it";
 import { syncScroll } from "./syncScroll";
 import { tryPushLocalToDatabase } from "./session";
+import { countWords } from "./statistics";
 
 const md = new MD("commonmark", {
   breaks: false,
@@ -119,6 +120,7 @@ codeEl.addEventListener(
 
 window["triggerRender"] = () => {
   render(codeEl.value);
+  countWords();
   updateTableOfContents();
   tryPushLocalToDatabase();
 };
