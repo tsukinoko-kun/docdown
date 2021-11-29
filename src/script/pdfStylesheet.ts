@@ -176,7 +176,6 @@ export const styles: { [key in styleName]: Style } = {
   toc_h3: {
     fontSize: 14,
     opacity: 0.5,
-    leadingIndent: 4,
   },
   a: {
     color: dracula.blue.toString(),

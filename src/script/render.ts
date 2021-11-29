@@ -125,51 +125,12 @@ window["triggerRender"] = () => {
   tryPushLocalToDatabase();
 };
 
-codeEl.value = `# Title
-
-Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas, similique nam? Fugiat excepturi modi, dolorum incidunt provident, praesentium labore nulla, minima pariatur nisi corporis maiores natus aut amet doloremque error?
-
-## Foo
-
-[foobar](https://example.com)
-
-## Bar
-
-*foo* **bar**
-
-\`\`\`cpp
-// C++ Hello World Program
-
-#include <iostream>
-
-int main() {
-    std::cout << "Hello World!";
-    return 0;
-}
-\`\`\`
-
-\`\`\`typescript
-// TypeScript insertion sort
-
-import { compareable } from "./compareable";
-
-export const insertionSort = <T extends compareable>(arr: Array<T>): Array<T> => {
-  for (let i: number = 0; i < arr.length; i++) {
-    let j = i - 1;
-    let key = arr[i];
-
-    while (j > -1 && arr[j] > key) {
-      arr[j + 1] = arr[j];
-      j--;
-    }
-
-    arr[j + 1] = key;
-  }
-  return arr;
-}
-\`\`\`
-
-Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com)
+codeEl.value = `# List Test
+1. Item
+2. Item
+   * Mixed
+   * Mixed
+3. Item
 `;
 
 triggerRender();

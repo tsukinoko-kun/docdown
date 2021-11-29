@@ -6,6 +6,7 @@ import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import { defaultStyle, fonts, styles, syntaxStyles } from "./pdfStylesheet";
 import { getUser } from "./database";
 import { hasSources, mapSources } from "./sources";
+import { isNullOrWhitespace } from "./dataHelper";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
@@ -29,14 +30,6 @@ const getBase64Image = (img: HTMLImageElement) => {
   canvas.remove();
 
   return dataUrl;
-};
-
-const parseStyleData = (el: Element) => {
-  const styleData = window.getComputedStyle(el);
-  return {
-    fontSize: parseFloat(styleData.fontSize),
-    color: styleData.color,
-  };
 };
 
 const mapSyntaxToPdfContent = (el: Node): Content => {
@@ -130,36 +123,64 @@ const mapDomToPdfContent = (el: Node): Content => {
           text: h6.innerText,
           style: "h6",
         };
-      case "UL":
-        const ul = el as HTMLUListElement;
-        return {
-          ul: Array.from(ul.getElementsByTagName("li")).map((li) => {
-            if (li.children.length === 0) {
-              return {
-                text: li.innerText,
-                style: "list",
-                ...parseStyleData(li),
-              };
-            } else {
-              return mapDomToPdfContent(li);
-            }
-          }),
-        };
       case "OL":
-        const ol = el as HTMLOListElement;
-        return {
-          ol: Array.from(ol.getElementsByTagName("li")).map((li) => {
-            if (li.children.length === 0) {
-              return {
-                text: li.innerText,
-                style: "list",
-                ...parseStyleData(li),
-              };
+      case "UL":
+        const listEl = el as HTMLUListElement;
+        const parseListEl = (listEl: HTMLElement): Content => {
+          const parseListItem = (li: ChildNode): Content => {
+            if (li.nodeType === Node.TEXT_NODE) {
+              if (isNullOrWhitespace(li.textContent)) {
+                return [];
+              }
+              return li.textContent ?? [];
+            } else if (li.nodeType === Node.ELEMENT_NODE) {
+              const liEl = li as HTMLElement;
+              if (liEl.tagName === "LI") {
+                if (liEl.children.length === 0) {
+                  if (isNullOrWhitespace(liEl.textContent)) {
+                    return [];
+                  }
+                  return liEl.innerText;
+                } else {
+                  return Array.from(liEl.childNodes).map((c) => {
+                    if (c.nodeType === Node.TEXT_NODE) {
+                      if (isNullOrWhitespace(c.textContent)) {
+                        return [];
+                      }
+                      return c.textContent!;
+                    } else if (c.nodeType === Node.ELEMENT_NODE) {
+                      return parseListEl(c as HTMLElement);
+                    } else {
+                      return [];
+                    }
+                  });
+                }
+              } else {
+                return [];
+              }
             } else {
-              return mapDomToPdfContent(li);
+              return [];
             }
-          }),
+          };
+
+          if (listEl.tagName === "OL") {
+            return {
+              ol: Array.from(listEl.childNodes).map(parseListItem),
+              style: "list",
+            };
+          } else if (listEl.tagName === "UL") {
+            return {
+              ul: Array.from(listEl.childNodes).map(parseListItem),
+              style: "list",
+            };
+          } else {
+            return mapDomToPdfContent(listEl);
+          }
         };
+
+        return JSON.parse(
+          JSON.stringify(parseListEl(listEl)).replace(/\[\],/g, "")
+        );
       case "PRE":
         const pre = el as HTMLPreElement;
         if (pre.children.length === 0) {
@@ -200,7 +221,6 @@ const mapDomToPdfContent = (el: Node): Content => {
                 return {
                   text: td.innerText,
                   style: "table",
-                  ...parseStyleData(td),
                 };
               });
             }),
@@ -233,6 +253,45 @@ const mapDomToPdfContent = (el: Node): Content => {
               .map((el) => mapSyntaxToPdfContent(el))
               .flat(),
           };
+        }
+      case "BOLD":
+      case "STRONG":
+        const strong = el as HTMLElement;
+        if (strong.children.length === 0) {
+          return {
+            text: strong.innerText,
+            bold: true,
+          };
+        } else {
+          return Array.from(strong.childNodes)
+            .map((el) => mapDomToPdfContent(el))
+            .flat();
+        }
+      case "EM":
+      case "ITALIC":
+        const em = el as HTMLElement;
+        if (em.children.length === 0) {
+          return {
+            text: em.innerText,
+            italics: true,
+          };
+        } else {
+          return Array.from(em.childNodes)
+            .map((el) => mapDomToPdfContent(el))
+            .flat();
+        }
+      case "UNDERLINE":
+      case "U":
+        const u = el as HTMLElement;
+        if (u.children.length === 0) {
+          return {
+            text: u.innerText,
+            decoration: "underline",
+          };
+        } else {
+          return Array.from(u.childNodes)
+            .map((el) => mapDomToPdfContent(el))
+            .flat();
         }
       case "SUP":
         const sup = el as HTMLElement;
@@ -368,6 +427,7 @@ const createDocDefinition = (): TDocumentDefinitions => {
     header: {
       text: `${getTitle()} - ${new Date().toLocaleDateString(getLocale())}`,
       margin: [80, 20],
+      opacity: 0.5,
     },
     content: [
       title(),
@@ -382,6 +442,7 @@ const createDocDefinition = (): TDocumentDefinitions => {
             text: `${currentPage - 1}/${pageCount - 1}`,
             alignment: "right",
             margin: [40, 20],
+            opacity: 0.5,
           },
     compress: true,
     pageSize: "A4",
