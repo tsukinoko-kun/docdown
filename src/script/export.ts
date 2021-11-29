@@ -332,6 +332,7 @@ const sources = (): Content => {
       text: getLocalizedString("sources"),
       style: "h1",
       tocItem: "mainToc",
+      tocStyle: "toc_h1",
     },
     {
       ol: mapSources<Content>((s) => {
