@@ -229,12 +229,10 @@ const mapDomToPdfContent = (el: Node): Content | null => {
         const table = el as HTMLTableElement;
         return {
           table: {
-            body: Array.from(table.querySelectorAll("tr")).map((tr) => {
-              return Array.from(tr.querySelectorAll("td")).map((td) => {
-                return {
-                  text: td.innerText,
-                  style: "table",
-                };
+            layout: "lightHorizontalLines",
+            body: mapArrayAllowEmpty(Array.from(table.rows), (row) => {
+              return mapArrayAllowEmpty(Array.from(row.cells), (cell) => {
+                return mapDomToPdfContent(cell);
               });
             }),
           },

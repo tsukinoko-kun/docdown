@@ -7,10 +7,11 @@ import { syncScroll } from "./syncScroll";
 import { tryPushLocalToDatabase } from "./session";
 import { countWords } from "./statistics";
 
-const md = new MD("commonmark", {
+const md = new MD("default", {
   breaks: false,
   linkify: true,
   xhtmlOut: true,
+  typographer: true,
   html: true,
   quotes: "„“‚‘",
   highlight: (str, lang) => {
