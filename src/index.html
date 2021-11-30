@@ -1,9 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <style id="loadingStyle">
+      body:after {
+        content: " ";
+        position: fixed;
+        padding: 0;
+        margin: 0;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999999;
+        background-color: #44475a;
+        background-image: url(./image/icon.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 25vmin;
+        user-select: none;
+      }
+    </style>
+    <script id="loadingScript">
+      window.addEventListener(
+        "load",
+        () => {
+          document.getElementById("loadingStyle").remove();
+          document.getElementById("loadingScript").remove();
+        },
+        {
+          capture: false,
+          once: true,
+          passive: true,
+        }
+      );
+    </script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="canonical" content="https://markdowndoc.app" />
+    <meta name="description" content="Markdown-powered documentation tool" />
     <title>MarkDownDoc</title>
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="shortcut icon" href="./image/icon.svg" type="image/svg" />
