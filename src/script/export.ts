@@ -269,6 +269,7 @@ const mapDomToPdfContent = (el: Node): Content | null => {
                   return {
                     text: cell.innerText,
                     style: cell.tagName.toLowerCase(),
+                    alignment: "left",
                     fillColor: oddEven ? "#f2f2f2" : "white",
                   };
                 }
