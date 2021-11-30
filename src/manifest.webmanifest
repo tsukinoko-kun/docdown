@@ -4,8 +4,8 @@
   "description": "Markdown-powered documentation tool",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#282a36",
-  "background_color": "#282a36",
+  "theme_color": "#44475a",
+  "background_color": "#44475a",
   "icons": [
     {
       "src": "./image/icon.svg",
