@@ -233,9 +233,10 @@ const contextOptionAdd: ContextOption = {
       },
       {
         name: "link",
-        label: getText(textId.link),
+        label: getText(textId.link) + " (URL)",
+        placeholder: "https://example.com",
         required: true,
-        type: "string",
+        type: "url",
       },
     ])
       .then((data) => {
