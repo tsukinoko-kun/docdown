@@ -4,15 +4,23 @@
       "autoprefixer": {}
     }
   },
-  "browserslist": "> 10%, last 2 versions, not dead",
+  "browserslist": [
+    "last 3 and_chr versions",
+    "last 3 chrome versions",
+    "last 3 opera versions",
+    "last 3 ios_saf versions",
+    "last 3 safari versions"
+  ],
   "scripts": {
     "serve": "browser-sync start --server '.' --files '.' 'css/' --extensions 'html'",
-    "dev": "parcel serve 'src/index.html'",
+    "dev": "mkdir -p ./dist && cp ./src/sw.js ./dist/ && parcel serve 'src/index.html'",
     "clean": "rm -rf ./.parcel-cache && rm -rf ./dist",
-    "build": "parcel build 'src/index.html' --no-source-maps --no-cache"
+    "build": "mkdir -p ./dist && cp ./src/sw.js ./dist/ && parcel build 'src/index.html' --no-source-maps --no-cache"
   },
   "devDependencies": {
+    "@parcel/packager-raw-url": "^2.0.1",
     "@parcel/transformer-sass": "^2.0.1",
+    "@parcel/transformer-webmanifest": "^2.0.1",
     "@types/markdown-it": "^12.2.3",
     "@types/xxhashjs": "^0.2.2",
     "autoprefixer": "^10.4.0",

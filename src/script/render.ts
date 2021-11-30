@@ -157,7 +157,7 @@ Enable typographer option to see result.
 | b   | sit amet |
 | c   | consectetur adipiscing elit. |
 
-Icon by [freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com)
+Icons made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com)
 `;
 
 triggerRender();

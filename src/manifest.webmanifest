@@ -1,0 +1,35 @@
+{
+  "name": "MarkDownDoc",
+  "short_name": "MarkDownDoc",
+  "description": "Markdown-powered documentation tool",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#44475a",
+  "background_color": "#44475a",
+  "icons": [
+    {
+      "src": "./image/icon.svg",
+      "type": "image/svg"
+    },
+    {
+      "src": "./image/icon_32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "./image/icon_64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "./image/icon_128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "./image/icon_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
