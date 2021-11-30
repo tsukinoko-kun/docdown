@@ -73,7 +73,7 @@ const findInCode = () => {
     })
     .catch((err) => {
       if (err) {
-        console.error(err);
+        console.info(err);
       }
     });
 };
@@ -117,7 +117,7 @@ const replaceInCode = () => {
     })
     .catch((err) => {
       if (err) {
-        console.error(err);
+        console.info(err);
       }
     });
 };
@@ -267,7 +267,7 @@ const renameFile = () => {
     })
     .catch((err) => {
       if (err) {
-        console.error(err);
+        console.info(err);
       }
     });
 };
@@ -290,7 +290,7 @@ const switchLanguage = () => {
     })
     .catch((err) => {
       if (err) {
-        console.error(err);
+        console.info(err);
       }
     });
 };

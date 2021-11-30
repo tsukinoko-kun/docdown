@@ -138,7 +138,7 @@ export const setLocale = (language: language): void => {
   if (language in localStringMap) {
     currentLanguage = language;
   } else {
-    console.error(`Language ${language} not supported`);
+    console.info(`Language ${language} not supported`);
   }
 };
 

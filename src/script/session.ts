@@ -4,8 +4,7 @@ import {
   addDisposableEventListener,
   disposeNode,
 } from "@frank-mayer/magic/bin";
-import { userAlert, userForm } from "./alert";
-import { context } from "./context";
+import { userAlert, userForm, context } from "./alert";
 import { DataBase } from "./database";
 import { getLocale, getText, setLocale, textId } from "./local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
@@ -113,7 +112,7 @@ document.addEventListener(
               })
               .catch((err) => {
                 if (err) {
-                  console.error(err);
+                  console.info(err);
                 }
               });
           },

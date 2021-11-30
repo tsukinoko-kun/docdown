@@ -1,4 +1,4 @@
-import { context } from "./context";
+import { context } from "./alert";
 import * as pdfMake from "pdfmake/build/pdfmake";
 import { getLocale, getText, textId } from "./local";
 import { getTitle } from "./session";

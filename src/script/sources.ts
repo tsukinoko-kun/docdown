@@ -1,16 +1,15 @@
 /// <reference path="global.d.ts" />
 
-import { context } from "./context";
 import { insertText, deleteAllSubstringsInText } from "./editor";
 import {
   addDisposableEventListener,
   disposeNode,
 } from "@frank-mayer/magic/bin";
 import { h64 } from "xxhashjs";
-import { userAlert, userForm } from "./alert";
+import { userAlert, userForm, context } from "./alert";
 import { getLocale, getText, textId } from "./local";
 
-import type { ContextOption } from "./context";
+import type { ContextOption } from "./alert";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -242,7 +241,7 @@ const contextOptionAdd: ContextOption = {
       })
       .catch((err) => {
         if (err) {
-          console.error(err);
+          console.info(err);
         }
       });
   },
