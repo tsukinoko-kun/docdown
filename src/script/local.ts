@@ -45,8 +45,8 @@ export enum textId {
 
 const localStringMap: { [key in language]: { [key in textId]: string } } = {
   de: [
-    "Quellen",
-    "Unbekannte Quelle",
+    "Einzelnachweise",
+    "Quelle unbekannt",
     "Autor",
     "Titel",
     "Erstellungsdatum",
@@ -87,7 +87,7 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     "Wörter",
   ],
   en: [
-    "Sources",
+    "References",
     "Unknown source",
     "Author",
     "Title",
