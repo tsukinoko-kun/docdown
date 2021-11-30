@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MarkDownDoc</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="shortcut icon" href="./image/icon.svg" type="image/svg" />
   </head>
   <body>
@@ -28,5 +29,21 @@
 
     <link rel="stylesheet" href="./style/fonts.scss" />
     <link rel="stylesheet" href="./style/style.scss" media="screen" />
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register(new URL("./sw.js", location.href))
+          .then((registration) => {
+            console.log(
+              "Registration successful, scope is:",
+              registration.scope
+            );
+          })
+          .catch((error) => {
+            console.log("Service worker registration failed, error:", error);
+          });
+      }
+    </script>
   </body>
 </html>
