@@ -1,12 +1,15 @@
 const CACHE_NAME = "sw-cache-v1";
 
-const clearCache = (async () => {
-  const cache = await caches.open(CACHE_NAME);
-  const storedRequests = await cache.keys();
-  for (const req of storedRequests) {
-    console.debug("delete from cache", req);
-  }
-})();
+const clearCache = navigator.onLine
+  ? (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const storedRequests = await cache.keys();
+      for (const req of storedRequests) {
+        console.debug("delete from cache", req);
+        await cache.delete(req);
+      }
+    })()
+  : Promise.resolve();
 
 /** @type {RequestInit} */
 const CORS = {
