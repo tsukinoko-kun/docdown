@@ -36,6 +36,27 @@ const getBase64Image = (img: HTMLImageElement) => {
   return dataUrl;
 };
 
+export const sourcesJump = new Map<string, [Content]>();
+
+const addSourceJump = (sup: HTMLElement, sourceId: string) => {
+  console.debug("addSourceJump", sourceId);
+  const jumpArr = sourcesJump.get(sourceId);
+  if (jumpArr) {
+    sup.id = `${sourceId}_${jumpArr.length}`;
+    jumpArr.push({
+      text: "↑" + (jumpArr.length + 1),
+      style: "src",
+      linkToDestination: sup.id,
+    });
+    sourcesJump.set(sourceId, jumpArr);
+  } else {
+    sup.id = `${sourceId}_0`;
+    sourcesJump.set(sourceId, [
+      { text: "↑1", style: "src", linkToDestination: sup.id },
+    ]);
+  }
+};
+
 const mapSyntaxToPdfContent = (el: Node): Content | null => {
   if (el instanceof HTMLElement) {
     if (el.children.length === 0) {
@@ -336,7 +357,9 @@ const mapDomToPdfContent = (el: Node): Content | null => {
         const sup = el as HTMLElement;
         const src = sup.getAttribute("src");
         if (src) {
+          addSourceJump(sup, src);
           return {
+            id: sup.id,
             text: sup.innerText,
             style: "src",
             linkToDestination: src,
@@ -424,6 +447,8 @@ const sources = (): Content | null => {
     return null;
   }
 
+  console.debug(sourcesJump);
+
   return removeEmpty([
     {
       pageBreak: "before",
@@ -434,8 +459,10 @@ const sources = (): Content | null => {
     },
     {
       ol: mapSources<Content>((s) => {
+        console.debug(s.id, sourcesJump.get(s.id));
         return {
           text: [
+            ...sourcesJump.get(s.id)!,
             `${s.author}, ${s.title}, ${s.creationDate}, ${s.lastAccessed}, `,
             {
               text: s.link,
@@ -502,8 +529,10 @@ const createDocDefinition = (): TDocumentDefinitions => {
   return docDefinition;
 };
 
-export const createPdf = () =>
-  pdfMake.createPdf(createDocDefinition(), undefined, fonts);
+export const createPdf = () => {
+  sourcesJump.clear();
+  return pdfMake.createPdf(createDocDefinition(), undefined, fonts);
+};
 
 document.body.addEventListener(
   "contextmenu",
