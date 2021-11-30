@@ -8,6 +8,7 @@ import { userAlert, userForm, context } from "./alert";
 import { DataBase } from "./database";
 import { getLocale, getText, setLocale, textId } from "./local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
+import { getThemeId, setTheme } from "./theme";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
@@ -24,6 +25,7 @@ const session = {
       sources: exportSourcesJSON(),
       language: getLocale(),
       lastUpdate: Date.now(),
+      theme: getThemeId(),
     };
   },
 };
@@ -172,6 +174,7 @@ export const loadLocal = () => {
       setLocale(data.language);
       codeEl.value = data.code;
       importSourcesJSON(data.sources);
+      setTheme(data.theme);
       triggerRender();
       disposeNode(upload, true);
     };

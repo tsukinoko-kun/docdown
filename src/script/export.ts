@@ -488,7 +488,7 @@ const createDocDefinition = (): TDocumentDefinitions => {
       creator: getUser(),
     },
     defaultStyle,
-    styles,
+    styles: styles(),
     pageMargins: [80, 60, 80, 60],
     header: {
       text: `${getTitle()} - ${new Date().toLocaleDateString(getLocale())}`,

@@ -10,6 +10,7 @@ import JetBrainsMonoRegular from "../font/JetBrainsMono/JetBrainsMono-Regular.tt
 import JetBrainsMonoBold from "../font/JetBrainsMono/JetBrainsMono-Bold.ttf";
 import JetBrainsMonoItalic from "../font/JetBrainsMono/JetBrainsMono-Italic.ttf";
 import JetBrainsMonoBoldItalic from "../font/JetBrainsMono/JetBrainsMono-BoldItalic.ttf";
+import { getTheme } from "./theme";
 
 export const fonts: TFontDictionary = {
   NotoSans: {
@@ -134,11 +135,12 @@ type styleName =
   | "src"
   | "sub";
 
-export const styles: { [key in styleName]: Style } = {
+export const styles: () => { [key in styleName]: Style } = () => ({
   title: {
     fontSize: 32,
     bold: true,
     margin: [0, 10, 0, 2],
+    color: getTheme().color.toString(),
   },
   h1: {
     fontSize: 24,
@@ -187,7 +189,7 @@ export const styles: { [key in styleName]: Style } = {
     alignment: "left",
   },
   a: {
-    color: dracula.blue.toString(),
+    color: getTheme().color.toString(),
     decoration: "underline",
   },
   code: {
@@ -206,4 +208,4 @@ export const styles: { [key in styleName]: Style } = {
   sub: {
     sub: true,
   },
-};
+});

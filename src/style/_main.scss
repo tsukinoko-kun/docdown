@@ -75,6 +75,10 @@ main {
     padding: 0 $gap;
     gap: 32px;
     font-size: 0.8em;
+    > select {
+      background-color: transparent;
+      @include clickable;
+    }
   }
 
   > #display {
