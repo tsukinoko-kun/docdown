@@ -202,6 +202,7 @@ class SourceData implements ISourceData {
 const contextOptionAdd: ContextOption = {
   label: getText(textId.add_source),
   action: () => {
+    const today = new Date().toISOString().split("T")[0]!;
     userForm([
       {
         name: "author",
@@ -220,12 +221,15 @@ const contextOptionAdd: ContextOption = {
         label: getText(textId.creation_date),
         required: false,
         type: "date",
+        max: today,
       },
       {
         name: "lastAccessed",
         label: getText(textId.last_access),
         required: true,
         type: "date",
+        value: today,
+        max: today,
       },
       {
         name: "link",

@@ -98,6 +98,8 @@ export const userForm = <KEY extends string>(
     required: boolean;
     autocomplete?: string;
     value?: string;
+    min?: string | number;
+    max?: string | number;
   }>
 ) =>
   modal<{ [key in KEY]: string }>((resolve, reject) => {
@@ -122,6 +124,12 @@ export const userForm = <KEY extends string>(
       }
       if (queryEl.placeholder) {
         inputEl.placeholder = queryEl.placeholder;
+      }
+      if (queryEl.min) {
+        inputEl.min = queryEl.min.toString();
+      }
+      if (queryEl.max) {
+        inputEl.max = queryEl.max.toString();
       }
       if (queryEl.value) {
         if (queryEl.type === "checkbox") {
