@@ -227,14 +227,42 @@ const mapDomToPdfContent = (el: Node): Content | null => {
         }
       case "TABLE":
         const table = el as HTMLTableElement;
+
+        let headerRows = 0;
+        let oddEven = false;
+
         return {
           table: {
-            layout: "lightHorizontalLines",
+            widths: "auto",
+            layout: "headerLineOnly",
+            dontBreakRows: true,
             body: mapArrayAllowEmpty(Array.from(table.rows), (row) => {
-              return mapArrayAllowEmpty(Array.from(row.cells), (cell) => {
-                return mapDomToPdfContent(cell);
-              });
+              let containsTableHead = false;
+
+              const pdfRow = mapArrayAllowEmpty(
+                Array.from(row.cells),
+                (cell) => {
+                  if (cell.tagName === "TH") {
+                    containsTableHead = true;
+                  }
+                  return {
+                    text: cell.innerText,
+                    style: cell.tagName.toLowerCase(),
+                    fillColor: oddEven ? "#f2f2f2" : "white",
+                  };
+                }
+              );
+
+              if (containsTableHead) {
+                headerRows++;
+              }
+
+              oddEven = !oddEven;
+
+              return pdfRow;
             }),
+            headerRows,
+            keepWithHeaderRows: headerRows,
           },
         };
       case "A":
@@ -335,7 +363,7 @@ const mapDomToPdfContent = (el: Node): Content | null => {
               type: "line",
               x1: 0,
               y1: 0,
-              x2: 514,
+              x2: 434,
               y2: 0,
               lineWidth: 0.5,
               lineColor: "#BDBDBD",

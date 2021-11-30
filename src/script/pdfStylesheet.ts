@@ -126,6 +126,8 @@ type styleName =
   | "toc_h1"
   | "toc_h2"
   | "toc_h3"
+  | "th"
+  | "td"
   | "a"
   | "code"
   | "sup"
@@ -176,6 +178,13 @@ export const styles: { [key in styleName]: Style } = {
   toc_h3: {
     fontSize: 14,
     opacity: 0.5,
+  },
+  th: {
+    bold: true,
+    alignment: "left",
+  },
+  td: {
+    alignment: "left",
   },
   a: {
     color: dracula.blue.toString(),
