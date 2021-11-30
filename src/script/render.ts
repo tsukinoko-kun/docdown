@@ -1,3 +1,5 @@
+/// <reference path="global.d.ts" />
+
 import passive from "./passive";
 import { setUsedSources, sourceTag } from "./sources";
 import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
@@ -119,19 +121,43 @@ codeEl.addEventListener(
   passive
 );
 
-window["triggerRender"] = () => {
+(window as any)["triggerRender"] = () => {
   render(codeEl.value);
   countWords();
   updateTableOfContents();
   tryPushLocalToDatabase();
 };
 
-codeEl.value = `# List Test
-1. Item
-2. Item
-   * Mixed
-   * Mixed
-3. Item
+codeEl.value = `# h1 Heading
+## h2 Heading
+### h3 Heading
+#### h4 Heading
+##### h5 Heading
+###### h6 Heading
+
+## Horizontal Lines
+
+___
+
+---
+
+***
+
+## Typographic replacements
+
+Enable typographer option to see result.
+
+(c) (C) (r) (R) (tm) (TM) (p) (P) +-
+
+## Tables
+
+| Option | Description |
+| :---: | :---: |
+| a   | Lorem ipsum dolor |
+| b   | sit amet |
+| c   | consectetur adipiscing elit. |
+
+Icon by [freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com)
 `;
 
 triggerRender();

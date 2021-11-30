@@ -1,1 +1,1 @@
-function triggerRender(): void;
+declare function triggerRender(): void;

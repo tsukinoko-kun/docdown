@@ -1,3 +1,5 @@
+/// <reference path="global.d.ts" />
+
 import { context } from "./context";
 import { insertText, deleteAllSubstringsInText } from "./editor";
 import {
