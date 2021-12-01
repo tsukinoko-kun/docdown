@@ -2,6 +2,7 @@
 
 ::selection {
   background-color: $current-line;
+  color: $foreground;
 }
 
 @media (prefers-color-scheme: dark) {
