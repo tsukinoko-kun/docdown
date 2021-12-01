@@ -136,3 +136,10 @@ body[view-mode="display"] > main {
     display: none;
   }
 }
+
+table {
+  td,
+  th {
+    text-align: left !important;
+  }
+}
