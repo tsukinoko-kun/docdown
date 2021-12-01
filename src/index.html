@@ -23,21 +23,7 @@
         }
       );
     </script>
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register(new URL("/sw.js", location.href))
-          .then((registration) => {
-            console.info(
-              "Registration successful, scope is:",
-              registration.scope
-            );
-          })
-          .catch((error) => {
-            console.error("Service worker registration failed, error:", error);
-          });
-      }
-    </script>
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="canonical" content="https://docdown.app" />
@@ -83,5 +69,21 @@
       href="./style/portrait.scss"
       media="screen and (orientation: portrait)"
     />
+
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register(new URL("/sw.js", location.href))
+          .then((registration) => {
+            console.info(
+              "Registration successful, scope is:",
+              registration.scope
+            );
+          })
+          .catch((error) => {
+            console.error("Service worker registration failed, error:", error);
+          });
+      }
+    </script>
   </body>
 </html>
