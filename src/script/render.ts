@@ -8,6 +8,7 @@ import MD from "markdown-it";
 import { syncScroll } from "./syncScroll";
 import { tryPushLocalToDatabase } from "./session";
 import { countWords } from "./statistics";
+import { download, gsb } from "./database";
 
 const md = new MD("default", {
   breaks: false,
@@ -50,6 +51,21 @@ const manipulateRenderedAnchors = () => {
         passive: false,
       }
     );
+  }
+};
+
+const resolveImages = () => {
+  for (const img of Array.from(displayEl.getElementsByTagName("img"))) {
+    const src = img.src;
+    if (src && src.startsWith(gsb)) {
+      download(src)
+        .then((url) => {
+          img.src = url;
+        })
+        .catch((err) => {
+          console.error("download error!!!", err);
+        });
+    }
   }
 };
 
@@ -103,6 +119,7 @@ const render = (markdown: string) => {
   setUsedSources(sources);
 
   manipulateRenderedAnchors();
+  resolveImages();
 };
 
 let renderDelayId: number | null = null;

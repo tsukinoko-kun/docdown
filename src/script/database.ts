@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 
 import {
   getDatabase,
-  ref,
+  ref as dbRef,
   set,
   onValue,
   onChildAdded,
@@ -20,6 +20,14 @@ import { userAlert, userForm } from "./alert";
 
 import type { DataSnapshot, Unsubscribe } from "firebase/database";
 import type { User } from "firebase/auth";
+
+import {
+  getStorage,
+  ref as storeRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+
 import { getText, textId } from "./local";
 
 const firebaseConfig = {
@@ -106,6 +114,8 @@ interface DatabaseEventMap {
   child_removed: (snapshot: DataSnapshot) => unknown;
 }
 
+const storage = getStorage();
+
 export class DataBase {
   private path: string;
   private unsubscribes: Array<Unsubscribe>;
@@ -119,7 +129,7 @@ export class DataBase {
     return new Promise((resolve, reject) => {
       enshureLoggedIn()
         .then(() => {
-          set(ref(db, this.path + "/" + path.join("/")), value)
+          set(dbRef(db, this.path + "/" + path.join("/")), value)
             .then(resolve)
             .catch(reject);
         })
@@ -139,23 +149,23 @@ export class DataBase {
     enshureLoggedIn()
       .then(() => {
         let unsubscribe: Unsubscribe;
-        const dbRef = ref(db, this.path + "/" + path.join("/"));
+        const dbr = dbRef(db, this.path + "/" + path.join("/"));
 
         switch (type) {
           case "value":
-            unsubscribe = onValue(dbRef, listener as any);
+            unsubscribe = onValue(dbr, listener as any);
             break;
           case "child_added":
-            unsubscribe = onChildAdded(dbRef, listener as any);
+            unsubscribe = onChildAdded(dbr, listener as any);
             break;
           case "child_changed":
-            unsubscribe = onChildChanged(dbRef, listener as any);
+            unsubscribe = onChildChanged(dbr, listener as any);
             break;
           case "child_moved":
-            unsubscribe = onChildMoved(dbRef, listener as any);
+            unsubscribe = onChildMoved(dbr, listener as any);
             break;
           case "child_removed":
-            unsubscribe = onChildRemoved(dbRef, listener as any);
+            unsubscribe = onChildRemoved(dbr, listener as any);
             break;
           default:
             throw new Error(`Unknown event type "${type}"`);
@@ -172,3 +182,46 @@ export class DataBase {
     }
   }
 }
+
+export const gsb = "gs://docdown.app/";
+const downloadUrlCache = new Map<string, string>();
+
+export const upload = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    enshureLoggedIn()
+      .then((u) => {
+        const onlineLocation = u.uid + "/" + file.name;
+        const uploadRef = storeRef(storage, onlineLocation);
+        uploadBytes(uploadRef, file)
+          .then((ur) => {
+            getDownloadURL(ur.ref)
+              .then((url) => {
+                const gsbUrl = gsb + onlineLocation;
+                downloadUrlCache.set(gsbUrl, url);
+                resolve(gsbUrl);
+              })
+              .catch(reject);
+          })
+          .catch(reject);
+      })
+      .catch(reject);
+  });
+
+export const download = (path: string): Promise<string> =>
+  new Promise((resolve, reject) => {
+    if (downloadUrlCache.has(path)) {
+      resolve(downloadUrlCache.get(path) as string);
+      return;
+    }
+
+    enshureLoggedIn()
+      .then(() => {
+        getDownloadURL(storeRef(storage, path.replace(gsb, "")))
+          .then((url) => {
+            downloadUrlCache.set(path, url);
+            resolve(url);
+          })
+          .catch(reject);
+      })
+      .catch(reject);
+  });

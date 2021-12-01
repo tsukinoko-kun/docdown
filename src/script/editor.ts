@@ -3,7 +3,9 @@ import { getText, textId } from "./local";
 
 export const replaceSelectedText = (
   textEl: HTMLTextAreaElement,
-  replacement: (selected: string, start: number, end: number) => string,
+  replacement:
+    | string
+    | ((selected: string, start: number, end: number) => string),
   insertIfNoSelection = true
 ): boolean => {
   const start = textEl.selectionStart ?? 0;
@@ -14,7 +16,10 @@ export const replaceSelectedText = (
   }
 
   const selected = textEl.value.substring(start, end);
-  const newText = replacement(selected, start, end);
+  const newText =
+    typeof replacement === "string"
+      ? replacement
+      : replacement(selected, start, end);
   textEl.value =
     textEl.value.substring(0, start) + newText + textEl.value.substring(end);
   textEl.selectionStart = start;

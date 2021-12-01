@@ -58,6 +58,7 @@ export enum textId {
   yes,
   no,
   next,
+  file_too_big,
 }
 
 const future = new Date().getFullYear() + 24;
@@ -119,6 +120,7 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     "Ja",
     "Nein",
     "Weiter",
+    "Die Datei ist zu groß!",
   ],
   en: [
     "References",
@@ -176,6 +178,7 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     "Yes",
     "No",
     "Next",
+    "The file is too big!",
   ],
 };
 

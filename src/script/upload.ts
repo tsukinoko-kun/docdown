@@ -1,4 +1,7 @@
-import { setLocale } from "./local";
+import { userAlert } from "./alert";
+import { upload } from "./database";
+import { replaceSelectedText } from "./editor";
+import { getText, setLocale, textId } from "./local";
 import { setTitle } from "./session";
 import { importSourcesJSON } from "./sources";
 import { setTheme } from "./theme";
@@ -25,6 +28,11 @@ const dropFile = (ev: DragEvent) => {
     return;
   }
 
+  if (file.size > 1048576) {
+    userAlert(getText(textId.file_too_big) + ` (${file.size / 1048576} MiB)`);
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = () => {
     if (file.name.endsWith(".ddd")) {
@@ -34,13 +42,27 @@ const dropFile = (ev: DragEvent) => {
       codeEl.value = data.code;
       importSourcesJSON(data.sources);
       setTheme(data.theme);
+      triggerRender();
     } else if (file.name.endsWith(".md")) {
       setTitle(file.name.substring(0, file.name.length - 3));
       codeEl.value = reader.result as string;
       importSourcesJSON([] as any);
+      triggerRender();
+    } else if (
+      document.activeElement === codeEl &&
+      file.type.startsWith("image/")
+    ) {
+      upload(file)
+        .then((url) => {
+          replaceSelectedText(codeEl, `![${file.name}](${url})`);
+          triggerRender();
+        })
+        .catch((err) => {
+          if (err) {
+            console.info(err);
+          }
+        });
     }
-
-    triggerRender();
   };
 
   reader.readAsText(file);

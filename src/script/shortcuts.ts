@@ -165,7 +165,7 @@ const newline = () => {
         insertText(codeEl, "\n", false);
       }
     } else {
-      replaceSelectedText(codeEl, () => "\n");
+      replaceSelectedText(codeEl, "\n");
     }
     triggerRender();
   }
