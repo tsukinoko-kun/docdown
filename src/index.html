@@ -3,25 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>docdown</title>
-    <style id="loadingStyle">
-      body:after {
-        content: " ";
-        position: fixed;
-        padding: 0;
-        margin: 0;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 9999999;
-        background-color: #44475a;
-        background-image: url(./image/icon.svg);
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 25vmin;
-        user-select: none;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="./style/loading.scss"
+      id="loadingStyle"
+      media="screen"
+    />
     <script id="loadingScript">
       window.addEventListener(
         "load",
@@ -85,6 +72,15 @@
     <script src="./script/tutorial.ts" type="module"></script>
 
     <link rel="stylesheet" href="./style/fonts.scss" />
-    <link rel="stylesheet" href="./style/style.scss" media="screen" />
+    <link
+      rel="stylesheet"
+      href="./style/style.scss"
+      media="screen and (orientation: landscape)"
+    />
+    <link
+      rel="stylesheet"
+      href="./style/portrait.scss"
+      media="screen and (orientation: portrait)"
+    />
   </body>
 </html>
