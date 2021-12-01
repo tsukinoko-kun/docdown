@@ -1,6 +1,6 @@
 {
-  "name": "MarkDownDoc",
-  "short_name": "MarkDownDoc",
+  "name": "docdown",
+  "short_name": "docdown",
   "description": "Markdown-powered documentation tool",
   "start_url": "/",
   "display": "standalone",
