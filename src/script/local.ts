@@ -1,3 +1,5 @@
+const htmlEl = document.documentElement;
+
 export type language = "en" | "de";
 
 export enum textId {
@@ -45,7 +47,21 @@ export enum textId {
   ocean,
   lime,
   magma,
+  tutorial_0,
+  tutorial_1,
+  tutorial_2,
+  tutorial_3,
+  tutorial_4,
+  tutorial_5,
+  tutorial_6,
+  tutorial_7,
+  tutorial_8,
+  yes,
+  no,
+  next,
 }
+
+const future = new Date().getFullYear() + 24;
 
 const localStringMap: { [key in language]: { [key in textId]: string } } = {
   de: [
@@ -93,6 +109,18 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     "Ozean",
     "Limette",
     "Magma",
+    "Möchtest Du die Anleitung zu docdown starten? Du kannst sie auch später über den Fragezeichen-Button am unteren Bildschirmrand starten.",
+    `Mein Name ist Dr. Emmett Down, diese Technologie habe ich aus dem Jahr ${future} mitgebracht! Ich erkläre Dir das notwendigste kurz und knapp. Hoffentlich brennen Dir bei der folgenden Erklärung nicht die Schaltkreise durch!`,
+    "In dem Textfeld in der Mitte des Fensters kannst Du Deine Dokumentation in Markdown schreiben, Markdown ist auch in diesem Jahr schon bekannt, oder?",
+    "Auf der rechten Seite wird Dir Deine Dokumentation in HTML angezeigt.",
+    "Mit der Tastenkombination STRG E kannst Du zwischen der Markdown und der HTML-Anzeige wechseln, mit STRG &#8679; E wird die Vorschauanzeige neben dem Code an- oder ausgeschaltet. Versuch es doch gleich mal!",
+    "Über das Rechtsklick-Menü kann das Dokument zu PDF exportiert oder ganz altmodisch gedruckt werden.",
+    "Unten links befindet sich eine Liste deiner Quellen. Über das Rechtsklick-Menü kannst Du eine Quelle hinzufügen, löschen oder bearbeiten.\nUm eine Quelle zu verwenden, klicke zuerst im Markdown-Editor an die gewünschte Stelle und wähle danach eine Quelle aus der Liste aus.\nUm eine verwendete Quelle wieder zu entfernen, lösche einfach den src Tag im Markdown.",
+    "Verwende die F1 Taste, um die Hilfe zu öffnen, dort findest Du einige sehr nützliche Tastenkürzel.",
+    "Das war’s erst mal, ich muss jetzt zurück in die Zukunft, bis bald!",
+    "Ja",
+    "Nein",
+    "Weiter",
   ],
   en: [
     "References",
@@ -139,19 +167,34 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     "Ocean",
     "Lime",
     "Magma",
+    "Would you like to learn how to use docdown? You can also do that later by clicking the question mark button at the bottom of the screen.",
+    `My name is Dr. Emmett Down, I brought this technology from ${future}! I explain you the most necessary briefly and concisely. Hopefully the following explanation will not burn out your circuits!`,
+    "In the text field in the middle of the window you can write your documentation in Markdown, Markdown is already known this year, right?",
+    "On the right side, you will see your documentation in HTML.",
+    "CTRL E lets you switch between the Markdown and HTML display, CTRL &#8679; E toggles the preview display next to the code on or off.",
+    "Using the right-click menu, the document can be exported to PDF or printed the old-fashioned way.",
+    "At the bottom left is a list of your sources. Use the right-click menu to add, delete or edit a source.\nTo use a source, first click on the desired location in the Markdown editor and then select a source from the list.\nTo remove a used source, simply delete the src tag in Markdown.",
+    "Use the F1 key to open the help, there you will find some very useful keyboard shortcuts.",
+    "That's it for now, I have to get back to the future, see you soon!",
+    "Yes",
+    "No",
+    "Next",
   ],
 };
 
-let currentLanguage: language = navigator.language.includes("de") ? "de" : "en";
+let currentLanguage: language;
 
 export const getLocale = (): language => currentLanguage;
 
 export const setLocale = (language: language): void => {
   if (language in localStringMap) {
     currentLanguage = language;
+    htmlEl.lang = language;
   } else {
-    console.info(`Language ${language} not supported`);
+    throw new Error(`Language ${language} not supported`);
   }
 };
+
+setLocale(navigator.language.includes("de") ? "de" : "en");
 
 export const getText = (id: textId) => localStringMap[currentLanguage][id];

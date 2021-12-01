@@ -225,7 +225,7 @@ export const userSelect = <T extends any>(
     ul.classList.add("interactable");
 
     const titleEl = document.createElement("p");
-    titleEl.innerText = title + ":";
+    titleEl.innerText = title;
     titleEl.style.pointerEvents = "none";
     ul.appendChild(titleEl);
 

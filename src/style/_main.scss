@@ -75,9 +75,14 @@ main {
     padding: 0 $gap;
     gap: 32px;
     font-size: 0.8em;
-    > select {
+    > * {
       background-color: transparent;
+    }
+    > .clickable {
       @include clickable;
+    }
+    > #repeat-tutorial {
+      cursor: help !important;
     }
   }
 

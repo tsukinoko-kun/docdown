@@ -32,7 +32,7 @@ const session = {
 
 export const setTitle = (title: string, render = true) => {
   session.title = title;
-  document.title = `MarkDownDoc - ${title}`;
+  document.title = `docdown - ${title}`;
   if (render) {
     triggerRender();
   }
