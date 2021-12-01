@@ -76,9 +76,12 @@ main {
     gap: 32px;
     font-size: 0.8em;
     > * {
+      color: $foreground;
       background-color: transparent;
     }
     > .clickable {
+      background-color: transparent;
+      text-decoration: none;
       @include clickable;
     }
     > #repeat-tutorial {
