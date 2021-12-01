@@ -1,14 +1,10 @@
 /// <reference path="global.d.ts" />
 
-import {
-  addDisposableEventListener,
-  disposeNode,
-} from "@frank-mayer/magic/bin";
 import { userAlert, userForm, context } from "./alert";
 import { DataBase } from "./database";
-import { getLocale, getText, setLocale, textId } from "./local";
+import { getLocale, getText, textId } from "./local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
-import { getThemeId, setTheme } from "./theme";
+import { getThemeId } from "./theme";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
@@ -146,39 +142,11 @@ export const saveLocal = () => {
     "data:text/json;charset=utf-8," +
       encodeURIComponent(JSON.stringify(session.getLocalData()))
   );
-  a.setAttribute("download", session.title + ".mdd");
+  a.setAttribute("download", session.title + ".ddd"); // doc down document
 
   a.style.display = "none";
   document.body.appendChild(a);
 
   a.click();
   a.remove();
-};
-
-export const loadLocal = () => {
-  const upload = document.createElement("input");
-  upload.setAttribute("type", "file");
-  upload.setAttribute("accept", ".mdd");
-  upload.style.display = "none";
-  addDisposableEventListener(upload, "change", () => {
-    if (!upload.files || upload.files.length === 0) {
-      disposeNode(upload, true);
-      return;
-    }
-
-    const file = upload.files[0]!;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const data = JSON.parse(reader.result as string);
-      setTitle(data.title);
-      setLocale(data.language);
-      codeEl.value = data.code;
-      importSourcesJSON(data.sources);
-      setTheme(data.theme);
-      triggerRender();
-      disposeNode(upload, true);
-    };
-    reader.readAsText(file);
-  });
-  upload.click();
 };

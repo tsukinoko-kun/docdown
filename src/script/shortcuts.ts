@@ -11,7 +11,7 @@ import {
 } from "./editor";
 import { createPdf } from "./export";
 import { getText, language, setLocale, textId } from "./local";
-import { loadLocal, saveLocal, setTitle, getTitle } from "./session";
+import { saveLocal, setTitle, getTitle } from "./session";
 
 let mode: "code" | "display" | "both" = "both";
 
@@ -221,33 +221,28 @@ const surround = (char: string, alt: boolean): boolean => {
 
 const showHelp = () => {
   userAlert(
-    [
-      '<table class="help">',
-      `<tr><th>${getText(textId.shortcut)}</th><th>${getText(
-        textId.description
-      )}</th></tr>`,
-      `<tr><td>F1</td><td>${getText(textId.show_help)}</td></tr>`,
-      `<tr><td>F2</td><td>${getText(textId.rename_file)}</td></tr>`,
-      `<tr><td>CTRL&nbsp;L</td><td>${getText(textId.set_language)}</td></tr>`,
-      `<tr><td>CTRL&nbsp;O</td><td>${getText(
-        textId.open_local_file
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;S</td><td>${getText(textId.download_file)}</td></tr>`,
-      `<tr><td>CTRL&nbsp;P</td><td>${getText(textId.print)}</td></tr>`,
-      `<tr><td>CTRL&nbsp;F</td><td>${getText(textId.find)}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&#8679;&nbsp;F</td><td>${getText(
+    `<table class="help">
+      <tr><th>${getText(textId.shortcut)}</th><th>${getText(
+      textId.description
+    )}</th></tr>
+      <tr><td>F1</td><td>${getText(textId.show_help)}</td></tr>
+      <tr><td>F2</td><td>${getText(textId.rename_file)}</td></tr>
+      <tr><td>CTRL&nbsp;L</td><td>${getText(textId.set_language)}</td></tr>
+      <tr><td>CTRL&nbsp;S</td><td>${getText(textId.download_file)}</td></tr>
+      <tr><td>CTRL&nbsp;P</td><td>${getText(textId.print)}</td></tr>
+      <tr><td>CTRL&nbsp;F</td><td>${getText(textId.find)}</td></tr>
+      <tr><td>CTRL&nbsp;&#8679;&nbsp;F</td><td>${getText(
         textId.find_and_replace
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;E</td><td>${getText(
+      )}</td></tr>
+      <tr><td>CTRL&nbsp;E</td><td>${getText(
         textId.switch_code_render
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&#8679;&nbsp;E</td><td>${getText(
+      )}</td></tr>
+      <tr><td>CTRL&nbsp;&#8679;&nbsp;E</td><td>${getText(
         textId.toggle_display_render
-      )}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&plus;</td><td>${getText(textId.zoom_in)}</td></tr>`,
-      `<tr><td>CTRL&nbsp;&minus;</td><td>${getText(textId.zoom_out)}</td></tr>`,
-      "</table>",
-    ].join(""),
+      )}</td></tr>
+      <tr><td>CTRL&nbsp;&plus;</td><td>${getText(textId.zoom_in)}</td></tr>
+      <tr><td>CTRL&nbsp;&minus;</td><td>${getText(textId.zoom_out)}</td></tr>
+      </table>`,
     true
   );
 };
@@ -312,17 +307,10 @@ window.addEventListener(
           ev.preventDefault();
           toggleViewMode(ev.shiftKey);
           break;
-
         case "s":
           ev.preventDefault();
           saveLocal();
           break;
-
-        case "o":
-          ev.preventDefault();
-          loadLocal();
-          break;
-
         case "f":
           ev.preventDefault();
           if (!ev.shiftKey) {
