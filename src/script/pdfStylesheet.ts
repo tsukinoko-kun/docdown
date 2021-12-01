@@ -203,7 +203,7 @@ export const styles: () => { [key in styleName]: Style } = () => ({
   },
   src: {
     sup: true,
-    color: dracula.blue.toString(),
+    color: getTheme().color.toString(),
   },
   sub: {
     sub: true,
