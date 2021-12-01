@@ -39,7 +39,6 @@ const getBase64Image = (img: HTMLImageElement) => {
 export const sourcesJump = new Map<string, [Content]>();
 
 const addSourceJump = (sup: HTMLElement, sourceId: string) => {
-  console.debug("addSourceJump", sourceId);
   const jumpArr = sourcesJump.get(sourceId);
   if (jumpArr) {
     sup.id = `${sourceId}_${jumpArr.length}`;
@@ -448,8 +447,6 @@ const sources = (): Content | null => {
     return null;
   }
 
-  console.debug(sourcesJump);
-
   return removeEmpty([
     {
       pageBreak: "before",
@@ -460,7 +457,6 @@ const sources = (): Content | null => {
     },
     {
       ol: mapSources<Content>((s) => {
-        console.debug(s.id, sourcesJump.get(s.id));
         return {
           text: [
             ...sourcesJump.get(s.id)!,

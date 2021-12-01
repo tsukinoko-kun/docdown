@@ -28,13 +28,13 @@
         navigator.serviceWorker
           .register(new URL("/sw.js", location.href))
           .then((registration) => {
-            console.log(
+            console.info(
               "Registration successful, scope is:",
               registration.scope
             );
           })
           .catch((error) => {
-            console.log("Service worker registration failed, error:", error);
+            console.error("Service worker registration failed, error:", error);
           });
       }
     </script>

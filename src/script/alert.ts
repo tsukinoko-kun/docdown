@@ -265,7 +265,6 @@ export const userSelect = <T extends any>(
  */
 export const cancelAllAlerts = () => {
   for (const [id, cancel] of activeModalPromises) {
-    console.debug("Cancelled alert dialog", id);
     cancel();
   }
 
