@@ -73,6 +73,8 @@ const askToStartTutorial = () => {
     .then((value) => {
       if (value) {
         startTutorial();
+      } else {
+        localStorage.setItem("tutorial", "canceled");
       }
     })
     .catch((err) => {
