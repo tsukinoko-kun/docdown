@@ -56,6 +56,11 @@ type IAlertOverload = {
    * Show alert dialog with a custom html message.
    */
   (messageHtml: string, asHtml: true): Promise<void>;
+
+  /**
+   * Show alert dialog with any data.
+   */
+  (message: any): Promise<void>;
 };
 export const userAlert: IAlertOverload = (message: string, asHtml = false) =>
   modal<void>((resolve) => {
@@ -64,10 +69,14 @@ export const userAlert: IAlertOverload = (message: string, asHtml = false) =>
 
     const p = document.createElement("p");
     alert.appendChild(p);
-    if (asHtml) {
-      p.outerHTML = message;
+    if (typeof message === "string") {
+      if (asHtml) {
+        p.outerHTML = message;
+      } else {
+        p.innerText = message;
+      }
     } else {
-      p.innerText = message;
+      p.innerText = String(message);
     }
 
     document.body.appendChild(alert);
@@ -264,7 +273,8 @@ export const userSelect = <T extends any>(
  * Cancel all open alert dialogs.
  */
 export const cancelAllAlerts = () => {
-  for (const [id, cancel] of activeModalPromises) {
+  for (const [id, cancel] of Array.from(activeModalPromises)) {
+    activeModalPromises.delete(id);
     cancel();
   }
 
@@ -311,6 +321,7 @@ export const context = (
       activeModalPromises.delete(localModalId);
       contextOptions.clear();
     };
+
     activeModalPromises.set(localModalId, clear);
 
     ct.classList.add("alert");
@@ -348,7 +359,16 @@ export const context = (
       "click",
       (ev) => {
         option.action(ev);
-        activeModalPromises.get(localModalId)!();
+        const f = activeModalPromises.get(localModalId);
+        if (f) {
+          f();
+        } else {
+          const cts = document.getElementsByClassName("context");
+          for (const ct of Array.from(cts)) {
+            disposeNode(ct, true);
+          }
+          contextOptions.clear();
+        }
       },
       {
         capture: true,

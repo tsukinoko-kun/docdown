@@ -1,10 +1,8 @@
 import { userAlert } from "./alert";
 import { upload } from "./database";
 import { replaceSelectedText } from "./editor";
-import { getText, setLocale, textId } from "./local";
-import { setTitle } from "./session";
-import { importSourcesJSON } from "./sources";
-import { setTheme } from "./theme";
+import { getText, textId } from "./local";
+import { importData } from "./session";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
@@ -36,18 +34,12 @@ const dropFile = (ev: DragEvent) => {
   const reader = new FileReader();
   reader.onload = () => {
     if (file.name.endsWith(".ddd")) {
-      const data = JSON.parse(reader.result as string);
-      setTitle(data.title);
-      setLocale(data.language);
-      codeEl.value = data.code;
-      importSourcesJSON(data.sources);
-      setTheme(data.theme);
-      triggerRender();
+      importData(JSON.parse(reader.result as string));
     } else if (file.name.endsWith(".md")) {
-      setTitle(file.name.substring(0, file.name.length - 3));
-      codeEl.value = reader.result as string;
-      importSourcesJSON([] as any);
-      triggerRender();
+      importData({
+        title: file.name.substring(0, file.name.length - 3),
+        code: reader.result as string,
+      });
     } else if (
       document.activeElement === codeEl &&
       file.type.startsWith("image/")

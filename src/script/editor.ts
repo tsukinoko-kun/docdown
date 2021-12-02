@@ -1,5 +1,6 @@
 import { userAlert } from "./alert";
 import { getText, textId } from "./local";
+import { mod, sendMessage, service } from "./router";
 
 export const replaceSelectedText = (
   textEl: HTMLTextAreaElement,
@@ -24,6 +25,10 @@ export const replaceSelectedText = (
     textEl.value.substring(0, start) + newText + textEl.value.substring(end);
   textEl.selectionStart = start;
   textEl.selectionEnd = start + newText.length;
+
+  sendMessage(mod.session, service.setChanged, {
+    code: textEl.value,
+  });
 
   return true;
 };
@@ -51,6 +56,10 @@ export const insertText = (
   } else {
     textEl.selectionEnd = textEl.selectionStart = start + textToInsert.length;
   }
+
+  sendMessage(mod.session, service.setChanged, {
+    code: textEl.value,
+  });
 };
 
 export const deleteAllSubstringsInText = (
@@ -75,6 +84,10 @@ export const deleteAllSubstringsInText = (
   const newEnd = newStart + b.length;
   textEl.selectionStart = newStart;
   textEl.selectionEnd = newEnd;
+
+  sendMessage(mod.session, service.setChanged, {
+    code: textEl.value,
+  });
 };
 
 export const replaceAllSubstringsInText = (
@@ -106,6 +119,10 @@ export const replaceAllSubstringsInText = (
   const newEnd = newStart + b.length;
   textEl.selectionStart = newStart;
   textEl.selectionEnd = newEnd;
+
+  sendMessage(mod.session, service.setChanged, {
+    code: textEl.value,
+  });
 };
 
 type IFindInTextOverloads = {

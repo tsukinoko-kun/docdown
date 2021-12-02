@@ -10,13 +10,14 @@ import { userAlert, userForm, context } from "./alert";
 import { getLocale, getText, textId } from "./local";
 
 import type { ContextOption } from "./alert";
+import { mod, sendMessage, service } from "./router";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
 const hashSeed = 0x12345678;
 
-interface ISourceData {
+export interface ISourceData {
   id: string;
   author: string;
   title: string;
@@ -243,6 +244,9 @@ const contextOptionAdd: ContextOption = {
         const sourceData = SourceData.from(data);
         sourcesRegister.set(sourceData.id, sourceData);
         sourcesEl.appendChild(createLiFromSource(sourceData));
+        sendMessage(mod.session, service.setChanged, {
+          sources: exportSourcesJSON(),
+        });
       })
       .catch((err) => {
         if (err) {

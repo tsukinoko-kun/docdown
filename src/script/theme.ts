@@ -1,6 +1,7 @@
 import { Color } from "./dataHelper";
 import draculaLight from "./dracula";
 import { getText, textId } from "./local";
+import { mod, sendMessage, service } from "./router";
 
 const themeGrpEl = document.getElementById("theme") as HTMLOptGroupElement;
 const themeEl = themeGrpEl.parentElement as HTMLSelectElement;
@@ -46,6 +47,10 @@ export const setTheme = (theme: keyof typeof themes) => {
   if (themeEl.value !== theme) {
     themeEl.value = theme;
   }
+
+  sendMessage(mod.session, service.setChanged, {
+    theme,
+  });
 };
 
 setTheme("ocean");

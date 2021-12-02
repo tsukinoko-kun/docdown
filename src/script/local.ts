@@ -1,3 +1,5 @@
+import { mod, sendMessage, service } from "./router";
+
 const htmlEl = document.documentElement;
 
 export type language = "en" | "de";
@@ -59,6 +61,7 @@ export enum textId {
   no,
   next,
   file_too_big,
+  exit_confirm,
 }
 
 const future = new Date().getFullYear() + 24;
@@ -121,6 +124,7 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     "Nein",
     "Weiter",
     "Die Datei ist zu groß!",
+    "Möchtest Du das Programm wirklich beenden?",
   ],
   en: [
     "References",
@@ -179,6 +183,7 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     "No",
     "Next",
     "The file is too big!",
+    "Do you really want to quit?",
   ],
 };
 
@@ -190,8 +195,12 @@ export const setLocale = (language: language): void => {
   if (language in localStringMap) {
     currentLanguage = language;
     htmlEl.lang = language;
+
+    sendMessage(mod.session, service.setChanged, {
+      language,
+    });
   } else {
-    throw new Error(`Language ${language} not supported`);
+    console.error(`Language "${language}" not supported`);
   }
 };
 

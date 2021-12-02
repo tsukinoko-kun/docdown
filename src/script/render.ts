@@ -6,9 +6,9 @@ import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import hljs from "highlight.js";
 import MD from "markdown-it";
 import { syncScroll } from "./syncScroll";
-import { tryPushLocalToDatabase } from "./session";
 import { countWords } from "./statistics";
 import { download, gsb } from "./database";
+import { mod, sendMessage, service } from "./router";
 
 const md = new MD("default", {
   breaks: false,
@@ -130,6 +130,9 @@ codeEl.addEventListener(
       clearTimeout(renderDelayId);
     }
 
+    sendMessage(mod.session, service.setChanged, {
+      code: codeEl.value,
+    });
     renderDelayId = window.setTimeout(() => {
       renderDelayId = null;
       triggerRender();
@@ -142,7 +145,6 @@ codeEl.addEventListener(
   render(codeEl.value);
   countWords();
   updateTableOfContents();
-  tryPushLocalToDatabase();
 };
 
 codeEl.value = `# h1 Heading

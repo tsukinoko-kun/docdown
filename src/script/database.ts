@@ -56,10 +56,16 @@ export const getUser = (): string => {
   return getText(textId.guest_user);
 };
 
+let loginProcess: Promise<User> | null = null;
 const enshureLoggedIn = (): Promise<User> => {
-  return new Promise((resolve, reject) => {
+  if (loginProcess) {
+    return loginProcess;
+  }
+
+  loginProcess = new Promise((resolve, reject) => {
     if (auth.currentUser) {
       resolve(auth.currentUser);
+      return;
     }
 
     userForm([
@@ -95,6 +101,12 @@ const enshureLoggedIn = (): Promise<User> => {
         }
       });
   });
+
+  loginProcess.then(() => {
+    loginProcess = null;
+  });
+
+  return loginProcess;
 };
 
 interface DatabaseEventMap {
@@ -121,15 +133,19 @@ export class DataBase {
   private unsubscribes: Array<Unsubscribe>;
 
   constructor(...path: Array<string>) {
-    this.path = "/" + path.join("/");
+    this.path = path.join("/") + "/";
     this.unsubscribes = new Array();
+  }
+
+  signOut() {
+    return auth.signOut();
   }
 
   setAt<T>(path: Array<string>, value: T) {
     return new Promise((resolve, reject) => {
       enshureLoggedIn()
         .then(() => {
-          set(dbRef(db, this.path + "/" + path.join("/")), value)
+          set(dbRef(db, this.path + path.join("/")), value)
             .then(resolve)
             .catch(reject);
         })
@@ -146,10 +162,12 @@ export class DataBase {
     type: K,
     listener: DatabaseEventMap[K]
   ) {
+    const combinedPath = this.path + path.join("/");
     enshureLoggedIn()
       .then(() => {
+        console.debug("addEventListener", combinedPath, type);
         let unsubscribe: Unsubscribe;
-        const dbr = dbRef(db, this.path + "/" + path.join("/"));
+        const dbr = dbRef(db, combinedPath);
 
         switch (type) {
           case "value":
