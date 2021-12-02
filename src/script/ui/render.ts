@@ -1,14 +1,14 @@
-/// <reference path="global.d.ts" />
+/// <reference path="../global.d.ts" />
 
-import passive from "./passive";
-import { setUsedSources, sourceTag } from "./sources";
+import passive from "../data/passive";
+import { setUsedSources, sourceTag } from "../logic/sources";
 import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import hljs from "highlight.js";
 import MD from "markdown-it";
 import { syncScroll } from "./syncScroll";
 import { countWords } from "./statistics";
-import { download, gsb } from "./database";
-import { mod, sendMessage, service } from "./router";
+import { download, gsb } from "../logic/database";
+import { mod, sendMessage, service } from "../logic/router";
 
 const md = new MD("default", {
   breaks: false,

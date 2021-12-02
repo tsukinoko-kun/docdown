@@ -1,4 +1,4 @@
-/// <reference path="global.d.ts" />
+/// <reference path="../global.d.ts" />
 
 import { cancelAllAlerts, userAlert, userForm, userSelect } from "./alert";
 import {
@@ -9,9 +9,9 @@ import {
   replaceSelectedText,
   textSelected,
 } from "./editor";
-import { createPdf } from "./export";
+import { createPdf } from "../logic/export";
 import { getText, language, setLocale, textId } from "./local";
-import { saveLocal, setTitle, getTitle } from "./session";
+import { saveLocal, setTitle, getTitle } from "../logic/session";
 
 let mode: "code" | "display" | "both" = "both";
 

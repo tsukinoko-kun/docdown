@@ -1,9 +1,14 @@
-import { context } from "./alert";
+import { context } from "../ui/alert";
 import * as pdfMake from "pdfmake/build/pdfmake";
-import { getLocale, getText, textId } from "./local";
+import { getLocale, getText, textId } from "../ui/local";
 import { getTitle } from "./session";
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
-import { defaultStyle, fonts, styles, syntaxStyles } from "./pdfStylesheet";
+import {
+  defaultStyle,
+  fonts,
+  styles,
+  syntaxStyles,
+} from "../data/pdfStylesheet";
 import { getUser } from "./database";
 import { hasSources, mapSources } from "./sources";
 import {

@@ -1,5 +1,5 @@
 import { getText, textId } from "./local";
-import passive from "./passive";
+import passive from "../data/passive";
 
 const displayEl = document.getElementById("display") as HTMLElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;

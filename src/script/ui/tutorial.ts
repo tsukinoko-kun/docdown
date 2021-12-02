@@ -4,7 +4,7 @@ import {
 } from "@frank-mayer/magic/bin";
 import { userSelect } from "./alert";
 import { getText, textId } from "./local";
-import passive from "./passive";
+import passive from "../data/passive";
 
 const repeatTutorialEl = document.getElementById(
   "repeat-tutorial"

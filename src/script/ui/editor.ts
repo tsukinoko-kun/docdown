@@ -1,6 +1,6 @@
 import { userAlert } from "./alert";
 import { getText, textId } from "./local";
-import { mod, sendMessage, service } from "./router";
+import { mod, sendMessage, service } from "../logic/router";
 
 export const replaceSelectedText = (
   textEl: HTMLTextAreaElement,

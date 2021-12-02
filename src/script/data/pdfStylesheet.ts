@@ -1,16 +1,16 @@
-import dracula from "./dracula";
+import dracula from "../ui/dracula";
 import type { Style, TFontDictionary } from "pdfmake/interfaces";
 
-import NotoSansRegular from "../font/Noto_Sans/NotoSans-Regular.ttf";
-import NotoSansBold from "../font/Noto_Sans/NotoSans-Bold.ttf";
-import NotoSansItalic from "../font/Noto_Sans/NotoSans-Italic.ttf";
-import NotoSansBoldItalic from "../font/Noto_Sans/NotoSans-BoldItalic.ttf";
+import NotoSansRegular from "../../font/Noto_Sans/NotoSans-Regular.ttf";
+import NotoSansBold from "../../font/Noto_Sans/NotoSans-Bold.ttf";
+import NotoSansItalic from "../../font/Noto_Sans/NotoSans-Italic.ttf";
+import NotoSansBoldItalic from "../../font/Noto_Sans/NotoSans-BoldItalic.ttf";
 
-import JetBrainsMonoRegular from "../font/JetBrainsMono/JetBrainsMono-Regular.ttf";
-import JetBrainsMonoBold from "../font/JetBrainsMono/JetBrainsMono-Bold.ttf";
-import JetBrainsMonoItalic from "../font/JetBrainsMono/JetBrainsMono-Italic.ttf";
-import JetBrainsMonoBoldItalic from "../font/JetBrainsMono/JetBrainsMono-BoldItalic.ttf";
-import { getTheme } from "./theme";
+import JetBrainsMonoRegular from "../../font/JetBrainsMono/JetBrainsMono-Regular.ttf";
+import JetBrainsMonoBold from "../../font/JetBrainsMono/JetBrainsMono-Bold.ttf";
+import JetBrainsMonoItalic from "../../font/JetBrainsMono/JetBrainsMono-Italic.ttf";
+import JetBrainsMonoBoldItalic from "../../font/JetBrainsMono/JetBrainsMono-BoldItalic.ttf";
+import { getTheme } from "../logic/theme";
 
 export const fonts: TFontDictionary = {
   NotoSans: {

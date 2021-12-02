@@ -1,4 +1,4 @@
-import { getText, textId } from "./local";
+import { getText, textId } from "../ui/local";
 import { logout } from "./session";
 
 window.onbeforeunload = function () {

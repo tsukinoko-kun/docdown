@@ -6,7 +6,7 @@ import {
   addDisposableEventListener,
   disposeNode,
 } from "@frank-mayer/magic/bin";
-import passive from "./passive";
+import passive from "../data/passive";
 
 const activeModalPromises = new Map<bigint, () => void>();
 

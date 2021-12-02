@@ -1,15 +1,15 @@
-/// <reference path="global.d.ts" />
+/// <reference path="../global.d.ts" />
 
-import { insertText, deleteAllSubstringsInText } from "./editor";
+import { insertText, deleteAllSubstringsInText } from "../ui/editor";
 import {
   addDisposableEventListener,
   disposeNode,
 } from "@frank-mayer/magic/bin";
 import { h64 } from "xxhashjs";
-import { userAlert, userForm, context } from "./alert";
-import { getLocale, getText, textId } from "./local";
+import { userAlert, userForm, context } from "../ui/alert";
+import { getLocale, getText, textId } from "../ui/local";
 
-import type { ContextOption } from "./alert";
+import type { ContextOption } from "../ui/alert";
 import { mod, sendMessage, service } from "./router";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;

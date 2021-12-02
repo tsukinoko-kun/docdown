@@ -1,4 +1,4 @@
-import { mod, sendMessage, service } from "./router";
+import { mod, sendMessage, service } from "../logic/router";
 
 const htmlEl = document.documentElement;
 

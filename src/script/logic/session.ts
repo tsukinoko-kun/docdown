@@ -1,8 +1,8 @@
-/// <reference path="global.d.ts" />
+/// <reference path="../global.d.ts" />
 
-import { userAlert, userForm, context } from "./alert";
+import { userAlert, userForm, context } from "../ui/alert";
 import { DataBase } from "./database";
-import { getLocale, getText, language, setLocale, textId } from "./local";
+import { getLocale, getText, language, setLocale, textId } from "../ui/local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
 import type { ISourceData } from "./sources";
 import { getThemeId, setTheme } from "./theme";

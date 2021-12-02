@@ -1,7 +1,7 @@
-import { userAlert } from "./alert";
+import { userAlert } from "../ui/alert";
 import { upload } from "./database";
-import { replaceSelectedText } from "./editor";
-import { getText, textId } from "./local";
+import { replaceSelectedText } from "../ui/editor";
+import { getText, textId } from "../ui/local";
 import { importData } from "./session";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
