@@ -1,5 +1,5 @@
 export * as alert from "./alert";
-export * as dracula from "./dracula";
+export * as dracula from "../data/dracula";
 export * as editor from "./editor";
 export * as local from "./local";
 export * as render from "./render";

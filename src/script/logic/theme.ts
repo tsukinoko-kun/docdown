@@ -1,5 +1,5 @@
 import { Color } from "./dataHelper";
-import draculaLight from "../ui/dracula";
+import draculaLight from "../data/dracula";
 import { getText, textId } from "../ui/local";
 import { mod, sendMessage, service } from "./router";
 

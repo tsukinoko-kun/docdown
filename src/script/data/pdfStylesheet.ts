@@ -1,4 +1,4 @@
-import dracula from "../ui/dracula";
+import dracula from "./dracula";
 import type { Style, TFontDictionary } from "pdfmake/interfaces";
 
 import NotoSansRegular from "../../font/Noto_Sans/NotoSans-Regular.ttf";
