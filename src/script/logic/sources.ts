@@ -83,6 +83,13 @@ function createLiFromSource(sourceData: ISourceData) {
 let usedSources = new Array<string>();
 export const setUsedSources = (sources: string[]) => {
   usedSources = sources;
+  for (const el of Array.from(sourcesEl.children)) {
+    if (usedSources.includes(el.id)) {
+      el.classList.add("used");
+    } else {
+      el.classList.remove("used");
+    }
+  }
 };
 
 export const hasSources = () => usedSources.length > 0;

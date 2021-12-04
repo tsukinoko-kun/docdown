@@ -89,6 +89,9 @@ main {
 
   > #sources {
     grid-area: sources;
+    > li:not(.used) {
+      opacity: 0.5;
+    }
   }
 
   > #code {
