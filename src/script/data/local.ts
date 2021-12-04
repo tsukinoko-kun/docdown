@@ -1,4 +1,4 @@
-import { mod, sendMessage, service } from "./router";
+import { sendMessage, service } from "../router";
 
 const htmlEl = document.documentElement;
 
@@ -196,7 +196,7 @@ export const setLocale = (language: language): void => {
     currentLanguage = language;
     htmlEl.lang = language;
 
-    sendMessage(mod.session, service.setChanged, {
+    sendMessage(service.setChanged, {
       language,
     });
   } else {

@@ -2,11 +2,9 @@
  * This module ist for any modal dialogs that are shown to the user.
  */
 
-import {
-  addDisposableEventListener,
-  disposeNode,
-} from "@frank-mayer/magic/bin";
-import passive from "./passive";
+import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
+import passive from "../data/passive";
+import { listenForMessage, service } from "../router";
 
 const activeModalPromises = new Map<bigint, () => void>();
 
@@ -216,6 +214,7 @@ interface ISelectOption<T> {
   label: string;
   value: T;
 }
+
 /**
  * Let the user pick an option from a list.
  * @param title Title/description of the selection dialog.
@@ -285,7 +284,7 @@ export const cancelAllAlerts = () => {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-export interface ContextOption {
+export interface IContextOption {
   label: string;
   action: (ev: MouseEvent) => void;
 }
@@ -294,10 +293,12 @@ let contextModalId = BigInt(0);
 
 const contextOptions = new Set<string>();
 
-export const context = (
-  ev: { clientX: number; clientY: number },
-  options: Array<ContextOption>
-) => {
+export interface IContextData {
+  ev: { clientX: number; clientY: number };
+  options: Array<IContextOption>;
+}
+
+listenForMessage(service.context, (data: IContextData) => {
   const existingContexts = document.getElementsByClassName("context");
 
   const ul: HTMLUListElement =
@@ -340,13 +341,13 @@ export const context = (
       }
     );
 
-    ct.style.setProperty("--pos-x", ev.clientX + "px");
-    ct.style.setProperty("--pos-y", ev.clientY + "px");
+    ct.style.setProperty("--pos-x", data.ev.clientX + "px");
+    ct.style.setProperty("--pos-y", data.ev.clientY + "px");
 
     document.body.appendChild(ct);
   }
 
-  for (const option of options) {
+  for (const option of data.options) {
     if (contextOptions.has(option.label)) {
       continue;
     } else {
@@ -378,4 +379,4 @@ export const context = (
     );
     ul.appendChild(li);
   }
-};
+});

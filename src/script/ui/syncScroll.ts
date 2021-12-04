@@ -1,4 +1,4 @@
-import passive from "./passive";
+import passive from "../data/passive";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 const displayEl = document.getElementById("display") as HTMLDivElement;

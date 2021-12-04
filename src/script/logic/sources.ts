@@ -1,16 +1,11 @@
-/// <reference path="global.d.ts" />
-
-import { insertText, deleteAllSubstringsInText } from "./editor";
-import {
-  addDisposableEventListener,
-  disposeNode,
-} from "@frank-mayer/magic/bin";
+import { deleteAllSubstringsInText } from "../ui/editor";
+import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import { h64 } from "xxhashjs";
-import { userAlert, userForm, context } from "./alert";
-import { getLocale, getText, textId } from "./local";
+import { userAlert, userForm } from "../ui/alert";
+import { getLocale, getText, textId } from "../data/local";
 
-import type { ContextOption } from "./alert";
-import { mod, sendMessage, service } from "./router";
+import type { IContextOption } from "../ui/alert";
+import { sendMessage, service } from "../router";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -54,8 +49,11 @@ const sourcesRegister = new Map<string, ISourceData>();
 
 const useSource = (source: ISourceData) => {
   if (document.activeElement === codeEl) {
-    insertText(codeEl, `<src>${source.id}</src>`);
-    triggerRender();
+    sendMessage(service.insertText, {
+      textEl: codeEl,
+      textToInsert: `<src>${source.id}</src>`,
+    });
+    sendMessage(service.triggerRender, undefined);
   }
 };
 
@@ -200,7 +198,7 @@ class SourceData implements ISourceData {
   }
 }
 
-const contextOptionAdd: ContextOption = {
+const contextOptionAdd: IContextOption = {
   label: getText(textId.add_source),
   action: () => {
     const today = new Date().toISOString().split("T")[0]!;
@@ -244,7 +242,7 @@ const contextOptionAdd: ContextOption = {
         const sourceData = SourceData.from(data);
         sourcesRegister.set(sourceData.id, sourceData);
         sourcesEl.appendChild(createLiFromSource(sourceData));
-        sendMessage(mod.session, service.setChanged, {
+        sendMessage(service.setChanged, {
           sources: exportSourcesJSON(),
         });
       })
@@ -265,18 +263,21 @@ sourcesEl.addEventListener(
     let tEl = ev.target as HTMLElement | null;
     while (tEl) {
       if (tEl.tagName === "LI") {
-        context(ev, [
-          contextOptionAdd,
-          {
-            label: getText(textId.delete_source),
-            action: () => {
-              sourcesRegister.delete(tEl!.id);
-              deleteAllSubstringsInText(codeEl, `<src>${tEl!.id}</src>`);
-              disposeNode(tEl!);
-              triggerRender();
+        sendMessage(service.context, {
+          ev,
+          options: [
+            contextOptionAdd,
+            {
+              label: getText(textId.delete_source),
+              action: () => {
+                sourcesRegister.delete(tEl!.id);
+                deleteAllSubstringsInText(codeEl, `<src>${tEl!.id}</src>`);
+                disposeNode(tEl!);
+                sendMessage(service.triggerRender, undefined);
+              },
             },
-          },
-        ]);
+          ],
+        });
 
         return;
       }
@@ -284,7 +285,7 @@ sourcesEl.addEventListener(
       tEl = tEl.parentElement;
     }
 
-    context(ev, [contextOptionAdd]);
+    sendMessage(service.context, { ev, options: [contextOptionAdd] });
   },
   {
     capture: true,

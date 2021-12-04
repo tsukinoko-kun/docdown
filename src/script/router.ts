@@ -1,80 +1,75 @@
-import type { ISessionData } from "./session";
+import { None, Some } from "./Option";
 
-export enum mod {
-  session,
-}
+import type { IInsertTextData, IReplaceTextData } from "./ui/editor";
+import type { IContextData } from "./ui/alert";
+import type { ISessionData } from "./logic/session";
+import type { themeId, ITheme } from "./logic/theme";
 
+/**
+ * module service
+ */
 export enum service {
   setChanged,
+  setTheme,
+  getTheme,
+  getThemeId,
+  getThemes,
+  triggerRender,
+  insertText,
+  replaceSelectedText,
+  logout,
+  context,
 }
 
-interface Modules {
-  [mod.session]: {
-    [service.setChanged]: Partial<ISessionData>;
-  };
+enum paramResult {
+  param,
+  result,
 }
-
-export const sendMessage = <
-  M extends keyof Modules,
-  S extends keyof Modules[M],
-  T extends Modules[M][S]
->(
-  module: M,
-  service: S,
-  message: T
-) => {
-  window.postMessage({
-    module,
-    service,
-    message,
-  });
+type ParamResult<P, R> = {
+  [paramResult.param]: P;
+  [paramResult.result]: R;
 };
 
-const messageReciever = new Map<mod, Map<service, Array<Function>>>();
+interface IServiceMap {
+  [service.setChanged]: ParamResult<Partial<ISessionData>, void>;
+  [service.setTheme]: ParamResult<themeId, void>;
+  [service.getTheme]: ParamResult<undefined, ITheme>;
+  [service.getThemeId]: ParamResult<undefined, themeId>;
+  [service.getThemes]: ParamResult<undefined, Array<themeId>>;
+  [service.triggerRender]: ParamResult<undefined, void>;
+  [service.insertText]: ParamResult<IInsertTextData, void>;
+  [service.replaceSelectedText]: ParamResult<IReplaceTextData, boolean>;
+  [service.logout]: ParamResult<undefined, void>;
+  [service.context]: ParamResult<IContextData, void>;
+}
 
-window.addEventListener("message", (ev) => {
-  const data = ev.data;
+const messageReciever = new Map<service, Array<Function>>();
 
-  const m = data.module;
-  const s = data.service;
-  const message = data.message;
-
-  if (m === undefined || s === undefined || message === undefined) {
-    return;
-  }
-
-  const moduleMap = messageReciever.get(m);
-  if (moduleMap) {
-    const serviceMap = moduleMap.get(s);
-    if (serviceMap) {
-      for (const fn of serviceMap) {
-        fn(message);
-      }
-    }
-  }
-});
-
-export const listenForMessage = <
-  M extends keyof Modules & mod,
-  S extends keyof Modules[M] & service,
-  T extends Modules[M][S]
->(
-  recieverModule: M,
-  recieverService: S,
-  callback: (message: T) => void
+export const listenForMessage = <S extends keyof IServiceMap>(
+  service: S,
+  callback: (
+    message: IServiceMap[S][paramResult.param]
+  ) => IServiceMap[S][paramResult.result]
 ) => {
-  const m = messageReciever.get(recieverModule);
-  if (m) {
-    const s = m.get(recieverService);
-    if (s) {
-      s.push(callback);
-    } else {
-      m.set(recieverService, [callback]);
-    }
+  const s = messageReciever.get(service);
+  if (s) {
+    s.push(callback);
   } else {
-    messageReciever.set(
-      recieverModule,
-      new Map([[recieverService, [callback]]])
-    );
+    messageReciever.set(service, [callback]);
+  }
+};
+
+export const sendMessage = <
+  S extends keyof IServiceMap,
+  R extends IServiceMap[S][paramResult.result]
+>(
+  service: S,
+  message: IServiceMap[S][paramResult.param]
+) => {
+  const s = messageReciever.get(service);
+  if (s && s.length > 0) {
+    return Some<R>(s.map((cb) => cb(message))[0]);
+  } else {
+    return None<R>();
   }
 };

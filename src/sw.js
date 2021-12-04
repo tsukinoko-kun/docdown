@@ -11,9 +11,9 @@ const clearCache = navigator.onLine
   : Promise.resolve();
 
 /** @type {RequestInit} */
-const CORS = {
+const RequestOptions = {
   mode: "no-cors",
-  cache: "default",
+  cache: "no-cache",
   method: "GET",
 };
 
@@ -40,20 +40,20 @@ const findSource = async (url) => {
         try {
           return await cache.match(url, cacheQueryOptions);
         } catch (e) {
-          const data = await fetch(url, CORS);
+          const data = await fetch(url, RequestOptions);
           await cache.put(url, data.clone());
           return data;
         }
       }
 
-      const data = await fetch(url, CORS);
+      const data = await fetch(url, RequestOptions);
       await cache.put(url, data.clone());
       return data;
     } else {
       return await cache.match(url, cacheQueryOptions);
     }
   } else {
-    return await fetch(url, CORS);
+    return await fetch(url, RequestOptions);
   }
 };
 

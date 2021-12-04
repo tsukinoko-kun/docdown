@@ -1,17 +1,14 @@
-/// <reference path="global.d.ts" />
-
 import { cancelAllAlerts, userAlert, userForm, userSelect } from "./alert";
 import {
   findInText,
   getSelectedText,
-  insertText,
   replaceAllSubstringsInText,
-  replaceSelectedText,
   textSelected,
 } from "./editor";
-import { createPdf } from "./export";
-import { getText, language, setLocale, textId } from "./local";
-import { saveLocal, setTitle, getTitle } from "./session";
+import { createPdf } from "../logic/export";
+import { getText, language, setLocale, textId } from "../data/local";
+import { saveLocal, setTitle, getTitle } from "../logic/session";
+import { sendMessage, service } from "../router";
 
 let mode: "code" | "display" | "both" = "both";
 
@@ -69,7 +66,7 @@ const findInCode = () => {
   ])
     .then((result) => {
       findInText(codeEl, result.searchValue);
-      triggerRender();
+      sendMessage(service.triggerRender, undefined);
     })
     .catch((err) => {
       if (err) {
@@ -113,7 +110,7 @@ const replaceInCode = () => {
           result.replaceValue
         );
       }
-      triggerRender();
+      sendMessage(service.triggerRender, undefined);
     })
     .catch((err) => {
       if (err) {
@@ -125,14 +122,24 @@ const replaceInCode = () => {
 const tab = (revert: boolean) => {
   if (textSelected(codeEl)) {
     if (revert) {
-      replaceSelectedText(codeEl, (t) => t.replace(/^ {1,2}/, ""));
+      sendMessage(service.replaceSelectedText, {
+        textEl: codeEl,
+        replacement: (t) => t.replace(/^ {1,2}/, ""),
+      });
     } else {
-      replaceSelectedText(codeEl, (t) => "  " + t);
+      sendMessage(service.replaceSelectedText, {
+        textEl: codeEl,
+        replacement: (t) => "  " + t,
+      });
     }
   } else {
-    insertText(codeEl, "  ", false);
+    sendMessage(service.insertText, {
+      textEl: codeEl,
+      textToInsert: "  ",
+      focusAfterInsert: false,
+    });
   }
-  triggerRender();
+  sendMessage(service.triggerRender, undefined);
 };
 
 const newline = () => {
@@ -156,18 +163,33 @@ const newline = () => {
           // continue list in next line
           const reg = /^[ \t]*[-|*]?[ \t](?![ \t])/.exec(currentLine);
           if (reg && reg.length === 1) {
-            insertText(codeEl, "\n" + reg[0], false);
+            sendMessage(service.insertText, {
+              textEl: codeEl,
+              textToInsert: "\n" + reg[0],
+              focusAfterInsert: false,
+            });
           } else {
-            insertText(codeEl, "\n", false);
+            sendMessage(service.insertText, {
+              textEl: codeEl,
+              textToInsert: "\n",
+              focusAfterInsert: false,
+            });
           }
         }
       } else {
-        insertText(codeEl, "\n", false);
+        sendMessage(service.insertText, {
+          textEl: codeEl,
+          textToInsert: "\n",
+          focusAfterInsert: false,
+        });
       }
     } else {
-      replaceSelectedText(codeEl, "\n");
+      sendMessage(service.replaceSelectedText, {
+        textEl: codeEl,
+        replacement: "\n",
+      });
     }
-    triggerRender();
+    sendMessage(service.triggerRender, undefined);
   }
 };
 
@@ -179,41 +201,45 @@ const surround = (char: string, alt: boolean): boolean => {
       return false;
     }
 
-    if (
-      replaceSelectedText(
-        codeEl,
-        (t) => surroundLR[0] + t + surroundLR[1],
-        false
-      )
-    ) {
-      triggerRender();
-      return true;
-    }
+    sendMessage(service.replaceSelectedText, {
+      textEl: codeEl,
+      replacement: (t) => surroundLR[0] + t + surroundLR[1],
+      insertIfNoSelection: false,
+    }).when((value) => {
+      if (value) {
+        sendMessage(service.triggerRender, undefined);
+      }
+    });
+    return true;
   } else if (char === "#") {
-    if (
-      replaceSelectedText(
-        codeEl,
-        (t) => {
-          if (alt) {
-            if (t.startsWith("#")) {
-              return t.substring(1);
-            } else {
-              return "#";
-            }
+    return sendMessage(service.replaceSelectedText, {
+      textEl: codeEl,
+      replacement: (t) => {
+        if (alt) {
+          if (t.startsWith("#")) {
+            return t.substring(1);
           } else {
-            if (t.startsWith("#")) {
-              return "#" + t;
-            } else {
-              return "# " + t;
-            }
+            return "#";
           }
-        },
-        false
-      )
-    ) {
-      triggerRender();
-      return true;
-    }
+        } else {
+          if (t.startsWith("#")) {
+            return "#" + t;
+          } else {
+            return "# " + t;
+          }
+        }
+      },
+      insertIfNoSelection: false,
+    })
+      .when((value) => {
+        if (value) {
+          sendMessage(service.triggerRender, undefined);
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .or(false);
   }
 
   return false;
@@ -281,7 +307,7 @@ const switchLanguage = () => {
   )
     .then((result) => {
       setLocale(result);
-      triggerRender();
+      sendMessage(service.triggerRender, undefined);
     })
     .catch((err) => {
       if (err) {

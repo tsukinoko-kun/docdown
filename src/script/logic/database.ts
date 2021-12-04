@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-
 import {
   getDatabase,
   ref as dbRef,
@@ -10,16 +9,16 @@ import {
   onChildMoved,
   onChildRemoved,
 } from "firebase/database";
-
 import {
   browserLocalPersistence,
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { userAlert, userForm } from "./alert";
 
 import type { DataSnapshot, Unsubscribe } from "firebase/database";
 import type { User } from "firebase/auth";
+
+import { userAlert, userForm } from "../ui/alert";
 
 import {
   getStorage,
@@ -28,7 +27,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-import { getText, textId } from "./local";
+import { getText, textId } from "../data/local";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCSv8c1dqMYtGVxsrfGY_BYFOKHn3oP9bc",
@@ -109,7 +108,7 @@ const enshureLoggedIn = (): Promise<User> => {
   return loginProcess;
 };
 
-interface DatabaseEventMap {
+interface IDatabaseEventMap {
   value: (snapshot: DataSnapshot) => any;
   child_added: (
     snapshot: DataSnapshot,
@@ -157,10 +156,10 @@ export class DataBase {
     return this.setAt(path, null);
   }
 
-  addEventListener<K extends keyof DatabaseEventMap>(
+  addEventListener<K extends keyof IDatabaseEventMap>(
     path: Array<string>,
     type: K,
-    listener: DatabaseEventMap[K]
+    listener: IDatabaseEventMap[K]
   ) {
     const combinedPath = this.path + path.join("/");
     enshureLoggedIn()

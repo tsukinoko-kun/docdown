@@ -1,10 +1,7 @@
-import {
-  addDisposableEventListener,
-  disposeNode,
-} from "@frank-mayer/magic/bin";
+import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import { userSelect } from "./alert";
-import { getText, textId } from "./local";
-import passive from "./passive";
+import { getText, textId } from "../data/local";
+import passive from "../data/passive";
 
 const repeatTutorialEl = document.getElementById(
   "repeat-tutorial"
