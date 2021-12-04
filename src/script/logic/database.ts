@@ -108,7 +108,7 @@ const enshureLoggedIn = (): Promise<User> => {
   return loginProcess;
 };
 
-interface DatabaseEventMap {
+interface IDatabaseEventMap {
   value: (snapshot: DataSnapshot) => any;
   child_added: (
     snapshot: DataSnapshot,
@@ -156,10 +156,10 @@ export class DataBase {
     return this.setAt(path, null);
   }
 
-  addEventListener<K extends keyof DatabaseEventMap>(
+  addEventListener<K extends keyof IDatabaseEventMap>(
     path: Array<string>,
     type: K,
-    listener: DatabaseEventMap[K]
+    listener: IDatabaseEventMap[K]
   ) {
     const combinedPath = this.path + path.join("/");
     enshureLoggedIn()
