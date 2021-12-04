@@ -148,36 +148,22 @@ const triggerRender = () => {
 
 listenForMessage(service.triggerRender, triggerRender);
 
-codeEl.value = `# h1 Heading
-## h2 Heading
-### h3 Heading
-#### h4 Heading
-##### h5 Heading
-###### h6 Heading
+codeEl.value = `# Links
 
-## Horizontal Lines
+- [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet)
+- [Sourcecode on GitHub](https://source.docdown.app)
+- [Bug reports and feature requests](https://github.com/Frank-Mayer/docdown/issues/new/choose)
+- [docdown Q & A](https://source.docdown.app/discussions/categories/q-a)
 
-___
+# Licenses
 
----
-
-***
-
-## Typographic replacements
-
-Enable typographer option to see result.
-
-(c) (C) (r) (R) (tm) (TM) (p) (P) +-
-
-## Tables
-
-| Option | Description |
-| :---: | :---: |
-| a   | Lorem ipsum dolor |
-| b   | sit amet |
-| c   | consectetur adipiscing elit. |
-
-Icons made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com)
+- Jetbrains Mono Font by JetBrains, Philipp Nurullin, Konstantin Bulenkov.
+- Noto Sans Mono Font by Google.
+- Database and hosting by [Firebase](https://firebase.google.com).
+- Markdown to HTML conversion by [markdown-it](https://npmjs.com/package/markdown-it).
+- [Highlight.js](https://npmjs.com/package/highlight.js) syntax highlighting.
+- PDF-API [pdfmake](https://npmjs.com/package/pdfmake) for PDF export.
+- Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com).
 `;
 
 triggerRender();
