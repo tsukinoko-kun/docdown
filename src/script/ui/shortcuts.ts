@@ -195,16 +195,20 @@ const surround = (char: string, alt: boolean): boolean => {
       return false;
     }
 
-    sendMessage(service.replaceSelectedText, {
+    return sendMessage(service.replaceSelectedText, {
       textEl: codeEl,
       replacement: (t) => surroundLR[0] + t + surroundLR[1],
       insertIfNoSelection: false,
-    }).when((value) => {
-      if (value) {
-        sendMessage(service.triggerRender, undefined);
-      }
-    });
-    return true;
+    })
+      .when((value) => {
+        if (value) {
+          sendMessage(service.triggerRender, undefined);
+          codeEl.selectionStart += surroundLR[0]!.length;
+          codeEl.selectionEnd -= surroundLR[1]!.length;
+        }
+        return value;
+      })
+      .or(false);
   } else if (char === "#") {
     return sendMessage(service.replaceSelectedText, {
       textEl: codeEl,
