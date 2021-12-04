@@ -1,10 +1,5 @@
 import { cancelAllAlerts, userAlert, userForm, userSelect } from "./alert";
-import {
-  findInText,
-  getSelectedText,
-  replaceAllSubstringsInText,
-  textSelected,
-} from "./editor";
+import { findInText, getSelectedText, textSelected } from "./editor";
 import { getText, language, setLocale, textId } from "../data/local";
 import { saveLocal, setTitle, getTitle } from "../logic/session";
 import { sendMessage, service } from "../router";
@@ -98,11 +93,11 @@ const replaceInCode = () => {
   ])
     .then((result) => {
       if (result.replaceAll) {
-        replaceAllSubstringsInText(
-          codeEl,
-          result.searchValue,
-          result.replaceValue
-        );
+        sendMessage(service.replaceAllSubstringsInText, {
+          textEl: codeEl,
+          searchValue: result.searchValue,
+          replaceValue: result.replaceValue,
+        });
       } else {
         codeEl.value = codeEl.value.replace(
           result.searchValue,

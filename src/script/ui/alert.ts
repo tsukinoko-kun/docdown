@@ -292,10 +292,12 @@ export interface IContextOption {
 let contextModalId = BigInt(0);
 
 const contextOptions = new Set<string>();
+let currentIsImportant = false;
 
 export interface IContextData {
   ev: { clientX: number; clientY: number };
   options: Array<IContextOption>;
+  important?: boolean;
 }
 
 listenForMessage(service.context, (data: IContextData) => {
@@ -347,6 +349,14 @@ listenForMessage(service.context, (data: IContextData) => {
     document.body.appendChild(ct);
   }
 
+  if (!currentIsImportant && (data.important ?? false)) {
+    ul.innerHTML = "";
+    contextOptions.clear();
+    currentIsImportant = true;
+  } else {
+    currentIsImportant = false;
+  }
+
   for (const option of data.options) {
     if (contextOptions.has(option.label)) {
       continue;
@@ -369,8 +379,9 @@ listenForMessage(service.context, (data: IContextData) => {
           for (const ct of Array.from(cts)) {
             disposeNode(ct, true);
           }
-          contextOptions.clear();
         }
+        contextOptions.clear();
+        currentIsImportant = false;
       },
       {
         capture: true,

@@ -100,40 +100,49 @@ export const deleteAllSubstringsInText = (
   });
 };
 
-export const replaceAllSubstringsInText = (
-  textEl: HTMLTextAreaElement,
-  searchValue: string,
-  replaceValue: string
-) => {
-  const start = textEl.selectionStart;
-  if (!start) {
-    textEl.value = textEl.value.split(searchValue).join(replaceValue);
-    return;
+export interface IReplaceAllSubstringsInTextData {
+  textEl: HTMLTextAreaElement;
+  searchValue: string | RegExp;
+  replaceValue: string;
+}
+listenForMessage(
+  service.replaceAllSubstringsInText,
+  (data: IReplaceAllSubstringsInTextData) => {
+    const start = data.textEl.selectionStart;
+    if (!start) {
+      data.textEl.value = data.textEl.value
+        .split(data.searchValue)
+        .join(data.replaceValue);
+      return;
+    }
+
+    const end = data.textEl.selectionEnd ?? start;
+
+    const a = data.textEl.value
+      .substring(0, start)
+      .split(data.searchValue)
+      .join(data.replaceValue);
+    const b = data.textEl.value
+      .substring(start, end)
+      .split(data.searchValue)
+      .join(data.replaceValue);
+    const c = data.textEl.value
+      .substring(end)
+      .split(data.searchValue)
+      .join(data.replaceValue);
+
+    data.textEl.value = a + b + c;
+
+    const newStart = a.length;
+    const newEnd = newStart + b.length;
+    data.textEl.selectionStart = newStart;
+    data.textEl.selectionEnd = newEnd;
+
+    sendMessage(service.setChanged, {
+      code: data.textEl.value,
+    });
   }
-
-  const end = textEl.selectionEnd ?? start;
-
-  const a = textEl.value
-    .substring(0, start)
-    .split(searchValue)
-    .join(replaceValue);
-  const b = textEl.value
-    .substring(start, end)
-    .split(searchValue)
-    .join(replaceValue);
-  const c = textEl.value.substring(end).split(searchValue).join(replaceValue);
-
-  textEl.value = a + b + c;
-
-  const newStart = a.length;
-  const newEnd = newStart + b.length;
-  textEl.selectionStart = newStart;
-  textEl.selectionEnd = newEnd;
-
-  sendMessage(service.setChanged, {
-    code: textEl.value,
-  });
-};
+);
 
 type IFindInTextOverloads = {
   (textEl: HTMLTextAreaElement, value: string): void;

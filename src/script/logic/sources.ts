@@ -152,7 +152,7 @@ export const importSourcesJSON = (sources: IterableIterator<ISourceData>) => {
   }
 };
 
-export const sourceTag = /(?<=<src>)[0-9a-z]+(?=<\/src>)/g;
+export const sourceTag = /<src>[0-9a-z]+<\/src>/g;
 
 class SourceData implements ISourceData {
   id: string;
@@ -198,10 +198,11 @@ class SourceData implements ISourceData {
   }
 }
 
+const today = new Date().toISOString().split("T")[0]!;
+
 const contextOptionAdd: IContextOption = {
   label: getText(textId.add_source),
   action: () => {
-    const today = new Date().toISOString().split("T")[0]!;
     userForm([
       {
         name: "author",
@@ -254,6 +255,83 @@ const contextOptionAdd: IContextOption = {
   },
 };
 
+const contextOptionEdit = (
+  data: ISourceData,
+  scrLiEl: HTMLLIElement
+): IContextOption => ({
+  label: getText(textId.edit_source),
+  action: () => {
+    userForm([
+      {
+        name: "author",
+        label: getText(textId.author),
+        required: true,
+        type: "text",
+        value: data.author,
+      },
+      {
+        name: "title",
+        label: getText(textId.title),
+        required: true,
+        type: "text",
+        value: data.title,
+      },
+      data.creationDate
+        ? {
+            name: "creationDate",
+            label: getText(textId.creation_date),
+            required: false,
+            type: "date",
+            max: today,
+            value: new Date(data.creationDate).toISOString().split("T")[0]!,
+          }
+        : {
+            name: "creationDate",
+            label: getText(textId.creation_date),
+            required: false,
+            type: "date",
+            max: today,
+          },
+      {
+        name: "lastAccessed",
+        label: getText(textId.last_access),
+        required: true,
+        type: "date",
+        value: new Date(data.lastAccessed).toISOString().split("T")[0]!,
+        max: today,
+      },
+      {
+        name: "link",
+        label: getText(textId.link) + " (URL)",
+        placeholder: "https://example.com",
+        required: true,
+        type: "url",
+        value: data.link,
+      },
+    ])
+      .then((newData) => {
+        const sourceData = SourceData.from(newData);
+        sourcesRegister.set(sourceData.id, sourceData);
+        sourcesRegister.delete(data.id);
+        sourcesEl.replaceChild(createLiFromSource(sourceData), scrLiEl);
+        sendMessage(service.replaceAllSubstringsInText, {
+          textEl: codeEl,
+          searchValue: `<src>${data.id}</src>`,
+          replaceValue: `<src>${sourceData.id}</src>`,
+        });
+        sendMessage(service.triggerRender, undefined);
+        sendMessage(service.setChanged, {
+          sources: exportSourcesJSON(),
+        });
+      })
+      .catch((err) => {
+        if (err) {
+          console.info(err);
+        }
+      });
+  },
+});
+
 sourcesEl.addEventListener(
   "contextmenu",
   (ev) => {
@@ -264,6 +342,7 @@ sourcesEl.addEventListener(
     while (tEl) {
       if (tEl.tagName === "LI") {
         sendMessage(service.context, {
+          important: true,
           ev,
           options: [
             contextOptionAdd,
@@ -276,6 +355,10 @@ sourcesEl.addEventListener(
                 sendMessage(service.triggerRender, undefined);
               },
             },
+            contextOptionEdit(
+              sourcesRegister.get(tEl!.id)!,
+              tEl as HTMLLIElement
+            ),
           ],
         });
 
@@ -285,7 +368,11 @@ sourcesEl.addEventListener(
       tEl = tEl.parentElement;
     }
 
-    sendMessage(service.context, { ev, options: [contextOptionAdd] });
+    sendMessage(service.context, {
+      ev,
+      important: true,
+      options: [contextOptionAdd],
+    });
   },
   {
     capture: true,

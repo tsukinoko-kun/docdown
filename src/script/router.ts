@@ -1,6 +1,10 @@
 import { None, Some } from "./Option";
 
-import type { IInsertTextData, IReplaceTextData } from "./ui/editor";
+import type {
+  IInsertTextData,
+  IReplaceAllSubstringsInTextData,
+  IReplaceTextData,
+} from "./ui/editor";
 import type { IContextData } from "./ui/alert";
 import type { ISessionData } from "./logic/session";
 import type { themeId, ITheme } from "./logic/theme";
@@ -18,6 +22,7 @@ export enum service {
   triggerRender,
   insertText,
   replaceSelectedText,
+  replaceAllSubstringsInText,
   logout,
   context,
   createPdf,
@@ -41,6 +46,10 @@ interface IServiceMap {
   [service.triggerRender]: ParamResult<undefined, void>;
   [service.insertText]: ParamResult<IInsertTextData, void>;
   [service.replaceSelectedText]: ParamResult<IReplaceTextData, boolean>;
+  [service.replaceAllSubstringsInText]: ParamResult<
+    IReplaceAllSubstringsInTextData,
+    void
+  >;
   [service.logout]: ParamResult<undefined, void>;
   [service.context]: ParamResult<IContextData, void>;
   [service.createPdf]: ParamResult<pdfOutput, void>;

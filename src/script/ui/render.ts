@@ -104,7 +104,8 @@ const render = (markdown: string) => {
   const sources = new Array<string>();
   disposeNode(displayEl, false);
 
-  displayEl.innerHTML = md.render(markdown).replace(sourceTag, (srcId) => {
+  displayEl.innerHTML = md.render(markdown).replace(sourceTag, (srcTag) => {
+    const srcId = srcTag.substring(5, srcTag.length - 6);
     const i = sources.indexOf(srcId);
     if (i === -1) {
       sources.push(srcId);
