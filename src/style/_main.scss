@@ -114,10 +114,9 @@ main {
     font-size: 0.8em;
     > * {
       color: $foreground;
-      background-color: transparent;
+      background-color: $current-line;
     }
     > .clickable {
-      background-color: transparent;
       text-decoration: none;
       @include clickable;
     }
