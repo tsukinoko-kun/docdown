@@ -164,7 +164,6 @@ export class DataBase {
     const combinedPath = this.path + path.join("/");
     enshureLoggedIn()
       .then(() => {
-        console.debug("addEventListener", combinedPath, type);
         let unsubscribe: Unsubscribe;
         const dbr = dbRef(db, combinedPath);
 
