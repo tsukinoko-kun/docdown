@@ -4,12 +4,21 @@ export const isNullOrWhitespace = (str: string | null): boolean =>
   str === null || str.match(/^\s*$/) !== null;
 
 export const mapArrayAllowEmpty = <T, U>(
-  arr: Iterable<T>,
-  func: (item: T) => Option<U>
+  arr: Array<T>,
+  func: (velue: T, index: number, array: Array<T>) => Option<U>
 ): U[] => {
   const result: U[] = new Array<U>();
+  let i = 0;
   for (const item of arr) {
-    func(item).then((value) => result.push(value));
+    func(item, i, arr).then((value) => {
+      if (typeof value === "string") {
+        if (isNullOrWhitespace(value)) {
+          return;
+        }
+      }
+      return result.push(value);
+    });
+    i++;
   }
   return result;
 };

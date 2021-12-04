@@ -5,11 +5,7 @@ import {
   styles,
   syntaxStyles,
 } from "../data/pdfStylesheet";
-import {
-  isNullOrWhitespace,
-  mapArrayAllowEmpty,
-  removeEmpty,
-} from "../data/dataHelper";
+import { mapArrayAllowEmpty, removeEmpty } from "../data/dataHelper";
 import { getTitle } from "./session";
 import { getUser } from "./database";
 import { hasSources, mapSources } from "./sources";
@@ -118,115 +114,173 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
     switch (el.tagName) {
       case "H1":
         const h1 = el as HTMLHeadingElement;
-        return Some({
-          text: h1.innerText,
-          style: "h1",
-          tocItem: "mainToc",
-          tocStyle: "toc_h1",
-        });
+        if (h1.children.length === 0) {
+          return Some({
+            text: h1.innerText,
+            style: "h1",
+            tocItem: "mainToc",
+            tocStyle: "toc_h1",
+          });
+        } else {
+          return Some(
+            mapArrayAllowEmpty(
+              Array.from(h1.childNodes),
+              mapDomToPdfContent
+            ).flat()
+          );
+        }
       case "H2":
         const h2 = el as HTMLHeadingElement;
-        return Some({
-          text: h2.innerText,
-          style: "h2",
-          tocItem: "mainToc",
-          tocStyle: "toc_h2",
-          tocMargin: [20, 0, 0, 0],
-        });
+        if (h2.children.length === 0) {
+          return Some({
+            text: h2.innerText,
+            style: "h2",
+            tocItem: "mainToc",
+            tocStyle: "toc_h2",
+            tocMargin: [20, 0, 0, 0],
+          });
+        } else {
+          return Some(
+            mapArrayAllowEmpty(
+              Array.from(h2.childNodes),
+              mapDomToPdfContent
+            ).flat()
+          );
+        }
       case "H3":
         const h3 = el as HTMLHeadingElement;
-        return Some({
-          text: h3.innerText,
-          style: "h3",
-          tocItem: "mainToc",
-          tocStyle: "toc_h3",
-          tocMargin: [40, 0, 0, 0],
-        });
+        if (h3.children.length === 0) {
+          return Some({
+            text: h3.innerText,
+            style: "h3",
+            tocItem: "mainToc",
+            tocStyle: "toc_h3",
+            tocMargin: [40, 0, 0, 0],
+          });
+        } else {
+          return Some(
+            mapArrayAllowEmpty(
+              Array.from(h3.childNodes),
+              mapDomToPdfContent
+            ).flat()
+          );
+        }
       case "H4":
         const h4 = el as HTMLHeadingElement;
-        return Some({
-          text: h4.innerText,
-          style: "h4",
-        });
+        if (h4.children.length === 0) {
+          return Some({
+            text: h4.innerText,
+            style: "h4",
+          });
+        } else {
+          return Some(
+            mapArrayAllowEmpty(
+              Array.from(h4.childNodes),
+              mapDomToPdfContent
+            ).flat()
+          );
+        }
       case "H5":
         const h5 = el as HTMLHeadingElement;
-        return Some({
-          text: h5.innerText,
-          style: "h5",
-        });
+        if (h5.children.length === 0) {
+          return Some({
+            text: h5.innerText,
+            style: "h5",
+          });
+        } else {
+          return Some(
+            mapArrayAllowEmpty(
+              Array.from(h5.childNodes),
+              mapDomToPdfContent
+            ).flat()
+          );
+        }
       case "H6":
         const h6 = el as HTMLHeadingElement;
-        return Some({
-          text: h6.innerText,
-          style: "h6",
-        });
+        if (h6.children.length === 0) {
+          return Some({
+            text: h6.innerText,
+            style: "h6",
+          });
+        } else {
+          return Some(
+            mapArrayAllowEmpty(
+              Array.from(h6.childNodes),
+              mapDomToPdfContent
+            ).flat()
+          );
+        }
       case "OL":
       case "UL":
-        const listEl = el as HTMLUListElement;
-        const parseListEl = (listEl: HTMLElement): Option<Content> => {
-          const parseListItem = (li: ChildNode): Option<Content> => {
-            if (li.nodeType === Node.TEXT_NODE) {
-              if (isNullOrWhitespace(li.textContent)) {
-                return None();
-              }
-              return Some(li.textContent);
-            } else if (li.nodeType === Node.ELEMENT_NODE) {
-              const liEl = li as HTMLElement;
-              if (liEl.tagName === "LI") {
-                if (liEl.children.length === 0) {
-                  if (isNullOrWhitespace(liEl.textContent)) {
-                    return None();
-                  }
-                  return Some(liEl.innerText);
-                } else {
-                  return Some(
-                    mapArrayAllowEmpty(
-                      Array.from(liEl.childNodes),
-                      (c): Option<Content> => {
-                        if (c.nodeType === Node.TEXT_NODE) {
-                          if (isNullOrWhitespace(c.textContent)) {
-                            return None();
-                          }
-                          return Some<string>(c.textContent);
-                        } else if (c.nodeType === Node.ELEMENT_NODE) {
-                          return parseListEl(c as HTMLElement);
-                        } else {
-                          return None();
-                        }
-                      }
-                    )
-                  );
+        const listEl = el as HTMLOListElement | HTMLUListElement;
+        if (listEl.children.length === 0) {
+          return None();
+        } else {
+          const insertAfter = new Map<number, Content>();
+
+          const content: Content[] = mapArrayAllowEmpty(
+            Array.from(listEl.children),
+            (li, i): Option<Content> => {
+              // Only LI Elements are valid List children
+              if (li.tagName === "LI") {
+                // simple list item
+                if (li.children.length === 0) {
+                  return Some((li as HTMLLIElement).innerText);
                 }
+
+                const liContent = mapArrayAllowEmpty(
+                  Array.from(li.childNodes),
+                  (el): Option<Content> => {
+                    if (el.nodeType === Node.TEXT_NODE) {
+                      return Some(el.textContent);
+                    } else if (el.nodeType === Node.ELEMENT_NODE) {
+                      if (["SPAN", "P"].includes((el as HTMLElement).tagName)) {
+                        return Some(el.textContent);
+                      } else if (
+                        ["OL", "UL"].includes((el as HTMLElement).tagName)
+                      ) {
+                        insertAfter.set(
+                          i,
+                          mapDomToPdfContent(el).unwrapUnchecked()
+                        );
+                        return None();
+                      } else {
+                        return mapDomToPdfContent(el);
+                      }
+                    } else {
+                      return None();
+                    }
+                  }
+                );
+                return Some({
+                  text: liContent.length === 1 ? liContent[0]! : liContent,
+                  style: "list",
+                });
               } else {
                 return None();
               }
-            } else {
-              return None();
             }
-          };
+          );
+
+          for (const [i, c] of insertAfter) {
+            content.splice(i + 1, 0, c);
+          }
 
           if (listEl.tagName === "OL") {
             return Some({
-              ol: mapArrayAllowEmpty(
-                Array.from(listEl.childNodes),
-                parseListItem
-              ),
+              ol: content,
               style: "list",
-            });
-          } else if (listEl.tagName === "UL") {
-            return Some({
-              ul: mapArrayAllowEmpty(
-                Array.from(listEl.childNodes),
-                parseListItem
-              ),
-              style: "list",
+              listType: "ordered",
             });
           } else {
-            return mapDomToPdfContent(listEl);
+            return Some({
+              ul: content,
+              style: "list",
+              listType: "unordered",
+            });
           }
-        };
+        }
 
-        return parseListEl(listEl);
       case "PRE":
         const pre = el as HTMLPreElement;
         if (pre.children.length === 0) {
