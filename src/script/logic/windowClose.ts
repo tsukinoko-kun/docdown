@@ -1,7 +1,7 @@
-import { getText, textId } from "../ui/local";
-import { logout } from "./session";
+import { getText, textId } from "../data/local";
+import { sendMessage, service } from "../router";
 
 window.onbeforeunload = function () {
-  logout();
+  sendMessage(service.logout, undefined);
   return getText(textId.exit_confirm);
 };

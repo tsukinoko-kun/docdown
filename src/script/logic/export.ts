@@ -1,21 +1,24 @@
 import { context } from "../ui/alert";
-import * as pdfMake from "pdfmake/build/pdfmake";
-import { getLocale, getText, textId } from "../ui/local";
-import { getTitle } from "./session";
-import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
+import { getLocale, getText, textId } from "../data/local";
 import {
   defaultStyle,
   fonts,
   styles,
   syntaxStyles,
 } from "../data/pdfStylesheet";
-import { getUser } from "./database";
-import { hasSources, mapSources } from "./sources";
 import {
   isNullOrWhitespace,
   mapArrayAllowEmpty,
   removeEmpty,
-} from "./dataHelper";
+} from "../data/dataHelper";
+import { getTitle } from "./session";
+import { getUser } from "./database";
+import { hasSources, mapSources } from "./sources";
+import { createPdf as pdfmakeCreatePdf } from "pdfmake/build/pdfmake";
+
+import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
+import { None, Some } from "../Option";
+import type { Option } from "../Option";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
@@ -61,159 +64,163 @@ const addSourceJump = (sup: HTMLElement, sourceId: string) => {
   }
 };
 
-const mapSyntaxToPdfContent = (el: Node): Content | null => {
+const mapSyntaxToPdfContent = (el: Node): Option<Content> => {
   if (el instanceof HTMLElement) {
     if (el.children.length === 0) {
       const classes = Array.from(el.classList);
       for (const cls of classes) {
         const classStyle = syntaxStyles.get(cls);
         if (classStyle) {
-          return {
+          return Some({
             text: el.innerText,
             style: classStyle,
-          };
+          });
         }
       }
 
-      return {
+      return Some({
         text: el.innerText,
         style: "code",
-      };
+      });
     } else {
-      return mapArrayAllowEmpty(
-        Array.from(el.childNodes),
-        mapSyntaxToPdfContent
-      ).flat();
+      return Some(
+        mapArrayAllowEmpty(
+          Array.from(el.childNodes),
+          mapSyntaxToPdfContent
+        ).flat()
+      );
     }
   } else {
     if (!el.textContent) {
-      return null;
+      return None();
     }
 
     const classes = Array.from(el.parentElement!.classList);
     for (const cls of classes) {
       const classStyle = syntaxStyles.get(cls);
       if (classStyle) {
-        return {
+        return Some({
           text: el.textContent,
           style: classStyle,
-        };
+        });
       }
     }
 
-    return {
+    return Some({
       text: el.textContent,
       style: "code",
-    };
+    });
   }
 };
 
-const mapDomToPdfContent = (el: Node): Content | null => {
+const mapDomToPdfContent = (el: Node): Option<Content> => {
   if (el instanceof Element) {
     switch (el.tagName) {
       case "H1":
         const h1 = el as HTMLHeadingElement;
-        return {
+        return Some({
           text: h1.innerText,
           style: "h1",
           tocItem: "mainToc",
           tocStyle: "toc_h1",
-        };
+        });
       case "H2":
         const h2 = el as HTMLHeadingElement;
-        return {
+        return Some({
           text: h2.innerText,
           style: "h2",
           tocItem: "mainToc",
           tocStyle: "toc_h2",
           tocMargin: [20, 0, 0, 0],
-        };
+        });
       case "H3":
         const h3 = el as HTMLHeadingElement;
-        return {
+        return Some({
           text: h3.innerText,
           style: "h3",
           tocItem: "mainToc",
           tocStyle: "toc_h3",
           tocMargin: [40, 0, 0, 0],
-        };
+        });
       case "H4":
         const h4 = el as HTMLHeadingElement;
-        return {
+        return Some({
           text: h4.innerText,
           style: "h4",
-        };
+        });
       case "H5":
         const h5 = el as HTMLHeadingElement;
-        return {
+        return Some({
           text: h5.innerText,
           style: "h5",
-        };
+        });
       case "H6":
         const h6 = el as HTMLHeadingElement;
-        return {
+        return Some({
           text: h6.innerText,
           style: "h6",
-        };
+        });
       case "OL":
       case "UL":
         const listEl = el as HTMLUListElement;
-        const parseListEl = (listEl: HTMLElement): Content | null => {
-          const parseListItem = (li: ChildNode): Content => {
+        const parseListEl = (listEl: HTMLElement): Option<Content> => {
+          const parseListItem = (li: ChildNode): Option<Content> => {
             if (li.nodeType === Node.TEXT_NODE) {
               if (isNullOrWhitespace(li.textContent)) {
-                return null!;
+                return None();
               }
-              return li.textContent!;
+              return Some(li.textContent);
             } else if (li.nodeType === Node.ELEMENT_NODE) {
               const liEl = li as HTMLElement;
               if (liEl.tagName === "LI") {
                 if (liEl.children.length === 0) {
                   if (isNullOrWhitespace(liEl.textContent)) {
-                    return null!;
+                    return None();
                   }
-                  return liEl.innerText;
+                  return Some(liEl.innerText);
                 } else {
-                  return mapArrayAllowEmpty(
-                    Array.from(liEl.childNodes),
-                    (c) => {
-                      if (c.nodeType === Node.TEXT_NODE) {
-                        if (isNullOrWhitespace(c.textContent)) {
-                          return null!;
+                  return Some(
+                    mapArrayAllowEmpty(
+                      Array.from(liEl.childNodes),
+                      (c): Option<Content> => {
+                        if (c.nodeType === Node.TEXT_NODE) {
+                          if (isNullOrWhitespace(c.textContent)) {
+                            return None();
+                          }
+                          return Some<string>(c.textContent);
+                        } else if (c.nodeType === Node.ELEMENT_NODE) {
+                          return parseListEl(c as HTMLElement);
+                        } else {
+                          return None();
                         }
-                        return c.textContent!;
-                      } else if (c.nodeType === Node.ELEMENT_NODE) {
-                        return parseListEl(c as HTMLElement);
-                      } else {
-                        return null!;
                       }
-                    }
+                    )
                   );
                 }
               } else {
-                return null!;
+                return None();
               }
             } else {
-              return null!;
+              return None();
             }
           };
 
           if (listEl.tagName === "OL") {
-            return {
+            return Some({
               ol: mapArrayAllowEmpty(
                 Array.from(listEl.childNodes),
                 parseListItem
               ),
               style: "list",
-            };
+            });
           } else if (listEl.tagName === "UL") {
-            return {
+            return Some({
               ul: mapArrayAllowEmpty(
                 Array.from(listEl.childNodes),
                 parseListItem
               ),
               style: "list",
-            };
+            });
           } else {
             return mapDomToPdfContent(listEl);
           }
@@ -223,32 +230,34 @@ const mapDomToPdfContent = (el: Node): Content | null => {
       case "PRE":
         const pre = el as HTMLPreElement;
         if (pre.children.length === 0) {
-          return {
+          return Some({
             text: pre.innerText,
             style: "code",
             font: "JetBrainsMono",
-          };
+          });
         } else {
-          return mapArrayAllowEmpty(Array.from(pre.childNodes), (el) =>
-            mapDomToPdfContent(el)
+          return Some(
+            mapArrayAllowEmpty(Array.from(pre.childNodes), (el) =>
+              mapDomToPdfContent(el)
+            )
           );
         }
       case "BLOCKQUOTE":
         const blockquote = el as HTMLQuoteElement;
-        return {
+        return Some({
           text: blockquote.innerText,
           style: "blockquote",
-        };
+        });
       case "IMG":
         const img = el as HTMLImageElement;
         try {
-          return {
+          return Some({
             image: getBase64Image(img),
             fit: [img.width, img.height],
             style: "image",
-          };
+          });
         } catch {
-          return { text: img.alt, style: "span" };
+          return Some({ text: img.alt, style: "span" });
         }
       case "TABLE":
         const table = el as HTMLTableElement;
@@ -256,12 +265,12 @@ const mapDomToPdfContent = (el: Node): Content | null => {
         let headerRows = 0;
         let oddEven = false;
 
-        return {
+        return Some({
           table: {
             widths: "auto",
             layout: "headerLineOnly",
             dontBreakRows: true,
-            body: mapArrayAllowEmpty(Array.from(table.rows), (row) => {
+            body: Array.from(table.rows).map((row) => {
               let containsTableHead = false;
 
               const pdfRow = mapArrayAllowEmpty(
@@ -270,12 +279,12 @@ const mapDomToPdfContent = (el: Node): Content | null => {
                   if (cell.tagName === "TH") {
                     containsTableHead = true;
                   }
-                  return {
+                  return Some({
                     text: cell.innerText,
                     style: cell.tagName.toLowerCase(),
                     alignment: "left",
                     fillColor: oddEven ? "#f2f2f2" : "white",
-                  };
+                  });
                 }
               );
 
@@ -290,101 +299,109 @@ const mapDomToPdfContent = (el: Node): Content | null => {
             headerRows,
             keepWithHeaderRows: headerRows,
           },
-        };
+        });
       case "A":
         const a = el as HTMLAnchorElement;
         if (a.children.length === 0) {
-          return {
+          return Some({
             text: a.innerText,
             link: a.href,
             style: "a",
-          };
+          });
         } else {
-          return mapArrayAllowEmpty(Array.from(a.childNodes), (el) =>
-            mapDomToPdfContent(el)
-          ).flat();
+          return Some(
+            mapArrayAllowEmpty(Array.from(a.childNodes), (el) =>
+              mapDomToPdfContent(el)
+            ).flat()
+          );
         }
       case "CODE":
         const code = el as HTMLElement;
         if (code.children.length === 0) {
-          return {
+          return Some({
             text: code.innerText,
             style: "code",
             font: "JetBrainsMono",
-          };
+          });
         } else {
-          return {
+          return Some({
             text: mapArrayAllowEmpty(Array.from(code.childNodes), (el) =>
               mapSyntaxToPdfContent(el)
             ).flat(),
-          };
+          });
         }
       case "BOLD":
       case "STRONG":
         const strong = el as HTMLElement;
         if (strong.children.length === 0) {
-          return {
+          return Some({
             text: strong.innerText,
             bold: true,
-          };
+          });
         } else {
-          return mapArrayAllowEmpty(Array.from(strong.childNodes), (el) =>
-            mapDomToPdfContent(el)
-          ).flat();
+          return Some(
+            mapArrayAllowEmpty(Array.from(strong.childNodes), (el) =>
+              mapDomToPdfContent(el)
+            ).flat()
+          );
         }
       case "EM":
       case "ITALIC":
         const em = el as HTMLElement;
         if (em.children.length === 0) {
-          return {
+          return Some({
             text: em.innerText,
             italics: true,
-          };
+          });
         } else {
-          return mapArrayAllowEmpty(Array.from(em.childNodes), (el) =>
-            mapDomToPdfContent(el)
-          ).flat();
+          return Some(
+            mapArrayAllowEmpty(Array.from(em.childNodes), (el) =>
+              mapDomToPdfContent(el)
+            ).flat()
+          );
         }
       case "UNDERLINE":
       case "U":
         const u = el as HTMLElement;
         if (u.children.length === 0) {
-          return {
+          return Some({
             text: u.innerText,
             decoration: "underline",
-          };
+          });
         } else {
-          return mapArrayAllowEmpty(Array.from(u.childNodes), (el) =>
-            mapDomToPdfContent(el)
-          ).flat();
+          return Some(
+            mapArrayAllowEmpty(Array.from(u.childNodes), (el) =>
+              mapDomToPdfContent(el)
+            ).flat()
+          );
         }
       case "SUP":
         const sup = el as HTMLElement;
         const src = sup.getAttribute("src");
         if (src) {
           addSourceJump(sup, src);
-          return {
+          return Some({
             id: sup.id,
             text: sup.innerText,
             style: "src",
             linkToDestination: src,
-          };
+          });
         } else {
-          return {
+          return Some({
             text: sup.innerText,
             style: "sup",
-          };
+          });
         }
       case "SUB":
         const sub = el as HTMLElement;
-        return {
+        return Some({
           text: sub.innerText,
           style: "sub",
-        };
+        });
       case "BR":
-        return { text: "\n" };
+        return Some({ text: "\n" });
       case "HR":
-        return {
+        return Some({
           margin: [0, 12, 0, 0],
           canvas: [
             {
@@ -397,37 +414,37 @@ const mapDomToPdfContent = (el: Node): Content | null => {
               lineColor: "#BDBDBD",
             },
           ],
-        };
+        });
       default:
         if (el.children.length === 0) {
           if ("innerText" in el) {
-            return {
+            return Some({
               text: (el as HTMLElement).innerText,
-            };
+            });
           } else {
             if (el.textContent) {
-              return {
+              return Some({
                 text: el.textContent,
-              };
+              });
             } else {
-              return null;
+              return None();
             }
           }
         } else {
-          return {
+          return Some({
             text: mapArrayAllowEmpty(Array.from(el.childNodes), (el) =>
               mapDomToPdfContent(el)
             ).flat(),
-          };
+          });
         }
     }
   } else {
     if (el.textContent) {
-      return {
+      return Some({
         text: el.textContent,
-      };
+      });
     } else {
-      return null;
+      return None();
     }
   }
 };
@@ -447,37 +464,39 @@ const title = (): Content => {
   };
 };
 
-const sources = (): Content | null => {
+const sources = (): Option<Content> => {
   if (!hasSources()) {
-    return null;
+    return None();
   }
 
-  return removeEmpty([
-    {
-      pageBreak: "before",
-      text: getText(textId.sources),
-      style: "h1",
-      tocItem: "mainToc",
-      tocStyle: "toc_h1",
-    },
-    {
-      ol: mapSources<Content>((s) => {
-        return {
-          text: [
-            ...sourcesJump.get(s.id)!,
-            `${s.author}, ${s.title}, ${s.creationDate}, ${s.lastAccessed}, `,
-            {
-              text: s.link,
-              link: s.link,
-              style: "a",
-            },
-          ],
-          style: "list",
-          id: s.id,
-        };
+  return Some(
+    removeEmpty<Content>([
+      Some<Content>({
+        pageBreak: "before",
+        text: getText(textId.sources),
+        style: "h1",
+        tocItem: "mainToc",
+        tocStyle: "toc_h1",
       }),
-    },
-  ]);
+      Some<Content>({
+        ol: mapSources<Content>((s) => {
+          return {
+            text: [
+              ...sourcesJump.get(s.id)!,
+              `${s.author}, ${s.title}, ${s.creationDate}, ${s.lastAccessed}, `,
+              {
+                text: s.link,
+                link: s.link,
+                style: "a",
+              },
+            ],
+            style: "list",
+            id: s.id,
+          };
+        }),
+      }),
+    ])
+  );
 };
 
 const createDocDefinition = (): TDocumentDefinitions => {
@@ -533,7 +552,7 @@ const createDocDefinition = (): TDocumentDefinitions => {
 
 export const createPdf = () => {
   sourcesJump.clear();
-  return pdfMake.createPdf(createDocDefinition(), undefined, fonts);
+  return pdfmakeCreatePdf(createDocDefinition(), undefined, fonts);
 };
 
 document.body.addEventListener(

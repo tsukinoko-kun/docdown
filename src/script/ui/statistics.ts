@@ -1,4 +1,4 @@
-import { getText, textId } from "./local";
+import { getText, textId } from "../data/local";
 import passive from "../data/passive";
 
 const displayEl = document.getElementById("display") as HTMLElement;

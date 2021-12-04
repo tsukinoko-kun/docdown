@@ -1,13 +1,11 @@
-/// <reference path="../global.d.ts" />
-
 import { userAlert, userForm, context } from "../ui/alert";
+import { getLocale, getText, language, setLocale, textId } from "../data/local";
 import { DataBase } from "./database";
-import { getLocale, getText, language, setLocale, textId } from "../ui/local";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
 import type { ISourceData } from "./sources";
-import { getThemeId, setTheme } from "./theme";
+import { getThemeId } from "./theme";
+import { listenForMessage, sendMessage, service } from "../router";
 import { h32 } from "xxhashjs";
-import { listenForMessage, mod, sendMessage, service } from "./router";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
@@ -42,10 +40,10 @@ export const setTitle = (title: string, render = true) => {
   session.title = title;
   document.title = `docdown - ${title}`;
   if (render) {
-    triggerRender();
+    sendMessage(service.triggerRender, undefined);
   }
 
-  sendMessage(mod.session, service.setChanged, {
+  sendMessage(service.setChanged, {
     title,
   });
 };
@@ -58,15 +56,15 @@ export const importData = (data: Partial<ISessionData> = {}) => {
   setLocale(data.language ?? navigator.language.includes("de") ? "de" : "en");
   codeEl.value = data.code ?? "";
   importSourcesJSON(data.sources ?? ([] as any));
-  setTheme(data.theme ?? "ocean");
+  sendMessage(service.setTheme, data.theme ?? "ocean");
 
-  triggerRender();
+  sendMessage(service.triggerRender, undefined);
 };
 
 let changedData: Partial<ISessionData> = {};
 let updateDbToken: number | null = null;
 
-listenForMessage(mod.session, service.setChanged, (data) => {
+listenForMessage(service.setChanged, (data) => {
   if (!session.active) {
     return;
   }
@@ -89,10 +87,10 @@ listenForMessage(mod.session, service.setChanged, (data) => {
   }, 2000);
 });
 
-export const logout = () => {
+listenForMessage(service.logout, () => {
   db.unsubscribeAll();
   db.signOut();
-};
+});
 
 const tryStartSession = (sessionId: string, fromLocal = false) => {
   console.debug(
@@ -123,7 +121,7 @@ const tryStartSession = (sessionId: string, fromLocal = false) => {
         }
 
         if (data.theme !== getThemeId()) {
-          setTheme(data.theme);
+          sendMessage(service.setTheme, data.theme);
         }
 
         if (h32(data.code, 0) !== h32(codeEl.value, 0)) {
@@ -140,7 +138,7 @@ const tryStartSession = (sessionId: string, fromLocal = false) => {
         }
 
         if (render) {
-          triggerRender();
+          sendMessage(service.triggerRender, undefined);
         }
 
         session.active = true;

@@ -1,4 +1,4 @@
-import { Color } from "../logic/dataHelper";
+import { Color } from "./Color";
 
 // const draculaDark = {
 //   background: new Color(0x282a36),

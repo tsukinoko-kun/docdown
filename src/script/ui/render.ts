@@ -1,5 +1,3 @@
-/// <reference path="../global.d.ts" />
-
 import passive from "../data/passive";
 import { setUsedSources, sourceTag } from "../logic/sources";
 import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
@@ -8,7 +6,7 @@ import MD from "markdown-it";
 import { syncScroll } from "./syncScroll";
 import { countWords } from "./statistics";
 import { download, gsb } from "../logic/database";
-import { mod, sendMessage, service } from "../logic/router";
+import { listenForMessage, sendMessage, service } from "../router";
 
 const md = new MD("default", {
   breaks: false,
@@ -130,7 +128,7 @@ codeEl.addEventListener(
       clearTimeout(renderDelayId);
     }
 
-    sendMessage(mod.session, service.setChanged, {
+    sendMessage(service.setChanged, {
       code: codeEl.value,
     });
     renderDelayId = window.setTimeout(() => {
@@ -141,11 +139,13 @@ codeEl.addEventListener(
   passive
 );
 
-(window as any)["triggerRender"] = () => {
+const triggerRender = () => {
   render(codeEl.value);
   countWords();
   updateTableOfContents();
 };
+
+listenForMessage(service.triggerRender, triggerRender);
 
 codeEl.value = `# h1 Heading
 ## h2 Heading

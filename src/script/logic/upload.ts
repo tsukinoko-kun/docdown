@@ -1,8 +1,8 @@
 import { userAlert } from "../ui/alert";
 import { upload } from "./database";
-import { replaceSelectedText } from "../ui/editor";
-import { getText, textId } from "../ui/local";
+import { getText, textId } from "../data/local";
 import { importData } from "./session";
+import { sendMessage, service } from "../router";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
@@ -46,8 +46,11 @@ const dropFile = (ev: DragEvent) => {
     ) {
       upload(file)
         .then((url) => {
-          replaceSelectedText(codeEl, `![${file.name}](${url})`);
-          triggerRender();
+          sendMessage(service.replaceSelectedText, {
+            textEl: codeEl,
+            replacement: `![${file.name}](${url})`,
+          });
+          sendMessage(service.triggerRender, undefined);
         })
         .catch((err) => {
           if (err) {

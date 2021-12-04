@@ -2,10 +2,7 @@
  * This module ist for any modal dialogs that are shown to the user.
  */
 
-import {
-  addDisposableEventListener,
-  disposeNode,
-} from "@frank-mayer/magic/bin";
+import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import passive from "../data/passive";
 
 const activeModalPromises = new Map<bigint, () => void>();

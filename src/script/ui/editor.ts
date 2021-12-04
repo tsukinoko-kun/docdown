@@ -1,37 +1,44 @@
 import { userAlert } from "./alert";
-import { getText, textId } from "./local";
-import { mod, sendMessage, service } from "../logic/router";
+import { getText, textId } from "../data/local";
+import { listenForMessage, sendMessage, service } from "../router";
 
-export const replaceSelectedText = (
-  textEl: HTMLTextAreaElement,
+export interface IReplaceTextData {
+  textEl: HTMLTextAreaElement;
   replacement:
     | string
-    | ((selected: string, start: number, end: number) => string),
-  insertIfNoSelection = true
-): boolean => {
-  const start = textEl.selectionStart ?? 0;
-  const end = textEl.selectionEnd ?? start;
+    | ((selected: string, start: number, end: number) => string);
+  insertIfNoSelection?: boolean;
+}
 
-  if (!insertIfNoSelection && start === end) {
-    return false;
+listenForMessage(
+  service.replaceSelectedText,
+  (data: IReplaceTextData): boolean => {
+    const start = data.textEl.selectionStart ?? 0;
+    const end = data.textEl.selectionEnd ?? start;
+
+    if (!(data.insertIfNoSelection ?? true) && start === end) {
+      return false;
+    }
+
+    const selected = data.textEl.value.substring(start, end);
+    const newText =
+      typeof data.replacement === "string"
+        ? data.replacement
+        : data.replacement(selected, start, end);
+    data.textEl.value =
+      data.textEl.value.substring(0, start) +
+      newText +
+      data.textEl.value.substring(end);
+    data.textEl.selectionStart = start;
+    data.textEl.selectionEnd = start + newText.length;
+
+    sendMessage(service.setChanged, {
+      code: data.textEl.value,
+    });
+
+    return true;
   }
-
-  const selected = textEl.value.substring(start, end);
-  const newText =
-    typeof replacement === "string"
-      ? replacement
-      : replacement(selected, start, end);
-  textEl.value =
-    textEl.value.substring(0, start) + newText + textEl.value.substring(end);
-  textEl.selectionStart = start;
-  textEl.selectionEnd = start + newText.length;
-
-  sendMessage(mod.session, service.setChanged, {
-    code: textEl.value,
-  });
-
-  return true;
-};
+);
 
 export const textSelected = (textEl: HTMLTextAreaElement): boolean => {
   const start = textEl.selectionStart ?? 0;
@@ -39,29 +46,32 @@ export const textSelected = (textEl: HTMLTextAreaElement): boolean => {
   return start !== end;
 };
 
-export const insertText = (
-  textEl: HTMLTextAreaElement,
-  textToInsert: string,
-  focusAfterInsert = true
-) => {
+export interface IInsertTextData {
+  textEl: HTMLTextAreaElement;
+  textToInsert: string;
+  focusAfterInsert?: boolean;
+}
+
+listenForMessage(service.insertText, (data: IInsertTextData) => {
+  const textEl = data.textEl;
   const start = textEl.selectionStart ?? 0;
   const end = textEl.selectionEnd ?? start;
   textEl.value =
     textEl.value.substring(0, start) +
-    textToInsert +
+    data.textToInsert +
     textEl.value.substring(end);
-  if (focusAfterInsert) {
+  if (data.focusAfterInsert ?? true) {
     textEl.selectionStart = start;
-    textEl.selectionEnd = start + textToInsert.length;
+    textEl.selectionEnd = start + data.textToInsert.length;
   } else {
-    textEl.selectionEnd = textEl.selectionStart = start + textToInsert.length;
+    textEl.selectionEnd = textEl.selectionStart =
+      start + data.textToInsert.length;
   }
 
-  sendMessage(mod.session, service.setChanged, {
+  sendMessage(service.setChanged, {
     code: textEl.value,
   });
-};
-
+});
 export const deleteAllSubstringsInText = (
   textEl: HTMLTextAreaElement,
   del: string
@@ -85,7 +95,7 @@ export const deleteAllSubstringsInText = (
   textEl.selectionStart = newStart;
   textEl.selectionEnd = newEnd;
 
-  sendMessage(mod.session, service.setChanged, {
+  sendMessage(service.setChanged, {
     code: textEl.value,
   });
 };
@@ -120,7 +130,7 @@ export const replaceAllSubstringsInText = (
   textEl.selectionStart = newStart;
   textEl.selectionEnd = newEnd;
 
-  sendMessage(mod.session, service.setChanged, {
+  sendMessage(service.setChanged, {
     code: textEl.value,
   });
 };

@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-
 import {
   getDatabase,
   ref as dbRef,
@@ -10,16 +9,16 @@ import {
   onChildMoved,
   onChildRemoved,
 } from "firebase/database";
-
 import {
   browserLocalPersistence,
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { userAlert, userForm } from "../ui/alert";
 
 import type { DataSnapshot, Unsubscribe } from "firebase/database";
 import type { User } from "firebase/auth";
+
+import { userAlert, userForm } from "../ui/alert";
 
 import {
   getStorage,
@@ -28,7 +27,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-import { getText, textId } from "../ui/local";
+import { getText, textId } from "../data/local";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCSv8c1dqMYtGVxsrfGY_BYFOKHn3oP9bc",
