@@ -4,6 +4,7 @@ import type { IInsertTextData, IReplaceTextData } from "./ui/editor";
 import type { IContextData } from "./ui/alert";
 import type { ISessionData } from "./logic/session";
 import type { themeId, ITheme } from "./logic/theme";
+import type { pdfOutput } from "./logic/export";
 
 /**
  * module service
@@ -19,6 +20,7 @@ export enum service {
   replaceSelectedText,
   logout,
   context,
+  createPdf,
 }
 
 enum paramResult {
@@ -41,6 +43,7 @@ interface IServiceMap {
   [service.replaceSelectedText]: ParamResult<IReplaceTextData, boolean>;
   [service.logout]: ParamResult<undefined, void>;
   [service.context]: ParamResult<IContextData, void>;
+  [service.createPdf]: ParamResult<pdfOutput, void>;
 }
 
 const messageReciever = new Map<service, Array<Function>>();

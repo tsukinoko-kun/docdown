@@ -5,7 +5,6 @@ import {
   replaceAllSubstringsInText,
   textSelected,
 } from "./editor";
-import { createPdf } from "../logic/export";
 import { getText, language, setLocale, textId } from "../data/local";
 import { saveLocal, setTitle, getTitle } from "../logic/session";
 import { sendMessage, service } from "../router";
@@ -351,7 +350,7 @@ window.addEventListener(
           break;
         case "p":
           ev.preventDefault();
-          createPdf().print();
+          sendMessage(service.createPdf, 0 /* pdfOutput.print */);
           break;
       }
     } else if (ev.key === "Escape") {

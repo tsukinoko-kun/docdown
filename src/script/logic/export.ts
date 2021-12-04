@@ -18,7 +18,7 @@ import { createPdf as pdfmakeCreatePdf } from "pdfmake/build/pdfmake";
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import { None, Some } from "../Option";
 import type { Option } from "../Option";
-import { sendMessage, service } from "../router";
+import { listenForMessage, sendMessage, service } from "../router";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
@@ -550,10 +550,29 @@ const createDocDefinition = (): TDocumentDefinitions => {
   return docDefinition;
 };
 
-export const createPdf = () => {
+const createPdf = () => {
   sourcesJump.clear();
   return pdfmakeCreatePdf(createDocDefinition(), undefined, fonts);
 };
+
+export enum pdfOutput {
+  print,
+  download,
+  open,
+}
+listenForMessage(service.createPdf, (output) => {
+  switch (output) {
+    case pdfOutput.print:
+      createPdf().print();
+      break;
+    case pdfOutput.download:
+      createPdf().download(getTitle() + ".pdf");
+      break;
+    case pdfOutput.open:
+      createPdf().open();
+      break;
+  }
+});
 
 document.body.addEventListener(
   "contextmenu",
@@ -566,19 +585,19 @@ document.body.addEventListener(
         {
           label: getText(textId.export_pdf),
           action: () => {
-            createPdf().open();
+            sendMessage(service.createPdf, pdfOutput.open);
           },
         },
         {
           label: getText(textId.download_pdf),
           action: () => {
-            createPdf().download(getTitle() + ".pdf");
+            sendMessage(service.createPdf, pdfOutput.download);
           },
         },
         {
           label: getText(textId.print),
           action: () => {
-            createPdf().print();
+            sendMessage(service.createPdf, pdfOutput.print);
           },
         },
       ],
