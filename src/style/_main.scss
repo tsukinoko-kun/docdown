@@ -39,6 +39,40 @@ main {
     }
   }
 
+  > #sources::before {
+    mask: url(../image/sources.svg) no-repeat 100% 100%;
+  }
+  > #nav::before {
+    mask: url(../image/title.svg) no-repeat 100% 100%;
+  }
+  > #display::before {
+    mask: url(../image/document.svg) no-repeat 100% 100%;
+  }
+
+  > #nav::before,
+  > #sources::before,
+  > #display::before {
+    mask-size: cover;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    content: "";
+    margin: {
+      left: $gap;
+      top: $gap;
+    }
+  }
+  > #nav:hover::before,
+  > #sources:hover::before,
+  > #display:hover::before {
+    background-color: $green;
+  }
+  > #nav:not(:hover)::before,
+  > #sources:not(:hover)::before,
+  > #display:not(:hover)::before {
+    background-color: $current-line;
+  }
+
   > #sources,
   > #nav {
     padding: 0;
