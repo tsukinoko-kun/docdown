@@ -93,11 +93,7 @@ listenForMessage(service.logout, () => {
 });
 
 const tryStartSession = (sessionId: string, fromLocal = false) => {
-  console.debug(
-    "tryStartSession",
-    sessionId,
-    fromLocal ? "from local" : "from database"
-  );
+
 
   if (session.active) {
     console.error("session already active");

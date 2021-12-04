@@ -353,6 +353,7 @@ listenForMessage(service.context, (data: IContextData) => {
     } else {
       contextOptions.add(option.label);
     }
+
     const li = document.createElement("li");
     li.textContent = option.label;
     addDisposableEventListener(
