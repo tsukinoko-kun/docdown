@@ -1,4 +1,3 @@
-import { context } from "../ui/alert";
 import { getLocale, getText, textId } from "../data/local";
 import {
   defaultStyle,
@@ -19,6 +18,7 @@ import { createPdf as pdfmakeCreatePdf } from "pdfmake/build/pdfmake";
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import { None, Some } from "../Option";
 import type { Option } from "../Option";
+import { sendMessage, service } from "../router";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
@@ -560,26 +560,29 @@ document.body.addEventListener(
   (ev) => {
     ev.preventDefault();
 
-    context(ev, [
-      {
-        label: getText(textId.export_pdf),
-        action: () => {
-          createPdf().open();
+    sendMessage(service.context, {
+      ev,
+      options: [
+        {
+          label: getText(textId.export_pdf),
+          action: () => {
+            createPdf().open();
+          },
         },
-      },
-      {
-        label: getText(textId.download_pdf),
-        action: () => {
-          createPdf().download(getTitle() + ".pdf");
+        {
+          label: getText(textId.download_pdf),
+          action: () => {
+            createPdf().download(getTitle() + ".pdf");
+          },
         },
-      },
-      {
-        label: getText(textId.print),
-        action: () => {
-          createPdf().print();
+        {
+          label: getText(textId.print),
+          action: () => {
+            createPdf().print();
+          },
         },
-      },
-    ]);
+      ],
+    });
   },
   {
     passive: false,

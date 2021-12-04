@@ -1,6 +1,7 @@
 import { None, Some } from "./Option";
 
 import type { IInsertTextData, IReplaceTextData } from "./ui/editor";
+import type { IContextData } from "./ui/alert";
 import type { ISessionData } from "./logic/session";
 import type { themeId, ITheme } from "./logic/theme";
 
@@ -17,6 +18,7 @@ export enum service {
   insertText,
   replaceSelectedText,
   logout,
+  context,
 }
 
 enum paramResult {
@@ -28,7 +30,7 @@ type ParamResult<P, R> = {
   [paramResult.result]: R;
 };
 
-interface ServiceMap {
+interface IServiceMap {
   [service.setChanged]: ParamResult<Partial<ISessionData>, void>;
   [service.setTheme]: ParamResult<themeId, void>;
   [service.getTheme]: ParamResult<undefined, ITheme>;
@@ -38,15 +40,16 @@ interface ServiceMap {
   [service.insertText]: ParamResult<IInsertTextData, void>;
   [service.replaceSelectedText]: ParamResult<IReplaceTextData, boolean>;
   [service.logout]: ParamResult<undefined, void>;
+  [service.context]: ParamResult<IContextData, void>;
 }
 
 const messageReciever = new Map<service, Array<Function>>();
 
-export const listenForMessage = <S extends keyof ServiceMap>(
+export const listenForMessage = <S extends keyof IServiceMap>(
   service: S,
   callback: (
-    message: ServiceMap[S][paramResult.param]
-  ) => ServiceMap[S][paramResult.result]
+    message: IServiceMap[S][paramResult.param]
+  ) => IServiceMap[S][paramResult.result]
 ) => {
   const s = messageReciever.get(service);
   if (s) {
@@ -57,11 +60,11 @@ export const listenForMessage = <S extends keyof ServiceMap>(
 };
 
 export const sendMessage = <
-  S extends keyof ServiceMap,
-  R extends ServiceMap[S][paramResult.result]
+  S extends keyof IServiceMap,
+  R extends IServiceMap[S][paramResult.result]
 >(
   service: S,
-  message: ServiceMap[S][paramResult.param]
+  message: IServiceMap[S][paramResult.param]
 ) => {
   const s = messageReciever.get(service);
   if (s && s.length > 0) {

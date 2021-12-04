@@ -1,10 +1,10 @@
 import { deleteAllSubstringsInText } from "../ui/editor";
 import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import { h64 } from "xxhashjs";
-import { userAlert, userForm, context } from "../ui/alert";
+import { userAlert, userForm } from "../ui/alert";
 import { getLocale, getText, textId } from "../data/local";
 
-import type { ContextOption } from "../ui/alert";
+import type { IContextOption } from "../ui/alert";
 import { sendMessage, service } from "../router";
 
 const sourcesEl = document.getElementById("sources") as HTMLUListElement;
@@ -198,7 +198,7 @@ class SourceData implements ISourceData {
   }
 }
 
-const contextOptionAdd: ContextOption = {
+const contextOptionAdd: IContextOption = {
   label: getText(textId.add_source),
   action: () => {
     const today = new Date().toISOString().split("T")[0]!;
@@ -263,18 +263,21 @@ sourcesEl.addEventListener(
     let tEl = ev.target as HTMLElement | null;
     while (tEl) {
       if (tEl.tagName === "LI") {
-        context(ev, [
-          contextOptionAdd,
-          {
-            label: getText(textId.delete_source),
-            action: () => {
-              sourcesRegister.delete(tEl!.id);
-              deleteAllSubstringsInText(codeEl, `<src>${tEl!.id}</src>`);
-              disposeNode(tEl!);
-              sendMessage(service.triggerRender, undefined);
+        sendMessage(service.context, {
+          ev,
+          options: [
+            contextOptionAdd,
+            {
+              label: getText(textId.delete_source),
+              action: () => {
+                sourcesRegister.delete(tEl!.id);
+                deleteAllSubstringsInText(codeEl, `<src>${tEl!.id}</src>`);
+                disposeNode(tEl!);
+                sendMessage(service.triggerRender, undefined);
+              },
             },
-          },
-        ]);
+          ],
+        });
 
         return;
       }
@@ -282,7 +285,7 @@ sourcesEl.addEventListener(
       tEl = tEl.parentElement;
     }
 
-    context(ev, [contextOptionAdd]);
+    sendMessage(service.context, { ev, options: [contextOptionAdd] });
   },
   {
     capture: true,

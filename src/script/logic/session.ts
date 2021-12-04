@@ -1,4 +1,4 @@
-import { userAlert, userForm, context } from "../ui/alert";
+import { userAlert, userForm } from "../ui/alert";
 import { getLocale, getText, language, setLocale, textId } from "../data/local";
 import { DataBase } from "./database";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
@@ -178,42 +178,48 @@ document.addEventListener(
     ev.preventDefault();
 
     if (!session.active) {
-      context(ev, [
-        {
-          label: getText(textId.start_new_session),
-          action: () => {
-            userForm([
-              {
-                name: "title",
-                label: getText(textId.title),
-                required: true,
-                type: "text",
-                value: getTitle(),
-              },
-            ])
-              .then((data) => {
-                setTitle(data.title);
-                tryStartSession(newSessionId(), true);
-              })
-              .catch((err) => {
-                if (err) {
-                  console.info(err);
-                }
-              });
+      sendMessage(service.context, {
+        ev,
+        options: [
+          {
+            label: getText(textId.start_new_session),
+            action: () => {
+              userForm([
+                {
+                  name: "title",
+                  label: getText(textId.title),
+                  required: true,
+                  type: "text",
+                  value: getTitle(),
+                },
+              ])
+                .then((data) => {
+                  setTitle(data.title);
+                  tryStartSession(newSessionId(), true);
+                })
+                .catch((err) => {
+                  if (err) {
+                    console.info(err);
+                  }
+                });
+            },
           },
-        },
-      ]);
+        ],
+      });
     } else {
-      context(ev, [
-        {
-          label: getText(textId.stop_session),
-          action: () => {
-            db.unsubscribeAll();
-            db.dropAt(["session", session.id]);
-            location.hash = "";
+      sendMessage(service.context, {
+        ev,
+        options: [
+          {
+            label: getText(textId.stop_session),
+            action: () => {
+              db.unsubscribeAll();
+              db.dropAt(["session", session.id]);
+              location.hash = "";
+            },
           },
-        },
-      ]);
+        ],
+      });
     }
   },
   {
