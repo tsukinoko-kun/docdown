@@ -1,0 +1,8 @@
+@import "../theme";
+
+main > #code {
+  grid-area: code;
+  padding: 0.5em;
+  resize: none !important;
+  font-family: $monospace-font !important;
+}

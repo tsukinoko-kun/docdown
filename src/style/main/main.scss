@@ -1,6 +1,6 @@
 @use "sass:math";
 
-@import "theme";
+@import "../theme";
 
 $gap: 4px;
 
@@ -13,30 +13,16 @@ main {
   margin: $gap;
   grid-auto-flow: row;
 
-  > *:not(#nav, #sources, #code, #display, #statistics) {
-    display: none !important;
-  }
-
-  > * {
+  > #nav,
+  > #sources,
+  > #code,
+  > #display {
     height: 100%;
     overflow-y: auto;
     margin: 0;
     border-radius: $radius;
-  }
-
-  > #nav {
-    grid-area: nav;
-
-    @for $i from 1 through 6 {
-      > * {
-        cursor: pointer;
-
-        &.h#{$i} {
-          font-size: #{18 - $i}px;
-          font-weight: #{max(100, 800 - $i * 200)} !important;
-        }
-      }
-    }
+    background-color: var(--background);
+    color: var(--foreground);
   }
 
   > #sources::before {
@@ -48,7 +34,6 @@ main {
   > #display::before {
     mask: url(../image/document.svg) no-repeat 100% 100%;
   }
-
   > #nav::before,
   > #sources::before,
   > #display::before {
@@ -70,75 +55,7 @@ main {
   > #nav:not(:hover)::before,
   > #sources:not(:hover)::before,
   > #display:not(:hover)::before {
-    background-color: $current-line;
-  }
-
-  > #sources,
-  > #nav {
-    padding: 0;
-    user-select: none;
-    list-style-type: none;
-
-    > * {
-      @include clickable;
-      width: 100%;
-      min-width: 100px;
-      padding: 2px 8px;
-    }
-  }
-
-  > #sources {
-    grid-area: sources;
-    > li:not(.used) {
-      opacity: 0.5;
-    }
-  }
-
-  > #code {
-    padding: 0.5em;
-    grid-area: code;
-    resize: none !important;
-    font-family: "JetBrainsMono", "SFMono-Regular", Consolas, "Liberation Mono",
-      monospace !important;
-  }
-
-  > #statistics {
-    user-select: none;
-    grid-area: statistics;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 $gap;
-    gap: 32px;
-    font-size: 0.8em;
-    > * {
-      color: $foreground;
-      background-color: $current-line;
-    }
-    > .clickable {
-      text-decoration: none;
-      @include clickable;
-    }
-    > #repeat-tutorial {
-      cursor: help !important;
-    }
-  }
-
-  > #display {
-    padding: 0.5em;
-    grid-area: display;
-
-    * {
-      white-space: normal;
-      max-width: 100%;
-    }
-
-    code,
-    code * {
-      font-family: "JetBrainsMono", "SFMono-Regular", Consolas,
-        "Liberation Mono", monospace !important;
-    }
+    background-color: var(--window-gap-color);
   }
 }
 
@@ -179,3 +96,9 @@ table {
     text-align: left !important;
   }
 }
+
+@import "code";
+@import "display";
+@import "nav";
+@import "sources";
+@import "statistics";

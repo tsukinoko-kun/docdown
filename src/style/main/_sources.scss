@@ -1,0 +1,10 @@
+@import "../theme";
+
+main > #sources {
+  grid-area: sources;
+  @include clickable-list;
+
+  > li:not(.used) {
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,13 @@
+@import "../theme";
+
+* {
+  color-scheme: dark;
+}
+
+:root {
+  --background: #{$background};
+  --foreground: #{$foreground};
+  --anchor-color: #{$cyan};
+  --anchor-hover-color: #{$purple};
+  --window-gap-color: #{$current-line};
+}

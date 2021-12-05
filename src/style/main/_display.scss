@@ -1,0 +1,27 @@
+@import "../theme";
+
+main > #display {
+  a {
+    &:not(:hover) {
+      color: var(--anchor-color);
+    }
+
+    &:hover {
+      color: var(--anchor-hover-color);
+    }
+  }
+
+  pre,
+  code,
+  code * {
+    font-family: $monospace-font !important;
+  }
+
+  padding: 0.5em;
+  grid-area: display;
+
+  * {
+    white-space: normal;
+    max-width: 100%;
+  }
+}

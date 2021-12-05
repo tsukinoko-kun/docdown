@@ -1,3 +1,5 @@
+@import "theme";
+
 *:not(hr),
 *:before,
 *:after {
@@ -11,21 +13,23 @@ body,
 main {
   padding: 0;
   margin: 0;
+  background-color: var(--window-gap-color);
 }
 
 * {
   position: relative;
 
-  font-family: "NotoSans", "Segoe UI", Roboto, sans-serif;
+  font-family: $default-font;
 }
 
-:root {
+:root,
+body {
   overflow-x: hidden;
 }
 
-@import "main";
 @import "alert";
-@import "dark-light-mode";
+@import "main/main";
+@import "selection";
 @import "scrollbar";
 @import "syntax";
 @import "tutorial";
