@@ -114,102 +114,84 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
     switch (el.tagName) {
       case "H1":
         const h1 = el as HTMLHeadingElement;
-        if (h1.children.length === 0) {
-          return Some({
-            text: h1.innerText,
-            style: "h1",
-            tocItem: "mainToc",
-            tocStyle: "toc_h1",
-          });
-        } else {
-          return Some(
-            mapArrayAllowEmpty(
-              Array.from(h1.childNodes),
-              mapDomToPdfContent
-            ).flat()
-          );
-        }
+        return Some({
+          text:
+            h1.children.length === 0
+              ? h1.innerText
+              : mapArrayAllowEmpty(
+                  Array.from(h1.childNodes),
+                  mapDomToPdfContent
+                ),
+          style: "h1",
+          tocItem: "mainToc",
+          tocStyle: "toc_h1",
+        });
       case "H2":
         const h2 = el as HTMLHeadingElement;
-        if (h2.children.length === 0) {
-          return Some({
-            text: h2.innerText,
-            style: "h2",
-            tocItem: "mainToc",
-            tocStyle: "toc_h2",
-            tocMargin: [20, 0, 0, 0],
-          });
-        } else {
-          return Some(
-            mapArrayAllowEmpty(
-              Array.from(h2.childNodes),
-              mapDomToPdfContent
-            ).flat()
-          );
-        }
+        return Some({
+          text:
+            h2.children.length === 0
+              ? h2.innerText
+              : mapArrayAllowEmpty(
+                  Array.from(h2.childNodes),
+                  mapDomToPdfContent
+                ),
+          style: "h2",
+          tocItem: "mainToc",
+          tocStyle: "toc_h2",
+          tocMargin: [20, 0, 0, 0],
+        });
       case "H3":
         const h3 = el as HTMLHeadingElement;
-        if (h3.children.length === 0) {
-          return Some({
-            text: h3.innerText,
-            style: "h3",
-            tocItem: "mainToc",
-            tocStyle: "toc_h3",
-            tocMargin: [40, 0, 0, 0],
-          });
-        } else {
-          return Some(
-            mapArrayAllowEmpty(
-              Array.from(h3.childNodes),
-              mapDomToPdfContent
-            ).flat()
-          );
-        }
+        return Some({
+          text:
+            h3.children.length === 0
+              ? h3.innerText
+              : mapArrayAllowEmpty(
+                  Array.from(h3.childNodes),
+                  mapDomToPdfContent
+                ),
+          style: "h3",
+          tocItem: "mainToc",
+          tocStyle: "toc_h3",
+          tocMargin: [40, 0, 0, 0],
+        });
       case "H4":
         const h4 = el as HTMLHeadingElement;
-        if (h4.children.length === 0) {
-          return Some({
-            text: h4.innerText,
-            style: "h4",
-          });
-        } else {
-          return Some(
-            mapArrayAllowEmpty(
-              Array.from(h4.childNodes),
-              mapDomToPdfContent
-            ).flat()
-          );
-        }
+        return Some({
+          text:
+            h4.children.length === 0
+              ? h4.innerText
+              : mapArrayAllowEmpty(
+                  Array.from(h4.childNodes),
+                  mapDomToPdfContent
+                ),
+          style: "h4",
+        });
       case "H5":
         const h5 = el as HTMLHeadingElement;
-        if (h5.children.length === 0) {
-          return Some({
-            text: h5.innerText,
-            style: "h5",
-          });
-        } else {
-          return Some(
-            mapArrayAllowEmpty(
-              Array.from(h5.childNodes),
-              mapDomToPdfContent
-            ).flat()
-          );
-        }
+        return Some({
+          text:
+            h5.children.length === 0
+              ? h5.innerText
+              : mapArrayAllowEmpty(
+                  Array.from(h5.childNodes),
+                  mapDomToPdfContent
+                ),
+          style: "h5",
+        });
       case "H6":
         const h6 = el as HTMLHeadingElement;
-        if (h6.children.length === 0) {
-          return Some({
-            text: h6.innerText,
-            style: "h6",
-          });
-        } else {
-          return Some(
-            mapArrayAllowEmpty(
-              Array.from(h6.childNodes),
-              mapDomToPdfContent
-            ).flat()
-          );
-        }
+        return Some({
+          text:
+            h6.children.length === 0
+              ? h6.innerText
+              : mapArrayAllowEmpty(
+                  Array.from(h6.childNodes),
+                  mapDomToPdfContent
+                ),
+          style: "h6",
+        });
       case "OL":
       case "UL":
         const listEl = el as HTMLOListElement | HTMLUListElement;

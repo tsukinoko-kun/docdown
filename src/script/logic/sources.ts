@@ -51,7 +51,7 @@ const useSource = (source: ISourceData) => {
   if (document.activeElement === codeEl) {
     sendMessage(service.insertText, {
       textEl: codeEl,
-      textToInsert: `<src>${source.id}</src>`,
+      textToInsert: ` [^${source.id}]`,
     });
     sendMessage(service.triggerRender, undefined);
   }
@@ -159,7 +159,7 @@ export const importSourcesJSON = (sources: IterableIterator<ISourceData>) => {
   }
 };
 
-export const sourceTag = /<src>[0-9a-z]+<\/src>/g;
+export const sourceTag = /[\^[0-9a-z]+]/g;
 
 class SourceData implements ISourceData {
   id: string;
@@ -323,8 +323,8 @@ const contextOptionEdit = (
         sourcesEl.replaceChild(createLiFromSource(sourceData), scrLiEl);
         sendMessage(service.replaceAllSubstringsInText, {
           textEl: codeEl,
-          searchValue: `<src>${data.id}</src>`,
-          replaceValue: `<src>${sourceData.id}</src>`,
+          searchValue: `[^${data.id}]`,
+          replaceValue: `[^${sourceData.id}]`,
         });
         sendMessage(service.triggerRender, undefined);
         sendMessage(service.setChanged, {
@@ -357,7 +357,7 @@ sourcesEl.addEventListener(
               label: getText(textId.delete_source),
               action: () => {
                 sourcesRegister.delete(tEl!.id);
-                deleteAllSubstringsInText(codeEl, `<src>${tEl!.id}</src>`);
+                deleteAllSubstringsInText(codeEl, `[^${tEl!.id}]`);
                 disposeNode(tEl!);
                 sendMessage(service.triggerRender, undefined);
               },

@@ -13,7 +13,7 @@ const md = new MD("default", {
   linkify: true,
   xhtmlOut: true,
   typographer: true,
-  html: true,
+  html: false,
   quotes: "„“‚‘",
   highlight: (str, lang) => {
     if (lang && hljs.getLanguage(lang)) {
@@ -105,7 +105,7 @@ const render = (markdown: string) => {
   disposeNode(displayEl, false);
 
   displayEl.innerHTML = md.render(markdown).replace(sourceTag, (srcTag) => {
-    const srcId = srcTag.substring(5, srcTag.length - 6);
+    const srcId = srcTag.substring(2, srcTag.length - 1);
     const i = sources.indexOf(srcId);
     if (i === -1) {
       sources.push(srcId);
