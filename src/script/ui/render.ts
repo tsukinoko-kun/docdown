@@ -164,19 +164,19 @@ listenForMessage(service.triggerRender, triggerRender);
 codeEl.value = `# Links
 
 - [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet)
-- [Sourcecode on GitHub](https://source.docdown.app)
+- [Source code on GitHub](https://source.docdown.app)
 - [Bug reports and feature requests](https://github.com/Frank-Mayer/docdown/issues/new/choose)
 - [docdown Q & A](https://source.docdown.app/discussions/categories/q-a)
 
-# Licenses
+# Third-party software & services
 
-- Jetbrains Mono Font by JetBrains, Philipp Nurullin, Konstantin Bulenkov.
-- Noto Sans Mono Font by Google.
-- Database and hosting by [Firebase](https://firebase.google.com).
-- Markdown to HTML conversion by [markdown-it](https://npmjs.com/package/markdown-it).
-- [Highlight.js](https://npmjs.com/package/highlight.js) syntax highlighting.
-- PDF-API [pdfmake](https://npmjs.com/package/pdfmake) for PDF export.
-- Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com).
+- [JetBrains Mono](https://www.jetbrains.com/lp/mono) Font by JetBrains, Philipp Nurullin, Konstantin Bulenkov (SIL Open Font License 1.1)
+- [Noto Sans Font](fonts.google.com/noto) by Google (SIL Open Font License & Apache License)
+- Database and hosting by [Firebase](https://firebase.google.com)
+- Markdown to HTML conversion by [markdown-it](https://npmjs.com/package/markdown-it) (MIT License)
+- [Highlight.js](https://npmjs.com/package/highlight.js) syntax highlighting (BSD-3-Clause License)
+- PDF-API [pdfmake](https://npmjs.com/package/pdfmake) for PDF export (MIT License)
+- Icon made by [Vitaly Gorbachev](https://www.flaticon.com/authors/vitaly-gorbachev) from [www.flaticon.com](https://www.flaticon.com) (Flaticon License)
 `;
 
 triggerRender();
