@@ -17,6 +17,18 @@ main > #display {
     font-family: $monospace-font !important;
   }
 
+  ul > li,
+  ol > li {
+    &.checked {
+      display: list-item;
+      list-style-type: "☑  ";
+    }
+    &.unchecked {
+      display: list-item;
+      list-style-type: "☐️  ";
+    }
+  }
+
   padding: 0.5em;
   grid-area: display;
 

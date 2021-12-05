@@ -1,5 +1,5 @@
 import dracula from "./dracula";
-import type { Style, TFontDictionary } from "pdfmake/interfaces";
+import type { Content, Style, TFontDictionary } from "pdfmake/interfaces";
 
 import NotoSansRegular from "../../font/Noto_Sans/NotoSans-Regular.ttf";
 import NotoSansBold from "../../font/Noto_Sans/NotoSans-Bold.ttf";
@@ -10,6 +10,10 @@ import JetBrainsMonoRegular from "../../font/JetBrainsMono/JetBrainsMono-Regular
 import JetBrainsMonoBold from "../../font/JetBrainsMono/JetBrainsMono-Bold.ttf";
 import JetBrainsMonoItalic from "../../font/JetBrainsMono/JetBrainsMono-Italic.ttf";
 import JetBrainsMonoBoldItalic from "../../font/JetBrainsMono/JetBrainsMono-BoldItalic.ttf";
+
+import FontAwesomeRegular from "../../font/FontAwesome/fa-regular-400.ttf";
+import FontAwesomeBold from "../../font/FontAwesome/fa-solid-900.ttf";
+
 import { sendMessage, service } from "../router";
 
 export const fonts: TFontDictionary = {
@@ -25,7 +29,26 @@ export const fonts: TFontDictionary = {
     italics: JetBrainsMonoItalic,
     bolditalics: JetBrainsMonoBoldItalic,
   },
+  FontAwesome: {
+    normal: FontAwesomeRegular,
+    bold: FontAwesomeBold,
+  },
 };
+
+export const faChecked: Content[] = [
+  {
+    text: "\uf14a",
+    style: "fontawesome",
+  },
+  { text: " " },
+];
+export const faUnchecked: Content[] = [
+  {
+    text: "\uf0c8",
+    style: "fontawesome",
+  },
+  { text: " " },
+];
 
 export const defaultStyle: Style = {
   fontSize: 11,
@@ -130,6 +153,7 @@ type styleName =
   | "th"
   | "td"
   | "a"
+  | "fontawesome"
   | "code"
   | "sup"
   | "src"
@@ -198,6 +222,9 @@ export const styles: () => { [key in styleName]: Style } = () => {
       color: themeColor.toString(),
       decoration: "underline",
     },
+    fontawesome: {
+      font: "FontAwesome",
+    },
     code: {
       font: "JetBrainsMono",
       color: dracula.foreground.toString(),
@@ -210,6 +237,7 @@ export const styles: () => { [key in styleName]: Style } = () => {
     src: {
       sup: true,
       color: themeColor.toString(),
+      separator: ["(", ")"],
     },
     sub: {
       sub: true,

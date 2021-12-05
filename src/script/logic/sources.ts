@@ -159,7 +159,7 @@ export const importSourcesJSON = (sources: IterableIterator<ISourceData>) => {
   }
 };
 
-export const sourceTag = /[\^[0-9a-z]+]/g;
+export const sourceTag = /\[\^[0-9a-z]+\]/g;
 
 class SourceData implements ISourceData {
   id: string;

@@ -1,6 +1,8 @@
 import { getLocale, getText, textId } from "../data/local";
 import {
   defaultStyle,
+  faChecked,
+  faUnchecked,
   fonts,
   styles,
   syntaxStyles,
@@ -205,9 +207,28 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
             (li, i): Option<Content> => {
               // Only LI Elements are valid List children
               if (li.tagName === "LI") {
+                const check = li.classList.contains("checked")
+                  ? 1
+                  : li.classList.contains("unchecked")
+                  ? 2
+                  : 0;
+
                 // simple list item
                 if (li.children.length === 0) {
-                  return Some((li as HTMLLIElement).innerText);
+                  switch (check) {
+                    case 0:
+                      return Some((li as HTMLLIElement).innerText);
+                    case 1:
+                      return Some({
+                        text: [...faChecked, (li as HTMLLIElement).innerText],
+                        listType: "none",
+                      });
+                    case 2:
+                      return Some({
+                        text: [...faUnchecked, (li as HTMLLIElement).innerText],
+                        listType: "none",
+                      });
+                  }
                 }
 
                 const liContent = mapArrayAllowEmpty(
@@ -234,10 +255,32 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
                     }
                   }
                 );
-                return Some({
-                  text: liContent.length === 1 ? liContent[0]! : liContent,
-                  style: "list",
-                });
+
+                switch (check) {
+                  case 0:
+                    return Some({
+                      text: liContent.length === 1 ? liContent[0]! : liContent,
+                      style: "list",
+                    });
+                  case 1:
+                    return Some({
+                      text: [
+                        ...faChecked,
+                        liContent.length === 1 ? liContent[0]! : liContent,
+                      ],
+                      style: "list",
+                      listType: "none",
+                    });
+                  case 2:
+                    return Some({
+                      text: [
+                        ...faUnchecked,
+                        liContent.length === 1 ? liContent[0]! : liContent,
+                      ],
+                      style: "list",
+                      listType: "none",
+                    });
+                }
               } else {
                 return None();
               }

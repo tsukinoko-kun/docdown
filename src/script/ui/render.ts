@@ -52,6 +52,18 @@ const manipulateRenderedAnchors = () => {
   }
 };
 
+const manipulateRenderedLists = () => {
+  for (const li of Array.from(displayEl.getElementsByTagName("li"))) {
+    if (li.innerText.startsWith("[ ] ")) {
+      li.classList.add("unchecked");
+      li.innerHTML = li.innerHTML.replace(/\[\s\]\s+/g, "");
+    } else if (li.innerText.startsWith("[x] ")) {
+      li.classList.add("checked");
+      li.innerHTML = li.innerHTML.replace(/\[x\]\s+/g, "");
+    }
+  }
+};
+
 const resolveImages = () => {
   for (const img of Array.from(displayEl.getElementsByTagName("img"))) {
     const src = img.src;
@@ -118,6 +130,7 @@ const render = (markdown: string) => {
   setUsedSources(sources);
 
   manipulateRenderedAnchors();
+  manipulateRenderedLists();
   resolveImages();
 };
 
