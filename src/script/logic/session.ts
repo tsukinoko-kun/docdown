@@ -20,14 +20,23 @@ export interface ISessionData {
   theme: string;
 }
 
+export interface IImportExportData {
+  title: string;
+  code: string[];
+  sources: ISourceData[];
+  language: language;
+  lastUpdate: number;
+  theme: string;
+}
+
 const session = {
   active: false,
   title: getText(textId.untitled),
   id: "",
-  getLocalData: (): ISessionData => {
+  getLocalData: (): IImportExportData => {
     return {
       title: session.title,
-      code: codeEl.value,
+      code: codeEl.value.split(/\r?\n/g),
       sources: exportSourcesJSON(),
       language: getLocale(),
       lastUpdate: Date.now(),
@@ -51,10 +60,20 @@ setTitle(session.title, false);
 
 export const getTitle = () => session.title;
 
-export const importData = (data: Partial<ISessionData> = {}) => {
+export const importData = (
+  data: Partial<ISessionData | IImportExportData> = {}
+) => {
   setTitle(data.title ?? getText(textId.untitled), false);
   setLocale(data.language ?? navigator.language.includes("de") ? "de" : "en");
-  codeEl.value = data.code ?? "";
+  if (data.code) {
+    if (typeof data.code === "string") {
+      codeEl.value = data.code;
+    } else {
+      codeEl.value = data.code.join("\n");
+    }
+  } else {
+    codeEl.value = "";
+  }
   importSourcesJSON(data.sources ?? ([] as any));
   sendMessage(service.setTheme, data.theme ?? "ocean");
 
@@ -93,8 +112,6 @@ listenForMessage(service.logout, () => {
 });
 
 const tryStartSession = (sessionId: string, fromLocal = false) => {
-
-
   if (session.active) {
     console.error("session already active");
     return;
@@ -229,7 +246,7 @@ export const saveLocal = () => {
   a.setAttribute(
     "href",
     "data:text/json;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(session.getLocalData()))
+      encodeURIComponent(JSON.stringify(session.getLocalData(), undefined, 2))
   );
   a.setAttribute("download", session.title + ".ddd"); // doc down document
 
