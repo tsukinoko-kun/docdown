@@ -59,12 +59,23 @@ main {
   }
 }
 
-body[view-mode="both"] > main {
-  grid-template-columns: auto 1fr 1fr;
-  grid-template-areas:
-    "nav code display"
-    "sources code display"
-    "statistics statistics statistics";
+@media (orientation: landscape) {
+  body[view-mode="both"] > main {
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-areas:
+      "nav code display"
+      "sources code display"
+      "statistics statistics statistics";
+  }
+}
+@media (orientation: portrait) {
+  body[view-mode="both"] > main {
+    grid-template-columns: auto 1fr 1fr;
+    grid-template-areas:
+      "nav code code"
+      "sources display display"
+      "statistics statistics statistics";
+  }
 }
 
 body[view-mode="code"] > main {
