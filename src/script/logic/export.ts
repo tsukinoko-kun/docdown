@@ -7,7 +7,11 @@ import {
   styles,
   syntaxStyles,
 } from "../data/pdfStylesheet";
-import { mapArrayAllowEmpty, removeEmpty } from "../data/dataHelper";
+import {
+  isNullOrWhitespace,
+  mapArrayAllowEmpty,
+  removeEmpty,
+} from "../data/dataHelper";
 import { getTitle } from "./session";
 import { getUser } from "./database";
 import { hasSources, mapSources } from "./sources";
@@ -26,7 +30,7 @@ export const sourcesJump = new Map<string, [Content]>();
 const addSourceJump = (sup: HTMLElement, sourceId: string) => {
   const jumpArr = sourcesJump.get(sourceId);
   if (jumpArr) {
-    sup.id = `${sourceId}_${jumpArr.length}`;
+    sup.id = `src_${sourceId}_${jumpArr.length}`;
     jumpArr.push({
       text: "↑" + (jumpArr.length + 1),
       style: "src",
@@ -61,10 +65,7 @@ const mapSyntaxToPdfContent = (el: Node): Option<Content> => {
       });
     } else {
       return Some(
-        mapArrayAllowEmpty(
-          Array.from(el.childNodes),
-          mapSyntaxToPdfContent
-        ).flat()
+        mapArrayAllowEmpty(Array.from(el.childNodes), mapSyntaxToPdfContent)
       );
     }
   } else {
@@ -90,6 +91,9 @@ const mapSyntaxToPdfContent = (el: Node): Option<Content> => {
   }
 };
 
+const getHeadLinkId = (el: HTMLHeadingElement) =>
+  "h_" + el.innerText.toLowerCase().replace(/\s+/g, "_");
+
 const mapDomToPdfContent = (el: Node): Option<Content> => {
   if (el instanceof Element) {
     switch (el.tagName) {
@@ -106,6 +110,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           style: "h1",
           tocItem: "mainToc",
           tocStyle: "toc_h1",
+          id: getHeadLinkId(h1),
         });
       case "H2":
         const h2 = el as HTMLHeadingElement;
@@ -121,6 +126,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           tocItem: "mainToc",
           tocStyle: "toc_h2",
           tocMargin: [20, 0, 0, 0],
+          id: getHeadLinkId(h2),
         });
       case "H3":
         const h3 = el as HTMLHeadingElement;
@@ -136,6 +142,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           tocItem: "mainToc",
           tocStyle: "toc_h3",
           tocMargin: [40, 0, 0, 0],
+          id: getHeadLinkId(h3),
         });
       case "H4":
         const h4 = el as HTMLHeadingElement;
@@ -148,6 +155,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
                   mapDomToPdfContent
                 ),
           style: "h4",
+          id: getHeadLinkId(h4),
         });
       case "H5":
         const h5 = el as HTMLHeadingElement;
@@ -160,6 +168,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
                   mapDomToPdfContent
                 ),
           style: "h5",
+          id: getHeadLinkId(h5),
         });
       case "H6":
         const h6 = el as HTMLHeadingElement;
@@ -172,6 +181,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
                   mapDomToPdfContent
                 ),
           style: "h6",
+          id: getHeadLinkId(h6),
         });
       case "OL":
       case "UL":
@@ -360,17 +370,30 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
         });
       case "A":
         const a = el as HTMLAnchorElement;
+
+        let link: Partial<Content>;
+        if (
+          a.href.startsWith("#") ||
+          a.href.startsWith(location.origin + "#") ||
+          a.href.startsWith(location.origin + "/#")
+        ) {
+          // i want everything behind the first #
+          const hrefSplitArr = a.href.split("#");
+          hrefSplitArr.shift();
+          link = { linkToDestination: "h_" + hrefSplitArr.join("#") };
+        } else {
+          link = { link: a.href };
+        }
+
         if (a.children.length === 0) {
           return Some({
             text: a.innerText,
-            link: a.href,
+            ...link,
             style: "a",
           });
         } else {
           return Some(
-            mapArrayAllowEmpty(Array.from(a.childNodes), (el) =>
-              mapDomToPdfContent(el)
-            ).flat()
+            mapArrayAllowEmpty(Array.from(a.childNodes), mapDomToPdfContent)
           );
         }
       case "CODE":
@@ -383,9 +406,10 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           });
         } else {
           return Some({
-            text: mapArrayAllowEmpty(Array.from(code.childNodes), (el) =>
-              mapSyntaxToPdfContent(el)
-            ).flat(),
+            text: mapArrayAllowEmpty(
+              Array.from(code.childNodes),
+              mapSyntaxToPdfContent
+            ),
           });
         }
       case "BOLD":
@@ -400,7 +424,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           return Some(
             mapArrayAllowEmpty(Array.from(strong.childNodes), (el) =>
               mapDomToPdfContent(el)
-            ).flat()
+            )
           );
         }
       case "EM":
@@ -415,7 +439,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           return Some(
             mapArrayAllowEmpty(Array.from(em.childNodes), (el) =>
               mapDomToPdfContent(el)
-            ).flat()
+            )
           );
         }
       case "UNDERLINE":
@@ -430,7 +454,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           return Some(
             mapArrayAllowEmpty(Array.from(u.childNodes), (el) =>
               mapDomToPdfContent(el)
-            ).flat()
+            )
           );
         }
       case "SUP":
@@ -480,23 +504,25 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
               text: (el as HTMLElement).innerText,
             });
           } else {
-            if (el.textContent) {
-              return Some({
-                text: el.textContent,
-              });
-            } else {
+            if (isNullOrWhitespace(el.textContent)) {
               return None();
+            } else {
+              return Some({
+                text: el.textContent!,
+              });
             }
           }
         } else {
           const childrenData = mapArrayAllowEmpty(
             Array.from(el.childNodes),
-            (child) => mapDomToPdfContent(child)
+            mapDomToPdfContent
           );
-          if (childrenData.length === 0) {
+          if (childrenData.length === 1) {
             return Some(childrenData[0]!);
           } else {
-            return Some(childrenData);
+            return Some({
+              text: childrenData,
+            });
           }
         }
     }
