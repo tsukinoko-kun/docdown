@@ -5,6 +5,6 @@ main > #sources {
   @include clickable-list;
 
   > li:not(.used) {
-    opacity: 0.5;
+    color: var(--window-gap-color) !important;
   }
 }
