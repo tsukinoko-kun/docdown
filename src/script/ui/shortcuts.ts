@@ -1,6 +1,6 @@
 import { cancelAllAlerts, userAlert, userForm, userSelect } from "./alert";
 import { findInText, getSelectedText, textSelected } from "./editor";
-import { getText, language, setLocale, textId } from "../data/local";
+import { getText, language, textId } from "../data/local";
 import { saveLocal, setTitle, getTitle } from "../logic/session";
 import { sendMessage, service } from "../router";
 
@@ -304,7 +304,7 @@ const switchLanguage = () => {
     }
   )
     .then((result) => {
-      setLocale(result);
+      sendMessage(service.setLocale, result);
       sendMessage(service.triggerRender, undefined);
     })
     .catch((err) => {

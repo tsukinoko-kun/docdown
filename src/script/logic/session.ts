@@ -1,11 +1,12 @@
 import { userAlert, userForm } from "../ui/alert";
-import { getLocale, getText, language, setLocale, textId } from "../data/local";
+import { getLocale, getText, language, textId } from "../data/local";
 import { DataBase } from "./database";
 import { exportSourcesJSON, importSourcesJSON } from "./sources";
 import type { ISourceData } from "./sources";
 import { getThemeId } from "./theme";
 import { listenForMessage, sendMessage, service } from "../router";
 import { h32 } from "xxhashjs";
+import { getHeaderText } from "./headerText";
 
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 
@@ -18,6 +19,7 @@ export interface ISessionData {
   language: language;
   lastUpdate: number;
   theme: string;
+  headerText: string;
 }
 
 export interface IImportExportData {
@@ -27,6 +29,7 @@ export interface IImportExportData {
   language: language;
   lastUpdate: number;
   theme: string;
+  headerText: string;
 }
 
 const session = {
@@ -41,6 +44,7 @@ const session = {
       language: getLocale(),
       lastUpdate: Date.now(),
       theme: getThemeId(),
+      headerText: getHeaderText(),
     };
   },
 };
@@ -64,7 +68,10 @@ export const importData = (
   data: Partial<ISessionData | IImportExportData> = {}
 ) => {
   setTitle(data.title ?? getText(textId.untitled), false);
-  setLocale(data.language ?? navigator.language.includes("de") ? "de" : "en");
+  sendMessage(
+    service.setLocale,
+    data.language ?? navigator.language.includes("de") ? "de" : "en"
+  );
   if (data.code) {
     if (typeof data.code === "string") {
       codeEl.value = data.code;
@@ -75,6 +82,7 @@ export const importData = (
     codeEl.value = "";
   }
   importSourcesJSON(data.sources ?? ([] as any));
+  sendMessage(service.serHeaderText, data.headerText ?? "");
   sendMessage(service.setTheme, data.theme ?? "ocean");
 
   sendMessage(service.triggerRender, undefined);
@@ -130,7 +138,7 @@ const tryStartSession = (sessionId: string, fromLocal = false) => {
         }
 
         if (data.language !== getLocale()) {
-          setLocale(data.language);
+          sendMessage(service.setLocale, data.language);
         }
 
         if (data.theme !== getThemeId()) {

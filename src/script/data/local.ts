@@ -1,4 +1,4 @@
-import { sendMessage, service } from "../router";
+import { listenForMessage, sendMessage, service } from "../router";
 
 const htmlEl = document.documentElement;
 
@@ -63,6 +63,7 @@ export enum textId {
   next,
   file_too_big,
   exit_confirm,
+  header_text,
 }
 
 const future = new Date().getFullYear() + 24;
@@ -127,6 +128,7 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     /* next */ "Weiter",
     /* file_too_big */ "Die Datei ist zu groß!",
     /* exit_confirm */ "Möchtest Du das Programm wirklich beenden?",
+    /* header_text */ "Anmerkung im Header",
   ],
   en: [
     /* sources */ "References",
@@ -187,6 +189,7 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
     /* next */ "Next",
     /* file_too_big */ "The file is too big!",
     /* exit_confirm */ "Do you really want to quit?",
+    /* header_text */ "Header text",
   ],
 };
 
@@ -194,7 +197,7 @@ let currentLanguage: language;
 
 export const getLocale = (): language => currentLanguage;
 
-export const setLocale = (language: language): void => {
+listenForMessage(service.setLocale, (language: language) => {
   if (language in localStringMap) {
     currentLanguage = language;
     htmlEl.lang = language;
@@ -205,8 +208,8 @@ export const setLocale = (language: language): void => {
   } else {
     console.error(`Language "${language}" not supported`);
   }
-};
+});
 
-setLocale(navigator.language.includes("de") ? "de" : "en");
+sendMessage(service.setLocale, navigator.language.includes("de") ? "de" : "en");
 
 export const getText = (id: textId) => localStringMap[currentLanguage][id];
