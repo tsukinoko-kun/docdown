@@ -322,6 +322,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           return Some({
             image: img.src,
             style: "image",
+            width: 434,
           });
         } catch (err) {
           console.error("Could not export image", img, err);
