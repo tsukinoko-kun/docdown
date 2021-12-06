@@ -8,8 +8,10 @@ import {
   syntaxStyles,
 } from "../data/pdfStylesheet";
 import {
+  centimeterToPoint,
   isNullOrWhitespace,
   mapArrayAllowEmpty,
+  parseFileNameToImageAlt,
   removeEmpty,
 } from "../data/dataHelper";
 import { getTitle } from "./session";
@@ -26,7 +28,7 @@ import { getHeaderText } from "./headerText";
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
 export const sourcesJump = new Map<string, [Content]>();
-
+let imgCount = 0;
 const addSourceJump = (sup: HTMLElement, sourceId: string) => {
   const jumpArr = sourcesJump.get(sourceId);
   if (jumpArr) {
@@ -317,13 +319,27 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
           style: "blockquote",
         });
       case "IMG":
+        imgCount++;
         const img = el as HTMLImageElement;
         try {
-          return Some({
-            image: img.src,
-            style: "image",
-            width: 434,
-          });
+          return Some([
+            {
+              image: img.src,
+              style: "image",
+              width: 434,
+            },
+            {
+              text: `${getText(
+                textId.figure
+              )} ${imgCount}: ${parseFileNameToImageAlt(
+                isNullOrWhitespace(img.title)
+                  ? img.alt
+                  : `${img.alt} - ${img.title}`
+              )}`,
+              style: "image_caption",
+              tocItem: "lof",
+            },
+          ]);
         } catch (err) {
           console.error("Could not export image", img, err);
           return Some({ text: img.alt, style: "span" });
@@ -416,7 +432,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
             text: mapArrayAllowEmpty(
               Array.from(code.childNodes),
               mapSyntaxToPdfContent
-            ),
+            ).flat(),
           });
         }
       case "BOLD":
@@ -552,6 +568,22 @@ const toc: Content = {
   pageBreak: "after",
 };
 
+const lof: Content = [
+  {
+    text: getText(textId.table_of_figures),
+    style: "hidden",
+    tocItem: "mainToc",
+    tocStyle: "toc_h1",
+  },
+  {
+    toc: {
+      id: "lof",
+      title: { text: getText(textId.table_of_figures), style: "h1" },
+    },
+    tocItem: "mainToc",
+  },
+];
+
 const title = (): Content => {
   return {
     text: getTitle() + "\n",
@@ -605,12 +637,12 @@ const createDocDefinition = (): TDocumentDefinitions => {
     },
     defaultStyle,
     styles: styles(),
-    pageMargins: [80, 60, 80, 60],
+    pageMargins: centimeterToPoint<[number, number]>([3.5, 2.5]),
     header: {
       text: `${getTitle()} - ${new Date().toLocaleDateString(
         getLocale()
       )}\n${getHeaderText()}`,
-      margin: [80, 20],
+      margin: centimeterToPoint<[number, number]>([3.5, 0.5]),
       opacity: 0.5,
     },
     content: removeEmpty([
@@ -621,6 +653,7 @@ const createDocDefinition = (): TDocumentDefinitions => {
         mapDomToPdfContent
       ),
       sources(),
+      imgCount !== 0 ? lof : [],
     ]),
     footer: (currentPage, pageCount) => ({
       text: `${currentPage}/${pageCount}`,
@@ -646,6 +679,7 @@ const createDocDefinition = (): TDocumentDefinitions => {
 
 const createPdf = () => {
   sourcesJump.clear();
+  imgCount = 0;
   return pdfmakeCreatePdf(createDocDefinition(), undefined, fonts);
 };
 

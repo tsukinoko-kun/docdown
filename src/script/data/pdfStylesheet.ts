@@ -51,10 +51,10 @@ export const faUnchecked: Content[] = [
 ];
 
 export const defaultStyle: Style = {
-  fontSize: 11,
-  color: "black",
+  fontSize: 12,
+  lineHeight: 1.2,
+  color: "#000000",
   font: "NotoSans",
-  lineHeight: 1.25,
   margin: 0,
 };
 
@@ -152,12 +152,14 @@ type styleName =
   | "toc_h3"
   | "th"
   | "td"
+  | "image_caption"
   | "a"
   | "fontawesome"
   | "code"
   | "sup"
   | "src"
-  | "sub";
+  | "sub"
+  | "hidden";
 
 export const styles: () => { [key in styleName]: Style } = () => {
   const themeColor = sendMessage(service.getTheme, undefined).mapOr(
@@ -167,48 +169,55 @@ export const styles: () => { [key in styleName]: Style } = () => {
 
   return {
     title: {
-      fontSize: 32,
+      fontSize: 26,
       bold: true,
       margin: [0, 10, 0, 2],
       color: themeColor.toString(),
     },
     h1: {
-      fontSize: 24,
+      fontSize: 20,
+      lineHeight: 1.5,
       bold: true,
       margin: [0, 10, 0, 2],
     },
     h2: {
-      fontSize: 18,
+      fontSize: 16,
       bold: true,
       margin: [0, 10, 0, 2],
     },
     h3: {
-      fontSize: 16,
+      fontSize: 14,
       bold: true,
       margin: [0, 5, 0, 0],
     },
     h4: {
-      fontSize: 14,
+      fontSize: 13,
+      bold: true,
       margin: [0, 5, 0, 0],
     },
     h5: {
       fontSize: 12,
+      bold: true,
       margin: [0, 5, 0, 0],
     },
     h6: {
-      fontSize: 11,
+      fontSize: 12,
+      bold: true,
       margin: [0, 5, 0, 0],
     },
     toc_h1: {
-      fontSize: 18,
+      fontSize: 16,
       bold: true,
     },
     toc_h2: {
-      fontSize: 16,
+      fontSize: 15,
       opacity: 0.75,
     },
     toc_h3: {
       fontSize: 14,
+      opacity: 0.5,
+    },
+    image_caption: {
       opacity: 0.5,
     },
     th: {
@@ -241,6 +250,10 @@ export const styles: () => { [key in styleName]: Style } = () => {
     },
     sub: {
       sub: true,
+    },
+    hidden: {
+      color: "transparent",
+      fontSize: 0,
     },
   };
 };

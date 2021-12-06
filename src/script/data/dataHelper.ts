@@ -55,3 +55,14 @@ export const convertToDataUrl = async (url: string) => {
   const blob = await response.blob();
   return await createDataUrl(blob);
 };
+
+export const centimeterToPoint = <T extends number | Array<number>>(cm: T): T =>
+  typeof cm === "number"
+    ? (((cm / 2.54) * 72) as T)
+    : (cm.map(centimeterToPoint) as T);
+
+export const parseFileNameToImageAlt = (fileName: string): string => {
+  const fileNameWithoutExtension = fileName.split(".");
+  fileNameWithoutExtension.pop();
+  return fileNameWithoutExtension.join(" ").replace(/[_]+/g, " ");
+};
