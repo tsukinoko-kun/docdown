@@ -34,3 +34,24 @@ export const removeEmpty = <T>(arr: Iterable<T | Option<T>>): T[] => {
   }
   return result;
 };
+
+const createDataUrl = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
+
+const datUrlCache: Map<string, string> = new Map();
+export const convertToDataUrl = async (url: string) => {
+  const dataUrlFromCache = datUrlCache.get(url);
+  if (dataUrlFromCache) {
+    return dataUrlFromCache;
+  }
+
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return await createDataUrl(blob);
+};

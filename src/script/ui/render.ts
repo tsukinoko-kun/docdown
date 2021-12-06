@@ -7,6 +7,7 @@ import { syncScroll } from "./syncScroll";
 import { countWords } from "./statistics";
 import { download, gsb } from "../logic/database";
 import { listenForMessage, sendMessage, service } from "../router";
+import { convertToDataUrl } from "../data/dataHelper";
 
 const md = new MD("default", {
   breaks: false,
@@ -64,17 +65,16 @@ const manipulateRenderedLists = () => {
   }
 };
 
-const resolveImages = () => {
+const resolveImages = async () => {
   for (const img of Array.from(displayEl.getElementsByTagName("img"))) {
     const src = img.src;
-    if (src && src.startsWith(gsb)) {
-      download(src)
-        .then((url) => {
-          img.src = url;
-        })
-        .catch((err) => {
-          console.error("download error!!!", err);
-        });
+    if (src) {
+      if (src.startsWith(gsb)) {
+        const url = await download(src);
+        img.src = await convertToDataUrl(url);
+      } else {
+        img.src = await convertToDataUrl(img.src);
+      }
     }
   }
 };
