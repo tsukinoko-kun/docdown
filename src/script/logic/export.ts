@@ -348,7 +348,13 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
                     containsTableHead = true;
                   }
                   return Some({
-                    text: cell.innerText,
+                    text:
+                      cell.children.length === 0
+                        ? cell.innerText
+                        : mapArrayAllowEmpty(
+                            Array.from(cell.childNodes),
+                            mapDomToPdfContent
+                          ),
                     style: cell.tagName.toLowerCase(),
                     alignment: "left",
                     fillColor: oddEven ? "#f2f2f2" : "white",

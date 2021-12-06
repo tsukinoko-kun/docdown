@@ -7,7 +7,7 @@ import { syncScroll } from "./syncScroll";
 import { countWords } from "./statistics";
 import { download, gsb } from "../logic/database";
 import { listenForMessage, sendMessage, service } from "../router";
-import { convertToDataUrl } from "../data/dataHelper";
+import { convertToDataUrl, isNullOrWhitespace } from "../data/dataHelper";
 
 const md = new MD("default", {
   breaks: false,
@@ -33,6 +33,40 @@ const md = new MD("default", {
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
 const displayEl = document.getElementById("display") as HTMLDivElement;
 const navEl = document.getElementById("nav") as HTMLOListElement;
+
+const deleteEmptyRows = (table: HTMLTableElement) => {
+  const rows = table.getElementsByTagName("tr");
+  for (let i = rows.length - 1; i >= 0; i--) {
+    const row = rows[i]!;
+
+    // no cells
+    if (row.childElementCount === 0) {
+      row.remove();
+      continue;
+    }
+
+    // all cells empty
+    let empty = true;
+    for (let j = 0; j < row.childElementCount; j++) {
+      const cell = row.children[j]!;
+      if (!isNullOrWhitespace(cell.textContent)) {
+        empty = false;
+        break;
+      }
+    }
+
+    if (empty) {
+      row.remove();
+    }
+  }
+};
+
+const manipulateRenderedTables = () => {
+  const tables = document.getElementsByTagName("table");
+  for (const table of Array.from(tables)) {
+    deleteEmptyRows(table as HTMLTableElement);
+  }
+};
 
 const manipulateRenderedAnchors = () => {
   for (const a of Array.from(displayEl.getElementsByTagName("a"))) {
@@ -129,6 +163,7 @@ const render = (markdown: string) => {
 
   setUsedSources(sources);
 
+  manipulateRenderedTables();
   manipulateRenderedAnchors();
   manipulateRenderedLists();
   resolveImages();
