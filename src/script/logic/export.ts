@@ -21,28 +21,6 @@ import { getHeaderText } from "./headerText";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
-const getBase64Image = (img: HTMLImageElement) => {
-  // Create an empty canvas element
-  const canvas = document.createElement("canvas");
-  const rect = img.getBoundingClientRect();
-  canvas.width = rect.width;
-  canvas.height = rect.height;
-
-  // Copy the image contents to the canvas
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    throw new Error("Could not get context for canvas");
-  }
-
-  ctx.drawImage(img, 0, 0);
-
-  const dataUrl = canvas.toDataURL();
-
-  canvas.remove();
-
-  return dataUrl;
-};
-
 export const sourcesJump = new Map<string, [Content]>();
 
 const addSourceJump = (sup: HTMLElement, sourceId: string) => {
@@ -332,8 +310,7 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
         const img = el as HTMLImageElement;
         try {
           return Some({
-            image: getBase64Image(img),
-            fit: [img.width, img.height],
+            image: img.src,
             style: "image",
           });
         } catch (err) {
@@ -512,11 +489,15 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
             }
           }
         } else {
-          return Some({
-            text: mapArrayAllowEmpty(Array.from(el.childNodes), (el) =>
-              mapDomToPdfContent(el)
-            ).flat(),
-          });
+          const childrenData = mapArrayAllowEmpty(
+            Array.from(el.childNodes),
+            (child) => mapDomToPdfContent(child)
+          );
+          if (childrenData.length === 0) {
+            return Some(childrenData[0]!);
+          } else {
+            return Some(childrenData);
+          }
         }
     }
   } else {
