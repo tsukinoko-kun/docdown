@@ -1,5 +1,6 @@
 import { getText, textId } from "../data/local";
 import passive from "../data/passive";
+import { notifyOnMessage, service } from "../router";
 
 const displayEl = document.getElementById("display") as HTMLElement;
 const codeEl = document.getElementById("code") as HTMLTextAreaElement;
@@ -39,3 +40,7 @@ codeEl.addEventListener("mouseup", updateCursor, passive);
 codeEl.addEventListener("keyup", updateCursor, passive);
 
 updateCursor();
+notifyOnMessage(service.setLocale, () => {
+  updateCursor();
+  countWords();
+});
