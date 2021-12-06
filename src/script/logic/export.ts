@@ -17,6 +17,7 @@ import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import { None, Some } from "../Option";
 import type { Option } from "../Option";
 import { listenForMessage, sendMessage, service } from "../router";
+import { getHeaderText } from "./headerText";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
@@ -335,7 +336,8 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
             fit: [img.width, img.height],
             style: "image",
           });
-        } catch {
+        } catch (err) {
+          console.error("Could not export image", img, err);
           return Some({ text: img.alt, style: "span" });
         }
       case "TABLE":
@@ -591,7 +593,9 @@ const createDocDefinition = (): TDocumentDefinitions => {
     styles: styles(),
     pageMargins: [80, 60, 80, 60],
     header: {
-      text: `${getTitle()} - ${new Date().toLocaleDateString(getLocale())}`,
+      text: `${getTitle()} - ${new Date().toLocaleDateString(
+        getLocale()
+      )}\n${getHeaderText()}`,
       margin: [80, 20],
       opacity: 0.5,
     },
@@ -604,15 +608,12 @@ const createDocDefinition = (): TDocumentDefinitions => {
       ),
       sources(),
     ]),
-    footer: (currentPage, pageCount) =>
-      currentPage === 1
-        ? null
-        : {
-            text: `${currentPage - 1}/${pageCount - 1}`,
-            alignment: "right",
-            margin: [40, 20],
-            opacity: 0.5,
-          },
+    footer: (currentPage, pageCount) => ({
+      text: `${currentPage}/${pageCount}`,
+      alignment: "right",
+      margin: [40, 20],
+      opacity: 0.5,
+    }),
     compress: true,
     pageSize: "A4",
     pageOrientation: "portrait",
