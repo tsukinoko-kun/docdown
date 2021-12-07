@@ -16,7 +16,8 @@ main {
   > #nav,
   > #sources,
   > #code,
-  > #display {
+  // > #display,
+  >#pdf-view {
     height: 100%;
     overflow-y: auto;
     margin: 0;
@@ -31,12 +32,12 @@ main {
   > #nav::before {
     mask: url(../image/title.svg) no-repeat 100% 100%;
   }
-  > #display::before {
-    mask: url(../image/document.svg) no-repeat 100% 100%;
-  }
+  // > #display::before {
+  //   mask: url(../image/document.svg) no-repeat 100% 100%;
+  // }
   > #nav::before,
-  > #sources::before,
-  > #display::before {
+  // > #display::before
+  > #sources::before {
     mask-size: cover;
     width: 1em;
     height: 1em;
@@ -48,13 +49,13 @@ main {
     }
   }
   > #nav:hover::before,
-  > #sources:hover::before,
-  > #display:hover::before {
+  // > #display:hover::before,
+  > #sources:hover::before {
     background-color: $green;
   }
   > #nav:not(:hover)::before,
-  > #sources:not(:hover)::before,
-  > #display:not(:hover)::before {
+  // > #display:not(:hover)::before,
+  > #sources:not(:hover)::before {
     background-color: var(--window-gap-color);
   }
 }
@@ -85,7 +86,8 @@ body[view-mode="code"] > main {
     "sources code"
     "statistics statistics";
 
-  > #display {
+  // > #display,
+  > #pdf-view {
     display: none;
   }
 }
@@ -111,5 +113,6 @@ table {
 @import "code";
 @import "display";
 @import "nav";
+@import "pdf-view";
 @import "sources";
 @import "statistics";

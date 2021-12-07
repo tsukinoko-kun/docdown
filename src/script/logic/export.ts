@@ -24,6 +24,7 @@ import { None, Some } from "../Option";
 import type { Option } from "../Option";
 import { listenForMessage, sendMessage, service } from "../router";
 import { getHeaderText } from "./headerText";
+import { previewPdf } from "../ui/adobe-pdf";
 
 const displayEl = document.getElementById("display") as HTMLDivElement;
 
@@ -350,47 +351,54 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
         let headerRows = 0;
         let oddEven = false;
 
-        return Some({
-          table: {
-            widths: "auto",
-            layout: "headerLineOnly",
-            dontBreakRows: true,
-            body: Array.from(table.rows).map((row) => {
-              let containsTableHead = false;
+        const body = Array.from(table.rows).map((row) => {
+          let containsTableHead = false;
 
-              const pdfRow = mapArrayAllowEmpty(
-                Array.from(row.cells),
-                (cell) => {
-                  if (cell.tagName === "TH") {
-                    containsTableHead = true;
-                  }
-                  return Some({
-                    text:
-                      cell.children.length === 0
-                        ? cell.innerText
-                        : mapArrayAllowEmpty(
-                            Array.from(cell.childNodes),
-                            mapDomToPdfContent
-                          ),
-                    style: cell.tagName.toLowerCase(),
-                    alignment: "left",
-                    fillColor: oddEven ? "#f2f2f2" : "white",
-                  });
-                }
-              );
+          const pdfRow = mapArrayAllowEmpty(Array.from(row.cells), (cell) => {
+            if (cell.tagName === "TH") {
+              containsTableHead = true;
+            }
+            return Some({
+              text:
+                cell.children.length === 0
+                  ? cell.innerText
+                  : mapArrayAllowEmpty(
+                      Array.from(cell.childNodes),
+                      mapDomToPdfContent
+                    ),
+              style: cell.tagName.toLowerCase(),
+              alignment: "left",
+              fillColor: oddEven ? "#f2f2f2" : "white",
+            });
+          });
 
-              if (containsTableHead) {
-                headerRows++;
-              }
+          if (containsTableHead) {
+            headerRows++;
+          }
 
-              oddEven = !oddEven;
+          oddEven = !oddEven;
 
-              return pdfRow;
-            }),
-            headerRows,
-            keepWithHeaderRows: headerRows,
-          },
+          return pdfRow;
         });
+
+        return Some(
+          headerRows > 0
+            ? {
+                table: {
+                  widths: "auto",
+                  body,
+                  headerRows,
+                  keepWithHeaderRows: headerRows,
+                },
+              }
+            : {
+                table: {
+                  dontBreakRows: true,
+                  widths: "auto",
+                  body,
+                },
+              }
+        );
       case "A":
         const a = el as HTMLAnchorElement;
 
@@ -687,6 +695,7 @@ export enum pdfOutput {
   print,
   download,
   open,
+  render,
 }
 listenForMessage(service.createPdf, (output) => {
   switch (output) {
@@ -698,6 +707,11 @@ listenForMessage(service.createPdf, (output) => {
       break;
     case pdfOutput.open:
       createPdf().open();
+      break;
+    case pdfOutput.render:
+      createPdf().getDataUrl((dataUrl) => {
+        previewPdf(dataUrl);
+      });
       break;
   }
 });

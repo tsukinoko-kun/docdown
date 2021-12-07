@@ -1,6 +1,8 @@
 @import "../theme";
 
 main > #display {
+  display: none !important;
+  /*
   a {
     &:not(:hover) {
       color: var(--anchor-color);
@@ -36,4 +38,5 @@ main > #display {
     white-space: normal;
     max-width: 100%;
   }
+  */
 }

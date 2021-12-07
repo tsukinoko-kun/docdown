@@ -3,11 +3,12 @@ import { setUsedSources, sourceTag } from "../logic/sources";
 import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import hljs from "highlight.js";
 import MD from "markdown-it";
-import { syncScroll } from "./syncScroll";
 import { countWords } from "./statistics";
 import { download, gsb } from "../logic/database";
 import { listenForMessage, sendMessage, service } from "../router";
 import { convertToDataUrl, isNullOrWhitespace } from "../data/dataHelper";
+import { escapeRegExp } from "../data/escape";
+import { findInText } from "./editor";
 
 const md = new MD("default", {
   breaks: false,
@@ -61,8 +62,17 @@ const deleteEmptyRows = (table: HTMLTableElement) => {
   }
 };
 
+const addLineBreaks = () => {
+  const ps = displayEl.getElementsByTagName("p");
+  for (const p of Array.from(ps)) {
+    if (/^(\s*\/\s*)+$/.test(p.innerHTML)) {
+      p.outerHTML = p.innerHTML.replace(/\s*\/\s*/g, "<br/>");
+    }
+  }
+};
+
 const manipulateRenderedTables = () => {
-  const tables = document.getElementsByTagName("table");
+  const tables = displayEl.getElementsByTagName("table");
   for (const table of Array.from(tables)) {
     deleteEmptyRows(table as HTMLTableElement);
   }
@@ -130,15 +140,7 @@ const updateTableOfContents = () => {
     const li = document.createElement("li");
     li.innerText = h.innerText;
     addDisposableEventListener(li, "click", () => {
-      // findInText(codeEl, new RegExp("\\#+\\s+" + escapeRegExp(h.innerText)));
-
-      h.scrollIntoView({
-        behavior: "auto",
-        block: "center",
-        inline: "start",
-      });
-
-      syncScroll(displayEl, codeEl);
+      findInText(codeEl, new RegExp("\\#+\\s+" + escapeRegExp(h.innerText)));
     });
 
     li.classList.add(tag);
@@ -163,10 +165,13 @@ const render = (markdown: string) => {
 
   setUsedSources(sources);
 
+  addLineBreaks();
   manipulateRenderedTables();
   manipulateRenderedAnchors();
   manipulateRenderedLists();
-  resolveImages();
+  resolveImages().then(() => {
+    sendMessage(service.createPdf, 3);
+  });
 };
 
 let renderDelayId: number | null = null;
