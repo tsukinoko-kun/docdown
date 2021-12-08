@@ -29,6 +29,7 @@ export enum service {
   createPdf,
   setLocale,
   serHeaderText,
+  format,
 }
 
 enum paramResult {
@@ -58,6 +59,7 @@ interface IServiceMap {
   [service.createPdf]: ParamResult<pdfOutput, void>;
   [service.setLocale]: ParamResult<language, void>;
   [service.serHeaderText]: ParamResult<string, void>;
+  [service.format]: ParamResult<undefined, void>;
 }
 
 const messageReciever = new Map<service, Array<Function>>();

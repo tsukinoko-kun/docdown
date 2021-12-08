@@ -194,6 +194,7 @@ codeEl.addEventListener(
 );
 
 const triggerRender = () => {
+  // sendMessage(service.format, undefined);
   render(codeEl.value);
   countWords();
   updateTableOfContents();
