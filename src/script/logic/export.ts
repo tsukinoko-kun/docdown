@@ -530,16 +530,21 @@ const mapDomToPdfContent = (el: Node): Option<Content> => {
         });
       default:
         if (el.children.length === 0) {
-          if ("innerText" in el) {
-            return Some({
-              text: (el as HTMLElement).innerText,
-            });
+          const content =
+            "innerText" in el ? (el as HTMLElement).innerText : el.textContent;
+
+          if (isNullOrWhitespace(content)) {
+            return None();
           } else {
-            if (isNullOrWhitespace(el.textContent)) {
-              return None();
+            if (content!.trim().toLocaleLowerCase() === "\\p") {
+              // pagebreak
+              return Some({
+                text: "",
+                pageBreak: "before",
+              });
             } else {
               return Some({
-                text: el.textContent!,
+                text: content!,
               });
             }
           }
