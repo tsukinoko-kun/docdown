@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>docdown</title>
-    <link
+    <!-- <link
       rel="stylesheet"
       href="./style/loading.scss"
       id="loadingStyle"
       media="screen"
-    />
+    /> -->
     <script id="loadingScript">
       window.addEventListener(
         "load",
@@ -29,30 +29,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="canonical" content="https://docdown.app" />
     <meta name="description" content="Markdown-powered documentation tool" />
-    <link rel="manifest" href="./manifest.webmanifest" />
+    <!-- <link rel="manifest" href="./manifest.webmanifest" /> -->
     <link rel="shortcut icon" href="./image/icon.svg" type="image/svg" />
     <link rel="shortcut icon" href="./image/icon_32.png" type="image/png" />
     <link rel="shortcut icon" href="./image/icon_64.png" type="image/png" />
   </head>
   <body>
     <main>
-      <ul id="nav"></ul>
-      <ul id="sources"></ul>
-      <textarea name="code" id="code" cols="50" rows="100"></textarea>
-      <div id="display"></div>
-      <embed id="pdf-view" type="application/pdf" />
-      <div id="statistics">
-        <img class="clickable" id="format" src="./image/paragraph.svg" />
-        <input type="text" id="headerText" placeholder="" />
-        <span id="repeat-tutorial" class="clickable">&nbsp;?&nbsp;</span>
-        <select class="clickable">
-          <optgroup id="theme" label="Theme"></optgroup>
-        </select>
-        <span id="cursor"></span>
-        <span id="word-count">0</span>
+      <div id="toolbar">
+        <span id="save">Save</span>
       </div>
+      <div id="editor"></div>
     </main>
 
+    <!--
     <link rel="stylesheet" href="./style/fonts.scss" media="screen" />
     <link rel="stylesheet" href="./style/style.scss" media="screen" />
     <link
@@ -81,5 +71,6 @@
           });
       }
     </script>
+    -->
   </body>
 </html>

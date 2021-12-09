@@ -1,35 +1,10 @@
-import { None, Some } from "./Option";
-
-import type {
-  IInsertTextData,
-  IReplaceAllSubstringsInTextData,
-  IReplaceTextData,
-} from "./ui/editor";
-import type { IContextData } from "./ui/alert";
-import type { ISessionData } from "./logic/session";
-import type { themeId, ITheme } from "./logic/theme";
-import type { pdfOutput } from "./logic/export";
-import type { language } from "./data/local";
+import type { OutputData } from "@editorjs/editorjs";
 
 /**
  * module service
  */
 export enum service {
-  setChanged,
-  setTheme,
-  getTheme,
-  getThemeId,
-  getThemes,
-  triggerRender,
-  insertText,
-  replaceSelectedText,
-  replaceAllSubstringsInText,
-  logout,
-  context,
-  createPdf,
-  setLocale,
-  serHeaderText,
-  format,
+  save,
 }
 
 enum paramResult {
@@ -42,24 +17,7 @@ type ParamResult<P, R> = {
 };
 
 interface IServiceMap {
-  [service.setChanged]: ParamResult<Partial<ISessionData>, void>;
-  [service.setTheme]: ParamResult<themeId, void>;
-  [service.getTheme]: ParamResult<undefined, ITheme>;
-  [service.getThemeId]: ParamResult<undefined, themeId>;
-  [service.getThemes]: ParamResult<undefined, Array<themeId>>;
-  [service.triggerRender]: ParamResult<undefined, void>;
-  [service.insertText]: ParamResult<IInsertTextData, void>;
-  [service.replaceSelectedText]: ParamResult<IReplaceTextData, boolean>;
-  [service.replaceAllSubstringsInText]: ParamResult<
-    IReplaceAllSubstringsInTextData,
-    void
-  >;
-  [service.logout]: ParamResult<undefined, void>;
-  [service.context]: ParamResult<IContextData, void>;
-  [service.createPdf]: ParamResult<pdfOutput, void>;
-  [service.setLocale]: ParamResult<language, void>;
-  [service.serHeaderText]: ParamResult<string, void>;
-  [service.format]: ParamResult<undefined, void>;
+  [service.save]: ParamResult<undefined, OutputData>;
 }
 
 const messageReciever = new Map<service, Array<Function>>();
@@ -69,7 +27,9 @@ export const listenForMessage = <S extends keyof IServiceMap>(
   service: S,
   callback: (
     message: IServiceMap[S][paramResult.param]
-  ) => IServiceMap[S][paramResult.result]
+  ) =>
+    | IServiceMap[S][paramResult.result]
+    | Promise<IServiceMap[S][paramResult.result]>
 ) => {
   const s = messageReciever.get(service);
   if (s) {
@@ -91,22 +51,34 @@ export const notifyOnMessage = <S extends keyof IServiceMap>(
   }
 };
 
-export const sendMessage = <
+export const sendMessage = async <
   S extends keyof IServiceMap,
   R extends IServiceMap[S][paramResult.result]
 >(
   service: S,
   message: IServiceMap[S][paramResult.param]
-) => {
-  const s = messageReciever.get(service);
-  if (s && s.length > 0) {
-    const value = s.map((cb) => cb(message))[0];
-    const s2 = messageNotifyReciever.get(service);
-    if (s2 && s2.length > 0) {
-      s2.forEach((cb) => cb(value));
+) =>
+  new Promise<R | null>((resolve, reject) => {
+    const s = messageReciever.get(service);
+    if (s && s.length > 0) {
+      let value: R | null = null;
+      for (const callback of s) {
+        try {
+          if (value === null) {
+            resolve((value = callback(message)));
+          } else {
+            callback(message);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      const s2 = messageNotifyReciever.get(service);
+      if (s2 && s2.length > 0) {
+        s2.forEach((cb) => cb(value));
+      }
+      return;
+    } else {
+      return reject(new Error(`No listener for service ${service}`));
     }
-    return Some<R>(value);
-  } else {
-    return None<R>();
-  }
-};
+  });
