@@ -13,7 +13,8 @@ body,
 main {
   padding: 0;
   margin: 0;
-  background-color: var(--window-gap-color);
+  background-color: $background;
+  overflow: hidden;
 }
 
 * {
@@ -27,10 +28,5 @@ body {
   overflow-x: hidden;
 }
 
-@import "alert";
 @import "main/main";
-@import "statistics";
-@import "selection";
-@import "scrollbar";
-@import "syntax";
-@import "tutorial";
+@import "editorjs";

@@ -1,0 +1,13 @@
+.ce-block {
+  &.ce-block--selected {
+    > .ce-block__content {
+      background-color: $current-line;
+    }
+  }
+
+  > .ce-block__content {
+    * {
+      color: $foreground;
+    }
+  }
+}

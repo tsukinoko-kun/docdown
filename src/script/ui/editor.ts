@@ -6,11 +6,8 @@ import { listenForMessage, service } from "../router";
 
 const editor = new EditorJS({
   holder: "editor",
-
-  /**
-   * Available Tools list.
-   * Pass Tool's class or Settings object for each Tool you want to use
-   */
+  autofocus: true,
+  placeholder: "...",
   tools: {
     header: Header,
     list: List,
