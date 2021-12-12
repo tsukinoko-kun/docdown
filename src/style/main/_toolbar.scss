@@ -19,16 +19,16 @@ main > #toolbar {
     transition: background-color $timing ease-out;
     cursor: pointer;
 
-    &:hover {
-      background-color: $purple;
-    }
-
     &:not(:hover) {
       background-color: $background;
     }
 
     &#pdf {
       mask-image: url(../image/file-earmark-pdf.svg);
+
+      &:hover {
+        background-color: $red;
+      }
     }
   }
 }

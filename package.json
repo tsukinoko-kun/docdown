@@ -33,6 +33,9 @@
     "@editorjs/editorjs": "^2.22.2",
     "@editorjs/header": "^2.6.2",
     "@editorjs/list": "^1.6.2",
+    "@editorjs/marker": "^1.2.2",
+    "@editorjs/quote": "^2.4.0",
+    "@editorjs/table": "^2.0.1",
     "pdfmake": "^0.2.4",
     "xxhashjs": "^0.2.2"
   }

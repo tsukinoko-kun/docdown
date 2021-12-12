@@ -10,4 +10,114 @@
       color: $foreground;
     }
   }
+
+  .tc-popover.tc-popover--opened {
+    background-color: $background;
+
+    .tc-popover__item {
+      &:not(:hover) {
+        background-color: $background !important;
+
+        svg,
+        svg * {
+          fill: $background !important;
+        }
+      }
+      &:hover {
+        background-color: $current-line !important;
+
+        svg,
+        svg * {
+          fill: $current-line !important;
+        }
+      }
+    }
+  }
+
+  .tc-cell {
+    background-color: $background;
+
+    &.tc-cell--selected {
+      background-color: $current-line !important;
+    }
+  }
+
+  .tc-toolbox__toggler {
+    > svg {
+      > rect:first-child {
+        fill: $current-line !important;
+      }
+    }
+
+    &:not(:hover) {
+      > svg {
+        > circle {
+          fill: $background;
+        }
+      }
+    }
+    &:hover {
+      > svg {
+        > circle {
+          fill: $purple;
+        }
+      }
+    }
+  }
+}
+
+.ce-toolbar__settings-btn,
+.ce-toolbar__plus {
+  background-color: $current-line !important;
+  &:not(:hover) > svg {
+    fill: $background !important;
+  }
+  &:hover > svg {
+    fill: $purple !important;
+  }
+}
+
+.tc-add-row,
+.tc-add-column {
+  &:not(:hover) {
+    background-color: $background !important;
+
+    > svg {
+      fill: $foreground !important;
+    }
+  }
+
+  &:hover {
+    background-color: $current-line !important;
+  }
+  &::before,
+  &::after {
+    background-color: transparent !important;
+  }
+
+  &:hover > svg {
+    fill: $purple !important;
+  }
+}
+
+.ce-toolbox__button:not(.ce-toolbox__button--active, :hover) {
+  &:not(:hover) > svg {
+    fill: $foreground !important;
+  }
+}
+
+.ce-toolbox__button {
+  &.ce-toolbox__button--active,
+  &:hover {
+    > svg {
+      fill: $purple !important;
+    }
+  }
+}
+
+.tc-table,
+.tc-table *,
+.tc-add-column,
+.tc-add-row {
+  border-color: $foreground !important;
 }
