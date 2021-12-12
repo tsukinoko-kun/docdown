@@ -4,7 +4,7 @@ import Header from "@editorjs/header";
 import List from "@editorjs/nested-list";
 import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
-import Table from "@editorjs/table";
+import Table from "editorjs-table";
 
 import { listenForMessage, service } from "../router";
 
@@ -18,8 +18,8 @@ const editor = new EditorJS({
       class: Table,
       inlineToolbar: true,
       config: {
-        rows: 8,
-        cols: 4,
+        rows: 2,
+        cols: 3,
       },
     },
     quote: Quote,

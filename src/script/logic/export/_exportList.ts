@@ -1,6 +1,7 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
 import type { IExportHelper } from "./ExportHelper";
+import { parseHtml } from "./html/parseHtml";
 
 type listStyle = "ordered" | "unordered";
 
@@ -34,7 +35,7 @@ export class ExportList implements IExportHelper<IListData> {
     const data = new Array<Content>();
 
     if (nestedListItem.content) {
-      data.push(nestedListItem.content);
+      data.push(parseHtml(nestedListItem.content));
     }
 
     if (nestedListItem.items.length > 0) {
@@ -58,16 +59,11 @@ export class ExportList implements IExportHelper<IListData> {
 
   parse(block: OutputBlockData<"list", IListData>): Content {
     const { items, style } = block.data;
-    console.debug("listPdfData", JSON.stringify(items, undefined, 2));
-
-    console.debug("ExportList", block);
 
     const listPdfData = new Array<Content>();
     for (const item of items) {
       listPdfData.push(...this.mapNestedList(item, style));
     }
-
-    console.debug("listPdfData", JSON.stringify(listPdfData, undefined, 2));
 
     if (style === "unordered") {
       return {

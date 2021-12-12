@@ -1,6 +1,7 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
 import type { IExportHelper } from "./ExportHelper";
+import { parseHtml } from "./html/parseHtml";
 
 type headerLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -18,14 +19,14 @@ export class ExportHeader implements IExportHelper<IHeaderData> {
     if (block.id) {
       return {
         id: block.id,
-        text: block.data.text,
+        text: parseHtml(block.data.text),
         tocItem: "mainToc",
         ...this.getStyle(block.data.level),
       };
     }
 
     return {
-      text: block.data.text,
+      text: parseHtml(block.data.text),
       tocItem: "mainToc",
       ...this.getStyle(block.data.level),
     };

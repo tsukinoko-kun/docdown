@@ -1,7 +1,7 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
 import type { IExportHelper } from "./ExportHelper";
-import { parseMark } from "./_parseMark";
+import { parseHtml } from "./html/parseHtml";
 
 interface IParagraphData {
   text: string;
@@ -15,10 +15,10 @@ export class ExportParagraph implements IExportHelper<IParagraphData> {
     if (block.id) {
       return {
         id: block.id,
-        text: parseMark(block.data.text),
+        text: parseHtml(block.data.text),
       };
     }
 
-    return { text: parseMark(block.data.text) };
+    return { text: parseHtml(block.data.text) };
   }
 }

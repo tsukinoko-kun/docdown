@@ -93,7 +93,6 @@ export enum pdfOutput {
 }
 
 listenForMessage(service.createPdf, (output) => {
-  console.debug("createPdf", output);
   switch (output) {
     case pdfOutput.print:
       createPdf()

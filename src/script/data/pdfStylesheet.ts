@@ -117,6 +117,7 @@ export const syntaxStyles = new Map<string, Style>([
 
 export const styles: () => { [key: string]: Style } = () => {
   const themeColor = dracula.blue;
+  const markColor = dracula.yellow;
 
   return {
     title: {
@@ -172,10 +173,10 @@ export const styles: () => { [key: string]: Style } = () => {
       opacity: 0.5,
     },
     mark: {
-      background: themeColor.toString(),
+      background: markColor.toString(),
       padding: [0, 2, 0, 2],
     },
-    a: {
+    anchor: {
       color: themeColor.toString(),
       decoration: "underline",
     },

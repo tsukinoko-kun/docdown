@@ -1,6 +1,7 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
 import type { IExportHelper } from "./ExportHelper";
+import { parseHtml } from "./html/parseHtml";
 
 interface IQuoteData {
   /** quote's text */
@@ -22,10 +23,10 @@ export class ExportQuote implements IExportHelper<IQuoteData> {
       text: block.data.caption
         ? [
             {
-              text: "„" + block.data.text + "“",
+              text: ["„", ...parseHtml(block.data.text), "“"],
             },
             {
-              text: " — " + block.data.caption,
+              text: [" — ", ...parseHtml(block.data.caption)],
               style: "caption",
             },
           ]
