@@ -1,7 +1,7 @@
 import EditorJS from "@editorjs/editorjs";
 
 import Header from "@editorjs/header";
-import List from "@editorjs/list";
+import List from "@editorjs/nested-list";
 import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
 import Table from "@editorjs/table";

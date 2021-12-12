@@ -1,12 +1,20 @@
-main > #toolbar {
-  $toolbar-height: 42px;
-  $toolbar-padding: 8px;
+$toolbar-height: 60px;
+
+#toolbar {
+  $toolbar-padding: 5px;
   height: $toolbar-height;
+  width: 100vw;
   padding: $toolbar-padding;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  background-color: $current-line;
+  background-color: $darker;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+  z-index: 100;
 
   > span {
     height: #{$toolbar-height - $toolbar-padding * 2};
@@ -31,4 +39,8 @@ main > #toolbar {
       }
     }
   }
+}
+
+#editor {
+  margin-top: #{$toolbar-height + 64px};
 }

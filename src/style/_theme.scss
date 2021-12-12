@@ -1,3 +1,4 @@
+$darker: #14141b;
 $background: #282a36;
 $current-line: #44475a;
 $foreground: #f8f8f2;
@@ -8,8 +9,13 @@ $green: #50fa7b;
 $orange: #ffb86c;
 $pink: #ff79c6;
 $purple: #bd93f9;
+$indigo: #9580ff;
 $red: #ff5555;
 $yellow: #f1fa8c;
+
+$gradient: linear-gradient(180deg, #9580ff, #80ffea);
+
+$rad: 0.5rem;
 
 $timing: 0.2s;
 

@@ -14,7 +14,8 @@ main {
   padding: 0;
   margin: 0;
   background-color: $background;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 * {
@@ -23,10 +24,14 @@ main {
   font-family: $default-font;
 }
 
+::selection {
+  background-color: $current-line;
+}
+
 :root,
 body {
   overflow-x: hidden;
 }
 
-@import "main/main";
-@import "editorjs";
+@import "toolbar";
+@import "editor";
