@@ -36,81 +36,188 @@ export const defaultStyle: Style = {
 
 export const syntaxStyles = new Map<string, Style>([
   [
-    "hljs-comment",
+    "hljs-built_in",
     {
-      color: dracula.comment.toString(),
-      lineHeight: 1,
+      color: dracula.cyan.toString(),
     },
   ],
-
   [
-    "hljs-meta",
+    "hljs-selector-tag",
     {
-      color: dracula.pink.toString(),
-      lineHeight: 1,
+      color: dracula.cyan.toString(),
+      bold: true,
     },
   ],
-
+  [
+    "hljs-section",
+    {
+      color: dracula.cyan.toString(),
+      bold: true,
+    },
+  ],
+  [
+    "hljs-link",
+    {
+      color: dracula.cyan.toString(),
+    },
+  ],
   [
     "hljs-keyword",
     {
       color: dracula.pink.toString(),
-      lineHeight: 1,
+      bold: true,
     },
   ],
-
   [
-    "hljs-literal",
+    "hljs",
     {
-      color: dracula.purple.toString(),
-      lineHeight: 1,
+      color: dracula.foreground.toString(),
     },
   ],
-
   [
-    "hljs-string",
+    "hljs-subst",
     {
-      color: dracula.yellow.toString(),
-      lineHeight: 1,
+      color: dracula.foreground.toString(),
     },
   ],
-
-  [
-    "hljs-type",
-    {
-      color: dracula.cyan.toString(),
-      lineHeight: 1,
-    },
-  ],
-
   [
     "hljs-title",
     {
+      italics: true,
       color: dracula.green.toString(),
-      lineHeight: 1,
-    },
-  ],
-
-  [
-    "class_",
-    {
-      color: dracula.cyan.toString(),
-      lineHeight: 1,
+      bold: true,
     },
   ],
   [
     "hljs-attr",
     {
-      color: dracula.orange.toString(),
-      lineHeight: 1,
+      italics: true,
+      color: dracula.green.toString(),
     },
   ],
-
+  [
+    "hljs-attribute",
+    {
+      italics: true,
+      color: dracula.green.toString(),
+    },
+  ],
+  [
+    "hljs-meta-keyword",
+    {
+      italics: true,
+      color: dracula.green.toString(),
+    },
+  ],
+  [
+    "hljs-string",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-meta",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-name",
+    {
+      color: dracula.yellow.toString(),
+      bold: true,
+    },
+  ],
+  [
+    "hljs-type",
+    {
+      color: dracula.yellow.toString(),
+      bold: true,
+    },
+  ],
+  [
+    "hljs-symbol",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-bullet",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-addition",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-variable",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-template-tag",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-template-variable",
+    {
+      color: dracula.yellow.toString(),
+    },
+  ],
+  [
+    "hljs-comment",
+    {
+      color: dracula.comment.toString(),
+    },
+  ],
+  [
+    "hljs-quote",
+    {
+      color: dracula.comment.toString(),
+    },
+  ],
+  [
+    "hljs-deletion",
+    {
+      color: dracula.comment.toString(),
+    },
+  ],
+  [
+    "hljs-doctag",
+    {
+      bold: true,
+    },
+  ],
+  [
+    "hljs-strong",
+    {
+      bold: true,
+    },
+  ],
+  [
+    "hljs-literal",
+    {
+      color: dracula.purple.toString(),
+      bold: true,
+    },
+  ],
   [
     "hljs-number",
     {
       color: dracula.purple.toString(),
-      lineHeight: 1,
+    },
+  ],
+  [
+    "hljs-emphasis",
+    {
+      italics: true,
     },
   ],
 ]);
@@ -185,7 +292,7 @@ export const styles: () => { [key: string]: Style } = () => {
     },
     code: {
       font: "JetBrainsMono",
-      color: dracula.foreground.toString(),
+      color: dracula.background.toString(),
       lineHeight: 1,
       preserveLeadingSpaces: true,
     },

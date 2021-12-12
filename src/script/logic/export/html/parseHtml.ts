@@ -14,12 +14,12 @@ const htmlParsers: Array<IHtmlHelper> = [
 
 export const parseHtml = (text: string): Array<Content> => {
   console.debug("parseHtml", text, typeof text);
-  const tempHtml = document.createElement("div");
-  tempHtml.innerHTML = text;
+  const tempEl = document.createElement("div");
+  tempEl.innerHTML = text;
 
   const content = new Array<Content>();
 
-  for (const el of Array.from(tempHtml.childNodes)) {
+  for (const el of Array.from(tempEl.childNodes)) {
     if (el.textContent) {
       if (el.nodeType === Node.ELEMENT_NODE) {
         let done = false;
@@ -42,6 +42,8 @@ export const parseHtml = (text: string): Array<Content> => {
       }
     }
   }
+
+  tempEl.remove();
 
   return content;
 };

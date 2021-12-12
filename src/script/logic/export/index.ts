@@ -10,6 +10,7 @@ import { ExportList } from "./_exportList";
 import { ExportParagraph } from "./_exportParagraph";
 import { ExportTable } from "./_exportTable";
 import { ExportQuote } from "./_exportQuote";
+import { ExportCodeBox } from "./_exportCode";
 
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { OutputBlockData, OutputData } from "@editorjs/editorjs";
@@ -20,6 +21,7 @@ const exportHelpers: Array<IExportHelper<any>> = [
   new ExportList(),
   new ExportTable(),
   new ExportQuote(),
+  new ExportCodeBox(),
 ];
 
 const mapOutputBlockToPdfContent = (

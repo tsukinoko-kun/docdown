@@ -21,14 +21,14 @@ export const removeEmpty = <T>(array: T[]): T[] =>
 
 export const mapIterableAllowEmpty = <T, U>(
   iterable: Iterable<T>,
-  callback: (item: T) => U | undefined
+  callback: (item: T) => U | undefined | null
 ): Array<U> => {
   const result = new Array<U>();
 
   for (const item of iterable) {
     const value = callback(item);
 
-    if (value !== undefined) {
+    if (value !== undefined && value !== null) {
       result.push(value);
     }
   }

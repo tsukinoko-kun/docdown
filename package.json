@@ -31,6 +31,7 @@
     "postcss": "^8.4.4"
   },
   "dependencies": {
+    "@bomdi/codebox": "^1.0.12",
     "@editorjs/editorjs": "^2.22.2",
     "@editorjs/header": "^2.6.2",
     "@editorjs/marker": "^1.2.2",
