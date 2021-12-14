@@ -38,6 +38,22 @@ $toolbar-height: 60px;
         background-color: $red;
       }
     }
+
+    &#download {
+      mask-image: url(../image/file-earmark-arrow-down.svg);
+
+      &:hover {
+        background-color: $green;
+      }
+    }
+
+    &#upload {
+      mask-image: url(../image/file-earmark-arrow-up.svg);
+
+      &:hover {
+        background-color: $cyan;
+      }
+    }
   }
 }
 

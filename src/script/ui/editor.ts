@@ -1,4 +1,5 @@
 import EditorJS from "@editorjs/editorjs";
+import type { EditorConfig } from "@editorjs/editorjs";
 
 import Header from "@editorjs/header";
 import List from "@editorjs/nested-list";
@@ -11,8 +12,11 @@ import TableOfContents from "./TableOfContentsData";
 
 import { listenForMessage, service } from "../router";
 
-const editor = new EditorJS({
-  holder: "editor",
+const editorHolder = document.getElementById("editor") as HTMLElement;
+
+const editorConfig: EditorConfig = {
+  holder: editorHolder,
+  data: undefined as any,
   autofocus: true,
   tools: {
     header: Header,
@@ -34,6 +38,13 @@ const editor = new EditorJS({
     codeBox: CodeBox,
     toc: TableOfContents,
   },
-});
+};
+
+let editor = new EditorJS(editorConfig);
 
 listenForMessage(service.getDocumentData, () => editor.save());
+listenForMessage(service.setDocumentData, (data) => {
+  editorConfig.data = data;
+  editor.destroy();
+  editor = editor = new EditorJS(editorConfig);
+});

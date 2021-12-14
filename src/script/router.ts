@@ -10,6 +10,7 @@ export enum service {
   setLocale,
   getTheme,
   getDocumentData,
+  setDocumentData,
   createPdf,
 }
 
@@ -26,6 +27,7 @@ type ParamResult<P, R> = {
 type ServiceMap = {
   [service.setLocale]: ParamResult<language, void>;
   [service.createPdf]: ParamResult<pdfOutput, void>;
+  [service.setDocumentData]: ParamResult<OutputData, void>;
 };
 type ServiceMapNoParam = {
   [service.getLocale]: ParamResult<undefined, language>;
@@ -98,8 +100,7 @@ type SendMessageOverload = {
 
   // ServiceMap[S][paramResult.result] is of type undefined
   <S extends keyof ServiceMapNoParam>(service: S):
-    | ServiceMapNoParam[S][paramResult.result]
-    | undefined;
+    | ServiceMapNoParam[S][paramResult.result];
 };
 
 export const sendMessage = (async (service, message) => {
