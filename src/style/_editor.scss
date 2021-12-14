@@ -158,3 +158,8 @@
 .ce-toolbar--opened {
   border-color: $foreground !important;
 }
+
+.ce-toc {
+  color: rgba($foreground, 0.5) !important;
+  text-decoration: underline dotted rgba($foreground, 0.5) 1px !important;
+}

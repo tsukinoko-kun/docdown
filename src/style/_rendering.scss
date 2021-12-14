@@ -1,0 +1,9 @@
+* {
+  text-rendering: optimizeLegibility;
+  image-rendering: optimizeQuality;
+  shape-rendering: geometricPrecision;
+}
+
+svg {
+  text-rendering: geometricPrecision !important;
+}

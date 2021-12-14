@@ -20,37 +20,35 @@ export class ExportHeader implements IExportHelper<IHeaderData> {
       return {
         id: block.id,
         text: parseHtml(block.data.text),
-        tocItem: "mainToc",
-        ...this.getStyle(block.data.level),
+        ...(this.getStyle(block.data.level) as any),
       };
     }
 
     return {
       text: parseHtml(block.data.text),
-      tocItem: "mainToc",
-      ...this.getStyle(block.data.level),
+      ...(this.getStyle(block.data.level) as any),
     };
   }
 
-  private getStyle(level: headerLevel): {
-    style: string;
-    tocStyle?: string;
-  } {
+  private getStyle(level: headerLevel): Partial<Content> & object {
     switch (level) {
       case 1:
         return {
           tocStyle: "toc_header1",
           style: "header1",
+          tocItem: true,
         };
       case 2:
         return {
           tocStyle: "toc_header2",
           style: "header2",
+          tocItem: true,
         };
       case 3:
         return {
           tocStyle: "toc_header3",
           style: "header3",
+          tocItem: true,
         };
       case 4:
         return {

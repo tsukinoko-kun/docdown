@@ -1,7 +1,7 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content, Style } from "pdfmake/interfaces";
 import { syntaxStyles } from "../../data/pdfStylesheet";
-import { isNullOrWhitespace, mapIterableAllowEmpty } from "../dataHelper";
+import { mapIterableAllowEmpty } from "../dataHelper";
 import type { IExportHelper } from "./ExportHelper";
 
 interface ICodeBoxData {

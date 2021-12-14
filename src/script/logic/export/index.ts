@@ -1,4 +1,3 @@
-import { getText, textId } from "../../data/local";
 import { defaultStyle, fonts, styles } from "../../data/pdfStylesheet";
 import { createPdf as pdfmakeCreatePdf } from "pdfmake/build/pdfmake";
 import { listenForMessage, sendMessage, service } from "../../router";
@@ -11,6 +10,7 @@ import { ExportParagraph } from "./_exportParagraph";
 import { ExportTable } from "./_exportTable";
 import { ExportQuote } from "./_exportQuote";
 import { ExportCodeBox } from "./_exportCode";
+import { ExportTableOfContents } from "./_exportTableOfContents";
 
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { OutputBlockData, OutputData } from "@editorjs/editorjs";
@@ -22,6 +22,7 @@ const exportHelpers: Array<IExportHelper<any>> = [
   new ExportTable(),
   new ExportQuote(),
   new ExportCodeBox(),
+  new ExportTableOfContents(),
 ];
 
 const mapOutputBlockToPdfContent = (
@@ -37,14 +38,6 @@ const mapOutputBlockToPdfContent = (
   return undefined;
 };
 
-const toc: Content = {
-  toc: {
-    id: "mainToc",
-    title: { text: getText(textId.table_of_contents), style: "h1" },
-  },
-  pageBreak: "after",
-};
-
 const createDocDefinition = (outputData: OutputData): TDocumentDefinitions => ({
   info: {
     creationDate: new Date(),
@@ -57,10 +50,7 @@ const createDocDefinition = (outputData: OutputData): TDocumentDefinitions => ({
     margin: centimeterToPoint<[number, number]>([3.5, 0.5]),
     opacity: 0.5,
   },
-  content: [
-    toc,
-    ...mapIterableAllowEmpty(outputData.blocks, mapOutputBlockToPdfContent),
-  ],
+  content: mapIterableAllowEmpty(outputData.blocks, mapOutputBlockToPdfContent),
   footer: (currentPage, pageCount) => ({
     text: `${currentPage}/${pageCount}`,
     alignment: "right",

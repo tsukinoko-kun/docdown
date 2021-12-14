@@ -6,6 +6,7 @@ import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
 import Table from "editorjs-table";
 import CodeBox from "@bomdi/codebox";
+import TableOfContents from "./TableOfContentsData";
 
 import { listenForMessage, service } from "../router";
 
@@ -24,18 +25,12 @@ const editor = new EditorJS({
       },
     },
     quote: Quote,
-    Marker: {
+    marker: {
       class: Marker,
       shortcut: "CMD+SHIFT+M",
     },
-    codeBox: {
-      class: CodeBox,
-      config: {
-        // themeURL: "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.3.1/build/styles/dracula.min.css", // Optional
-        themeName: "dracula", // Optional
-        useDefaultTheme: "dark", // Optional. This also determines the background color of the language select drop-down
-      },
-    },
+    codeBox: CodeBox,
+    toc: TableOfContents,
   },
 });
 
