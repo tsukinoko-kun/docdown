@@ -1,7 +1,7 @@
 import { defaultStyle, fonts, styles } from "../../data/pdfStylesheet";
 import { createPdf as pdfmakeCreatePdf } from "pdfmake/build/pdfmake";
 import { listenForMessage, sendMessage, service } from "../../router";
-import { centimeterToPoint, mapIterableAllowEmpty } from "../dataHelper";
+import { centimeterToPoint, mapIterableAllowEmptyAsync } from "../dataHelper";
 
 import type { IExportHelper } from "./ExportHelper";
 import { ExportHeader } from "./_exportHeader";
@@ -14,6 +14,8 @@ import { ExportTableOfContents } from "./_exportTableOfContents";
 
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { OutputBlockData, OutputData } from "@editorjs/editorjs";
+import { ExportImage } from "./_exportImage";
+import { pageMargins } from "../../data/pageSize";
 
 const exportHelpers: Array<IExportHelper<any>> = [
   new ExportParagraph(),
@@ -23,40 +25,55 @@ const exportHelpers: Array<IExportHelper<any>> = [
   new ExportQuote(),
   new ExportCodeBox(),
   new ExportTableOfContents(),
+  new ExportImage(),
 ];
 
-const mapOutputBlockToPdfContent = (
+const mapOutputBlockToPdfContent = async (
   el: OutputBlockData<string, any>
-): Content | undefined => {
+): Promise<Content> => {
   for (const helper of exportHelpers) {
     if (helper.fulfillsSchema(el)) {
-      return helper.parse(el);
+      return await helper.parse(el);
     }
   }
 
-  console.error(`No export helper found for ${el.type}`);
-  return undefined;
+  const err = `No export helper found for ${el.type}`;
+  console.error(err);
+  throw new Error(err);
 };
 
-const createDocDefinition = (outputData: OutputData): TDocumentDefinitions => ({
+const createDocDefinition = async (
+  outputData: OutputData
+): Promise<TDocumentDefinitions> => ({
   info: {
     creationDate: new Date(),
   },
   defaultStyle,
   styles: styles(),
-  pageMargins: centimeterToPoint<[number, number]>([3.5, 2.5]),
+  pageMargins,
   header: {
     text: new Date().toLocaleDateString(sendMessage(service.getLocale)),
     margin: centimeterToPoint<[number, number]>([3.5, 0.5]),
     opacity: 0.5,
   },
-  content: mapIterableAllowEmpty(outputData.blocks, mapOutputBlockToPdfContent),
+  content: await mapIterableAllowEmptyAsync(
+    outputData.blocks,
+    mapOutputBlockToPdfContent
+  ),
   footer: (currentPage, pageCount) => ({
     text: `${currentPage}/${pageCount}`,
     alignment: "right",
     margin: [40, 20],
     opacity: 0.5,
   }),
+  pageBreakBefore: function (
+    currentNode,
+    followingNodesOnPage
+    /*,nodesOnNextPage,
+    previousNodesOnPage*/
+  ) {
+    return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0;
+  },
   compress: true,
   pageSize: "A4",
   pageOrientation: "portrait",
@@ -72,7 +89,7 @@ const createDocDefinition = (outputData: OutputData): TDocumentDefinitions => ({
 const createPdf = async () => {
   const data = await sendMessage(service.getDocumentData);
   if (data) {
-    return pdfmakeCreatePdf(createDocDefinition(data), undefined, fonts);
+    return pdfmakeCreatePdf(await createDocDefinition(data), undefined, fonts);
   } else {
     throw new Error("No data");
   }
@@ -85,21 +102,24 @@ export enum pdfOutput {
 }
 
 listenForMessage(service.createPdf, (output) => {
-  switch (output) {
-    case pdfOutput.print:
-      createPdf()
-        .then((x) => x.print())
-        .catch(console.error);
-      break;
-    case pdfOutput.download:
-      createPdf()
-        .then((x) => x.download())
-        .catch(console.error);
-      break;
-    case pdfOutput.open:
-      createPdf()
-        .then((x) => x.open())
-        .catch(console.error);
-      break;
-  }
+  createPdf()
+    .catch(console.error)
+    .then((x) => {
+      if (!x) {
+        return;
+      }
+
+      switch (output) {
+        case pdfOutput.print:
+          x.print();
+
+          break;
+        case pdfOutput.download:
+          x.download();
+          break;
+        case pdfOutput.open:
+          x.open();
+          break;
+      }
+    });
 });

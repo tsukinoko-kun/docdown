@@ -6,6 +6,7 @@ import Marker from "@editorjs/marker";
 import Quote from "@editorjs/quote";
 import Table from "editorjs-table";
 import CodeBox from "@bomdi/codebox";
+import SimpleImage from "simple-image-editorjs";
 import TableOfContents from "./TableOfContentsData";
 
 import { listenForMessage, service } from "../router";
@@ -24,6 +25,7 @@ const editor = new EditorJS({
         cols: 3,
       },
     },
+    image: SimpleImage,
     quote: Quote,
     marker: {
       class: Marker,

@@ -36,19 +36,19 @@ export class ExportHeader implements IExportHelper<IHeaderData> {
         return {
           tocStyle: "toc_header1",
           style: "header1",
-          tocItem: true,
+          tocItem: "toc",
         };
       case 2:
         return {
           tocStyle: "toc_header2",
           style: "header2",
-          tocItem: true,
+          tocItem: "toc",
         };
       case 3:
         return {
           tocStyle: "toc_header3",
           style: "header3",
-          tocItem: true,
+          tocItem: "toc",
         };
       case 4:
         return {

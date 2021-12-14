@@ -35,3 +35,16 @@ export const mapIterableAllowEmpty = <T, U>(
 
   return result;
 };
+
+export const mapIterableAllowEmptyAsync = <T, U>(
+  iterable: Iterable<T>,
+  callback: (item: T) => Promise<U>
+): Promise<Array<U>> => {
+  const result = new Array<Promise<U>>();
+
+  for (const item of iterable) {
+    result.push(callback(item));
+  }
+
+  return Promise.all(result);
+};

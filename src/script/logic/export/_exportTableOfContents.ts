@@ -15,6 +15,7 @@ export class ExportTableOfContents
     return {
       toc: {
         title: { text: block.data.title, style: "title" },
+        id: "toc",
       },
       pageBreak: "after",
     };
