@@ -1,19 +1,18 @@
-import type { BlockTool, BlockAPI, SanitizerConfig } from "@editorjs/editorjs";
+import type { BlockTool, BlockAPI } from "@editorjs/editorjs";
 
 export interface ITableOfContentsData {
   title: string;
 }
 
 export default class TableOfContents implements BlockTool {
-  sanitize: SanitizerConfig = {
-    p: true,
-  };
   api: BlockAPI;
+  data: ITableOfContentsData;
   isReadOnlySupported = true;
 
-  constructor(config?: { api: any }) {
+  constructor(config?: { data: ITableOfContentsData; api: any }) {
     if (config) {
       this.api = config.api;
+      this.data = config.data;
     } else {
       throw new Error("Config is needed!");
     }
@@ -30,7 +29,7 @@ export default class TableOfContents implements BlockTool {
     toc.setAttribute("data-placeholder", "true");
     toc.spellcheck = true;
     toc.contentEditable = "true";
-    toc.innerText = "Table of Contents";
+    toc.innerText = this.data.title || "Table of Contents";
     return toc;
   }
 

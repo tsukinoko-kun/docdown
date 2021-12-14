@@ -36,15 +36,28 @@ export const mapIterableAllowEmpty = <T, U>(
   return result;
 };
 
-export const mapIterableAllowEmptyAsync = <T, U>(
+export const mapIterableAllowEmptyAsync = async <T, U>(
   iterable: Iterable<T>,
-  callback: (item: T) => Promise<U>
+  callback: (item: T) => Promise<U>,
+  keepOrder: boolean = true
 ): Promise<Array<U>> => {
   const result = new Array<Promise<U>>();
 
-  for (const item of iterable) {
-    result.push(callback(item));
+  if (keepOrder) {
+    for await (const item of iterable) {
+      result.push(callback(item));
+    }
+  } else {
+    for (const item of iterable) {
+      result.push(callback(item));
+    }
   }
 
-  return Promise.all(result);
+  return await Promise.all(result);
 };
+
+export const firstIfSingle = <T>(arr: Array<T>): T | Array<T> =>
+  Array.isArray(arr) ? (arr.length === 1 ? arr[0]! : arr) : arr;
+
+export const tryFlatIfArray = <T>(arr: Array<T> | T): Array<T> | T =>
+  (Array.isArray(arr) ? firstIfSingle(arr.flat()) : arr) as Array<T>;

@@ -13,7 +13,6 @@ const htmlParsers: Array<IHtmlHelper> = [
 ];
 
 export const parseHtml = (text: string): Array<Content> => {
-  console.debug("parseHtml", text, typeof text);
   const tempEl = document.createElement("div");
   tempEl.innerHTML = text;
 

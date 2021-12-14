@@ -122,6 +122,13 @@ export const syntaxStyles = new Map<string, Style>([
     },
   ],
   [
+    "hljs-tag",
+    {
+      color: dracula.yellow.toString(),
+      bold: true,
+    },
+  ],
+  [
     "hljs-name",
     {
       color: dracula.yellow.toString(),

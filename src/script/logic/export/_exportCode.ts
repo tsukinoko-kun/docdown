@@ -1,7 +1,7 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content, Style } from "pdfmake/interfaces";
 import { syntaxStyles } from "../../data/pdfStylesheet";
-import { mapIterableAllowEmpty } from "../dataHelper";
+import { mapIterableAllowEmpty, tryFlatIfArray } from "../dataHelper";
 import type { IExportHelper } from "./ExportHelper";
 
 interface ICodeBoxData {
@@ -22,9 +22,7 @@ export class ExportCodeBox implements IExportHelper<ICodeBoxData> {
       (content as any).id = block.id;
     }
 
-    console.debug("codeBox", JSON.stringify(content, undefined, 2));
-
-    return content;
+    return tryFlatIfArray(content as Array<Content>);
   }
 
   private parseHtml(code: string): Content {
@@ -39,35 +37,55 @@ export class ExportCodeBox implements IExportHelper<ICodeBoxData> {
     tempEl.remove();
 
     return {
-      text: lines,
+      text: tryFlatIfArray(lines),
       style: "code",
-      // preserveLeadingSpaces: true,
     };
   }
 
   private parseHtmlCodeWithStyle(el: ChildNode): Content | null {
     if (el.nodeType === Node.ELEMENT_NODE) {
-      const style = this.getSyntaxStyleFor(el as HTMLElement);
-      if (style) {
-        return {
-          text: (el as HTMLElement).innerText,
-          style,
-        };
+      if (el.childNodes.length === 0) {
+        const style = this.getSyntaxStyleFor(el as HTMLElement);
+        if (style) {
+          return {
+            text: (el as HTMLElement).innerText,
+            style,
+          };
+        } else {
+          return (el as HTMLElement).innerText;
+        }
       } else {
-        return (el as HTMLElement).innerText;
+        const snippets = mapIterableAllowEmpty<ChildNode, Content>(
+          Array.from(el.childNodes),
+          (snippet) => this.parseHtmlCodeWithStyle(snippet)
+        );
+
+        return tryFlatIfArray(snippets);
       }
     }
 
-    return el.textContent;
+    if (el.textContent) {
+      const style = this.getSyntaxStyleFor(el.parentElement as HTMLElement);
+      if (style) {
+        return {
+          text: el.textContent,
+          style,
+        };
+      } else {
+        return el.textContent;
+      }
+    }
+    return null;
   }
 
   private getSyntaxStyleFor(node: Node): Style | undefined {
     let combinedStyle: Style = {};
 
-    let el: Node | null = node;
+    let el: null | HTMLElement = node as HTMLElement;
 
-    for (let i = 0; i < 5 && el !== null; i++) {
+    for (let i = 0; i < 10 && el !== null; i++) {
       if ("classList" in el) {
+        console.debug("classList", el.classList);
         for (const cls of Array.from((el as HTMLElement).classList)) {
           console.debug("class", cls);
           const style = syntaxStyles.get(cls);
@@ -75,9 +93,11 @@ export class ExportCodeBox implements IExportHelper<ICodeBoxData> {
             combinedStyle = { ...style, ...combinedStyle };
           }
         }
+      } else {
+        console.debug("no classList", el);
       }
 
-      el = el.parentNode;
+      el = el.parentNode as HTMLElement;
     }
 
     return combinedStyle;
