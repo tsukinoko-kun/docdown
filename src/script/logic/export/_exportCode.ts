@@ -85,16 +85,12 @@ export class ExportCodeBox implements IExportHelper<ICodeBoxData> {
 
     for (let i = 0; i < 10 && el !== null; i++) {
       if ("classList" in el) {
-        console.debug("classList", el.classList);
         for (const cls of Array.from((el as HTMLElement).classList)) {
-          console.debug("class", cls);
           const style = syntaxStyles.get(cls);
           if (style) {
             combinedStyle = { ...style, ...combinedStyle };
           }
         }
-      } else {
-        console.debug("no classList", el);
       }
 
       el = el.parentNode as HTMLElement;

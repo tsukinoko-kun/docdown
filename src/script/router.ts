@@ -1,6 +1,7 @@
 import type { OutputData } from "@editorjs/editorjs";
 import type { language } from "./data/local";
 import type { pdfOutput } from "./logic/export";
+import type { ISaveData } from "./logic/saveAndLoad";
 
 /**
  * module service
@@ -10,7 +11,8 @@ export enum service {
   setLocale,
   getTheme,
   getDocumentData,
-  setDocumentData,
+  initFromData,
+  getSaveData,
   createPdf,
 }
 
@@ -27,12 +29,13 @@ type ParamResult<P, R> = {
 type ServiceMap = {
   [service.setLocale]: ParamResult<language, void>;
   [service.createPdf]: ParamResult<pdfOutput, void>;
-  [service.setDocumentData]: ParamResult<OutputData, void>;
+  [service.initFromData]: ParamResult<ISaveData, void>;
 };
 type ServiceMapNoParam = {
   [service.getLocale]: ParamResult<undefined, language>;
   [service.getTheme]: ParamResult<undefined, string>;
   [service.getDocumentData]: ParamResult<undefined, Promise<OutputData>>;
+  [service.getSaveData]: ParamResult<undefined, Promise<Partial<ISaveData>>>;
 };
 
 const messageReciever = new Map<service, Array<Function>>();
@@ -95,24 +98,51 @@ type SendMessageOverload = {
   // ServiceMap[S][paramResult.result] can be any type
   <S extends keyof ServiceMap>(
     service: S,
+    onlyFirstAnswer: true,
     message: ServiceMap[S][paramResult.param]
   ): ServiceMap[S][paramResult.result] | undefined;
 
+  // ServiceMap[S][paramResult.result] can be any type
+  <S extends keyof ServiceMap>(
+    service: S,
+    onlyFirstAnswer: false,
+    message: ServiceMap[S][paramResult.param]
+  ): Array<ServiceMap[S][paramResult.result]>;
+
   // ServiceMap[S][paramResult.result] is of type undefined
-  <S extends keyof ServiceMapNoParam>(service: S):
-    | ServiceMapNoParam[S][paramResult.result];
+  <S extends keyof ServiceMapNoParam>(service: S, onlyFirstAnswer: true):
+    | ServiceMapNoParam[S][paramResult.result]
+    | undefined;
+
+  // ServiceMap[S][paramResult.result] is of type undefined
+  <S extends keyof ServiceMapNoParam>(
+    service: S,
+    onlyFirstAnswer: false
+  ): Array<ServiceMapNoParam[S][paramResult.result]>;
 };
 
-export const sendMessage = (async (service, message) => {
+export const sendMessage = ((
+  service: any,
+  onlyFirstAnswer = true,
+  message = undefined
+) => {
   const s = messageReciever.get(service);
   if (s && s.length > 0) {
-    let value: any = undefined;
+    let value: any = onlyFirstAnswer ? undefined : new Array();
     for (const callback of s) {
       try {
-        if (value === undefined) {
-          value = callback(message);
+        if (onlyFirstAnswer) {
+          if (value === undefined) {
+            value = callback(message);
+          } else {
+            callback(message);
+          }
         } else {
-          callback(message);
+          if (Array.isArray(value)) {
+            value.push(callback(message));
+          } else {
+            value = [callback(message)];
+          }
         }
       } catch (e) {
         console.error(e);
@@ -123,12 +153,17 @@ export const sendMessage = (async (service, message) => {
     if (s2) {
       for (const callback of s2) {
         try {
-          callback(value);
+          if (onlyFirstAnswer) {
+            callback(value);
+          } else {
+            value.forEach(callback);
+          }
         } catch (e) {
           console.error(e);
         }
       }
     }
+
     return value;
   } else {
     throw new Error(`No listener for service ${service}`);

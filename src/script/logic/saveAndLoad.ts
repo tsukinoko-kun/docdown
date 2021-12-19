@@ -1,11 +1,18 @@
 import { sendMessage, service } from "../router";
+import type { sourceId, ISourceData } from "../ui/Source/SourceTypes";
+import type { OutputData } from "@editorjs/editorjs";
+
+export interface ISaveData {
+  sources: { [key: sourceId]: ISourceData };
+  editor: OutputData;
+}
 
 //#region Download
-const downloadTxt = (data: string, fileName: string) => {
+const downloadTxt = (data: string, fileName: string, mime = "text/plain") => {
   const element = document.createElement("a");
   element.setAttribute(
     "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(data)
+    `data:${mime};charset=utf-8,${encodeURIComponent(data)}`
   );
   element.setAttribute("download", fileName);
 
@@ -18,12 +25,16 @@ const downloadTxt = (data: string, fileName: string) => {
 };
 
 export const downloadData = async () => {
-  const data = await sendMessage(service.getDocumentData);
-  if (data) {
-    downloadTxt(JSON.stringify(data, undefined, 2), "data.json");
-  } else {
-    console.error(new Error("No data to export"));
-  }
+  const data = Object.assign(
+    {},
+    ...(await Promise.all(sendMessage(service.getSaveData, false)))
+  );
+
+  downloadTxt(
+    JSON.stringify(data, undefined, 2),
+    "data.json",
+    "application/json"
+  );
 };
 //#endregion
 
@@ -43,7 +54,7 @@ uploadEl.addEventListener("change", async () => {
   const reader = new FileReader();
   reader.onload = async () => {
     const data = JSON.parse(reader.result as string);
-    await sendMessage(service.setDocumentData, data);
+    await sendMessage(service.initFromData, true, data);
   };
   reader.readAsText(file);
 });

@@ -12,12 +12,16 @@ import { ExportQuote } from "./_exportQuote";
 import { ExportCodeBox } from "./_exportCode";
 import { ExportTableOfContents } from "./_exportTableOfContents";
 
+import type { ITuneHelper } from "./TuneHelper";
+import { TuneSource } from "./_tuneSource";
+
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { OutputBlockData, OutputData } from "@editorjs/editorjs";
+import type { BlockTuneData } from "@editorjs/editorjs/types/block-tunes/block-tune-data";
 import { ExportImage } from "./_exportImage";
 import { pageMargins } from "../../data/pageSize";
 
-const exportHelpers: Array<IExportHelper<any>> = [
+const exportHelpers: Array<IExportHelper> = [
   new ExportParagraph(),
   new ExportHeader(),
   new ExportList(),
@@ -28,18 +32,40 @@ const exportHelpers: Array<IExportHelper<any>> = [
   new ExportImage(),
 ];
 
+const tuneHelpers: Array<ITuneHelper> = [new TuneSource()];
+
 const mapOutputBlockToPdfContent = async (
-  el: OutputBlockData<string, any>
+  data: OutputBlockData<string, any>
 ): Promise<Content> => {
   for (const helper of exportHelpers) {
-    if (helper.fulfillsSchema(el)) {
-      return await helper.parse(el);
+    if (helper.fulfillsSchema(data)) {
+      const content = await helper.parse(data);
+      if (data.tunes) {
+        return tuneContent(content, data.tunes);
+      } else {
+        return content;
+      }
     }
   }
 
-  const err = `No export helper found for ${el.type}`;
+  const err = `No export helper found for ${data.type}`;
   console.error(err);
   throw new Error(err);
+};
+
+const tuneContent = (
+  content: Content,
+  tunes: { [name: string]: BlockTuneData }
+): Content => {
+  for (const name in tunes) {
+    for (const helper of tuneHelpers) {
+      if (helper.fulfillsSchema(name, tunes[name])) {
+        return helper.tune(content, tunes[name]);
+      }
+    }
+  }
+
+  return content;
 };
 
 const createDocDefinition = async (
@@ -52,7 +78,7 @@ const createDocDefinition = async (
   styles: styles(),
   pageMargins,
   header: {
-    text: new Date().toLocaleDateString(sendMessage(service.getLocale)),
+    text: new Date().toLocaleDateString(sendMessage(service.getLocale, true)),
     margin: centimeterToPoint<[number, number]>([3.5, 0.5]),
     opacity: 0.5,
   },
@@ -87,7 +113,7 @@ const createDocDefinition = async (
 });
 
 const createPdf = async () => {
-  const data = await sendMessage(service.getDocumentData);
+  const data = await sendMessage(service.getDocumentData, true);
   if (data) {
     return pdfmakeCreatePdf(await createDocDefinition(data), undefined, fonts);
   } else {

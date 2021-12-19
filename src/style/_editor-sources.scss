@@ -1,0 +1,67 @@
+.select-source-ui,
+.register-source-ui {
+  * {
+    padding: 0;
+    margin: 0;
+  }
+
+  pointer-events: all;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+
+  > form {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    width: fit-content;
+    height: fit-content;
+    transform: translate(-50%, -50%);
+    background-color: $current-line;
+    border: {
+      width: 1px;
+      style: solid;
+      color: $background;
+      radius: $rad;
+    }
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: $padding;
+  }
+
+  > form,
+  > form > ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: #{$padding * 0.5};
+    > * {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: $padding;
+    }
+  }
+}
+
+.register-source-ui {
+  z-index: 101;
+
+  &::before {
+    content: "Add new source";
+    font-weight: bold;
+  }
+}
+
+.select-source-ui {
+  z-index: 100;
+
+  &::before {
+    content: "Select a source";
+    font-weight: bold;
+  }
+}

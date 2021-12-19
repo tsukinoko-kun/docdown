@@ -212,6 +212,10 @@ listenForMessage(service.setLocale, (language) => {
   }
 });
 
-sendMessage(service.setLocale, navigator.language.includes("de") ? "de" : "en");
+sendMessage(
+  service.setLocale,
+  true,
+  navigator.language.includes("de") ? "de" : "en"
+);
 
 export const getText = (id: textId) => localStringMap[currentLanguage][id];

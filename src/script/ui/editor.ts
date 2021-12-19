@@ -9,6 +9,7 @@ import Table from "editorjs-table";
 import CodeBox from "@bomdi/codebox";
 import SimpleImage from "simple-image-editorjs";
 import TableOfContents from "./TableOfContentsData";
+import { Source } from "./Source";
 
 import { listenForMessage, service } from "../router";
 
@@ -31,20 +32,24 @@ const editorConfig: EditorConfig = {
     },
     image: SimpleImage,
     quote: Quote,
-    marker: {
-      class: Marker,
-      shortcut: "CMD+SHIFT+M",
-    },
+    marker: Marker,
     codeBox: CodeBox,
     toc: TableOfContents,
+    source: Source,
   },
+  tunes: ["source"],
 };
 
 let editor = new EditorJS(editorConfig);
 
 listenForMessage(service.getDocumentData, () => editor.save());
-listenForMessage(service.setDocumentData, (data) => {
-  editorConfig.data = data;
-  editor.destroy();
-  editor = editor = new EditorJS(editorConfig);
+listenForMessage(service.getSaveData, async () => ({
+  editor: await editor.save(),
+}));
+listenForMessage(service.initFromData, (data) => {
+  if (data.editor) {
+    editorConfig.data = data.editor;
+    editor.destroy();
+    editor = editor = new EditorJS(editorConfig);
+  }
 });
