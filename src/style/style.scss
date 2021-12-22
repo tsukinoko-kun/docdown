@@ -22,6 +22,8 @@ main {
   position: relative;
 
   font-family: $default-font;
+
+  color-scheme: dark !important;
 }
 
 ::selection {

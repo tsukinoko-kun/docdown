@@ -12,6 +12,7 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
 
   > form {
     position: fixed;
@@ -63,9 +64,42 @@
         }
 
         &:hover {
-          background-color: $yellow;
+          background-color: $cyan;
         }
       }
+    }
+  }
+
+  label {
+    font-size: $font-size;
+    color: $foreground;
+
+    input {
+      background-color: $background;
+      border-radius: $rad;
+      color: $foreground;
+      font-size: $font-size;
+      padding: 4px 8px;
+    }
+  }
+
+  .button {
+    color: $current-line;
+    font-weight: bold;
+    font-size: $font-size;
+    border-radius: $rad;
+    padding: 4px 8px;
+    cursor: pointer;
+
+    transition: background $timing ease-out;
+
+    background: $gradient-blue;
+    background-size: 200% auto;
+    &:not(:hover) {
+      background-position: 100% 0%;
+    }
+    &:hover {
+      background-position: 0% 0%;
     }
   }
 }
@@ -73,9 +107,10 @@
 .register-source-ui {
   z-index: 101;
 
-  &::before {
+  form::before {
     content: "Add new source";
     font-weight: bold;
+    color: $background;
   }
 }
 

@@ -127,32 +127,42 @@
   }
 }
 
-.ce-settings__button:not(:hover) > svg,
-.cdx-settings-button:not(.cdx-settings-button--active, :hover) > svg {
-  fill: $background !important;
-}
-.ce-settings__button,
-.cdx-settings-button {
-  &.cdx-settings-button--active,
-  &:hover {
-    > svg {
-      fill: $purple !important;
-    }
-  }
-}
-
-.ce-settings__button--confirm {
-  &:not(:hover) {
-    background-color: transparent !important;
-    > svg {
-      fill: $red !important;
-    }
+.ce-settings {
+  background-color: $current-line;
+  border: {
+    width: 2px;
+    style: solid;
+    color: $background;
+    radius: $rad;
   }
 
-  &:hover {
-    background-color: $red !important;
-    > svg {
-      fill: $foreground !important;
+  svg {
+    fill: $background;
+  }
+
+  .cdx-settings-button:hover,
+  .ce-settings__button.ce-settings__button--focused,
+  .ce-settings__button:hover {
+    background-color: $current-line !important;
+    border-color: $purple !important;
+    svg {
+      fill: $purple;
+    }
+  }
+
+  .ce-settings__button--delete.ce-settings__button--confirm {
+    &:not(:hover) {
+      background-color: transparent !important;
+      > svg {
+        fill: $red !important;
+      }
+    }
+
+    &:hover {
+      background-color: $red !important;
+      > svg {
+        fill: $foreground !important;
+      }
     }
   }
 }
@@ -163,6 +173,11 @@
 .tc-add-row,
 .ce-toolbar--opened {
   border-color: $foreground !important;
+}
+
+.table-cell {
+  background-color: $background;
+  border-color: $current-line;
 }
 
 .ce-toc {
@@ -192,6 +207,49 @@
     color: rgba($foreground, 0.5) !important;
   }
   text-decoration: underline dotted rgba($foreground, 0.5) 1px !important;
+}
+
+.codeBoxSelectDiv {
+  border: {
+    width: 2px;
+    style: solid;
+    radius: $rad;
+  }
+
+  &:not(:hover) {
+    border-color: $current-line;
+  }
+
+  &:hover {
+    border-color: $purple;
+  }
+
+  .codeBoxSelectInput,
+  .codeBoxSelectDropIcon {
+    background-color: transparent;
+  }
+
+  .codeBoxSelectPreview {
+    background-color: $darker;
+    border: {
+      width: 2px;
+      style: solid;
+      color: $current-line;
+      radius: $rad;
+    }
+
+    .codeBoxSelectItem {
+      &:not(:hover) {
+        background-color: $darker;
+      }
+
+      &:hover {
+        background-color: $current-line;
+        color: white !important;
+        opacity: 1 !important;
+      }
+    }
+  }
 }
 
 @import "editor-sources";

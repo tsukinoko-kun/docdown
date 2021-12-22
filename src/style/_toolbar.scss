@@ -24,18 +24,18 @@ $toolbar-height: 60px;
       size: contain;
       position: center;
     }
-    transition: background-color $timing ease-out;
     cursor: pointer;
+    transition: background-image $timing ease-out;
 
     &:not(:hover) {
-      background-color: $background;
+      background-image: linear-gradient(140deg, $darker, $background);
     }
 
     &#pdf {
       mask-image: url(../image/file-earmark-pdf.svg);
 
       &:hover {
-        background-color: $red;
+        background-image: linear-gradient(140deg, $orange, $red);
       }
     }
 
@@ -43,7 +43,7 @@ $toolbar-height: 60px;
       mask-image: url(../image/file-earmark-arrow-down.svg);
 
       &:hover {
-        background-color: $green;
+        background-image: linear-gradient(140deg, $cyan, $green);
       }
     }
 
@@ -51,7 +51,7 @@ $toolbar-height: 60px;
       mask-image: url(../image/file-earmark-arrow-up.svg);
 
       &:hover {
-        background-color: $cyan;
+        background-image: linear-gradient(140deg, $blue, $indigo);
       }
     }
   }

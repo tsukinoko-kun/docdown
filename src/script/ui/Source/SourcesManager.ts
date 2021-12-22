@@ -105,6 +105,7 @@ export class SourcesManager {
       const submit = document.createElement("input");
       submit.type = "submit";
       submit.value = "Add";
+      submit.className = "button";
       form.appendChild(submit);
 
       ui.appendChild(form);
@@ -175,6 +176,7 @@ export class SourcesManager {
       this.populateSourcesCheckList(ul);
 
       const addSrcButton = document.createElement("p");
+      addSrcButton.className = "button";
       addSrcButton.innerText = "Add new source";
       addDisposableEventListener(addSrcButton, "click", () => {
         this.triggerAddNewSource()
@@ -193,6 +195,7 @@ export class SourcesManager {
       const submit = document.createElement("input");
       submit.type = "submit";
       submit.value = "OK";
+      submit.className = "button";
       form.appendChild(submit);
 
       ui.appendChild(form);
