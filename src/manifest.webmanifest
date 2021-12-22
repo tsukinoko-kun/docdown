@@ -1,7 +1,7 @@
 {
   "name": "docdown",
   "short_name": "docdown",
-  "description": "Markdown-powered documentation tool",
+  "description": "Fully automated documentation tool",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#44475a",
