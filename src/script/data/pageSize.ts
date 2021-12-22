@@ -40,10 +40,14 @@ export class Size {
     this._max = Math.max(this._width, this._height);
     this._min = Math.min(this._width, this._height);
   }
+
+  public toString(): string {
+    return `${this._width.toFixed(2)} × ${this._height.toFixed(2)}`;
+  }
 }
 
 const PlainA4 = [595.28, 841.89];
-export const pageMargins = centimeterToPoint<[number, number]>([3.5, 2.5]);
+export const pageMargins = centimeterToPoint<[number, number]>([3, 2]);
 export const A4 = new Size(
   PlainA4[0]! - pageMargins[0]! * 2,
   PlainA4[1]! - pageMargins[1]! * 2

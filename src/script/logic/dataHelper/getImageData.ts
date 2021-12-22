@@ -1,5 +1,9 @@
 import { Size } from "../../data/pageSize";
 
+const pixelToPoint = (pixel: number): number => {
+  return pixel * 0.75;
+};
+
 type imageData = {
   size: Size;
   dataUrl: string;
@@ -29,11 +33,14 @@ export const getImageData = (image: string): Promise<imageData> =>
       ctx!.drawImage(img, 0, 0);
 
       if (isAlreadyDataUrl) {
-        resolve({ size: new Size(img.width, img.height), dataUrl: image });
+        resolve({
+          size: new Size(pixelToPoint(img.width), pixelToPoint(img.height)),
+          dataUrl: image,
+        });
       } else {
         const data: imageData = {
-          size: new Size(img.width, img.height),
-          dataUrl: canvas.toDataURL("image/webp", 0.9),
+          size: new Size(pixelToPoint(img.width), pixelToPoint(img.height)),
+          dataUrl: canvas.toDataURL("image/jpeg", 0.9),
         };
 
         imageDataCache.set(image, data);

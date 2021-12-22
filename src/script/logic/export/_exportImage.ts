@@ -22,25 +22,43 @@ interface IImageData {
 }
 
 export class ExportImage implements IExportHelper<IImageData> {
-  fulfillsSchema(block: OutputBlockData<string, IImageData>): boolean {
+  public fulfillsSchema(block: OutputBlockData<string, IImageData>): boolean {
     return block.type === "image";
   }
-  async parse(block: OutputBlockData<"image", IImageData>): Promise<Content> {
+
+  public async parse(
+    block: OutputBlockData<"image", IImageData>
+  ): Promise<Content> {
     const imageData = await getImageData(block.data.url);
 
     if (imageData.size.width > A4.width) {
-      imageData.size.width = A4.width;
+      console.debug(`${imageData.size.width} > ${A4.width} too wide`);
       imageData.size.height =
-        (imageData.size.width / imageData.size.width) * imageData.size.height;
+        (A4.width / imageData.size.width) * imageData.size.height;
+      imageData.size.width = A4.width;
     } else if (imageData.size.height > A4.height) {
-      imageData.size.height = A4.height;
+      console.debug(`${imageData.size.height} > ${A4.height} too high`);
       imageData.size.width =
-        (imageData.size.height / imageData.size.height) * imageData.size.width;
+        (A4.height / imageData.size.height) * imageData.size.width;
+      imageData.size.height = A4.height;
+    } else {
+      console.debug("Image is ok");
     }
 
-    const contentImage = block.id
-      ? { image: await (await imageData).dataUrl, id: block.id }
-      : { image: await (await imageData).dataUrl };
+    console.debug("Image size", imageData.size.toString());
+
+    const contentImage: Content = block.id
+      ? {
+          image: imageData.dataUrl,
+          id: block.id,
+          width: imageData.size.width,
+          height: imageData.size.height,
+        }
+      : {
+          image: imageData.dataUrl,
+          width: imageData.size.width,
+          height: imageData.size.height,
+        };
 
     if (block.data.caption) {
       return [contentImage, { text: block.data.caption, style: "caption" }];
