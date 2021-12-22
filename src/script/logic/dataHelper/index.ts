@@ -53,4 +53,6 @@ export const firstIfSingle = <T>(arr: Array<T>): T | Array<T> =>
   Array.isArray(arr) ? (arr.length === 1 ? arr[0]! : arr) : arr;
 
 export const tryFlatIfArray = <T>(arr: Array<T> | T): Array<T> | T =>
-  (Array.isArray(arr) ? firstIfSingle(arr.flat()) : arr) as Array<T>;
+  (Array.isArray(arr)
+    ? firstIfSingle(arr.flat().map((x) => (Array.isArray(x) ? x.flat() : x)))
+    : arr) as Array<T>;

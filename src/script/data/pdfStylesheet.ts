@@ -75,13 +75,13 @@ export const syntaxStyles = new Map<string, Style>([
   [
     "hljs",
     {
-      color: dracula.foreground.toString(),
+      color: dracula.background.toString(),
     },
   ],
   [
     "hljs-subst",
     {
-      color: dracula.foreground.toString(),
+      color: dracula.background.toString(),
     },
   ],
   [
@@ -300,7 +300,7 @@ export const styles: () => { [key: string]: Style } = () => {
     },
     code: {
       font: "JetBrainsMono",
-      color: dracula.background.toString(),
+      color: dracula.foreground.toString(),
       lineHeight: 1,
       preserveLeadingSpaces: true,
     },
