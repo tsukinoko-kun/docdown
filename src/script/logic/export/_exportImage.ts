@@ -32,15 +32,14 @@ export class ExportImage implements IExportHelper<IImageData> {
     const imageData = await getImageData(block.data.url);
 
     if (imageData.size.width > A4.width) {
-      console.debug(`${imageData.size.width} > ${A4.width} too wide`);
       imageData.size.height =
         (A4.width / imageData.size.width) * imageData.size.height;
       imageData.size.width = A4.width;
     } else if (imageData.size.height > A4.height) {
-      console.debug(`${imageData.size.height} > ${A4.height} too high`);
+      const maxHeight = A4.height * 0.75;
       imageData.size.width =
-        (A4.height / imageData.size.height) * imageData.size.width;
-      imageData.size.height = A4.height;
+        (maxHeight / imageData.size.height) * imageData.size.width;
+      imageData.size.height = maxHeight;
     } else {
       console.debug("Image is ok");
     }
