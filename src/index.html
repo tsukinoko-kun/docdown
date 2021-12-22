@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>docdown</title>
-    <link
+    <!-- <link
       rel="stylesheet"
       href="./style/loading.scss"
       id="loadingStyle"
@@ -22,50 +22,29 @@
           passive: true,
         }
       );
-    </script>
+    </script> -->
     <script src="./script/index.ts" type="module" defer></script>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="canonical" content="https://docdown.app" />
     <meta name="description" content="Markdown-powered documentation tool" />
-    <link rel="manifest" href="./manifest.webmanifest" />
+    <!-- <link rel="manifest" href="./manifest.webmanifest" /> -->
     <link rel="shortcut icon" href="./image/icon.svg" type="image/svg" />
     <link rel="shortcut icon" href="./image/icon_32.png" type="image/png" />
     <link rel="shortcut icon" href="./image/icon_64.png" type="image/png" />
   </head>
   <body>
-    <main>
-      <ul id="nav"></ul>
-      <ul id="sources"></ul>
-      <textarea name="code" id="code" cols="50" rows="100"></textarea>
-      <div id="display"></div>
-      <embed id="pdf-view" type="application/pdf" />
-      <div id="statistics">
-        <img class="clickable" id="format" src="./image/paragraph.svg" />
-        <input type="text" id="headerText" placeholder="" />
-        <span id="repeat-tutorial" class="clickable">&nbsp;?&nbsp;</span>
-        <select class="clickable">
-          <optgroup id="theme" label="Theme"></optgroup>
-        </select>
-        <span id="cursor"></span>
-        <span id="word-count">0</span>
-      </div>
-    </main>
+    <div id="toolbar">
+      <span id="pdf" title="PDF Export"></span>
+      <span id="download" title="Download"></span>
+      <span id="upload" title="Upload"></span>
+    </div>
+    <div id="editor"></div>
 
     <link rel="stylesheet" href="./style/fonts.scss" media="screen" />
     <link rel="stylesheet" href="./style/style.scss" media="screen" />
-    <link
-      rel="stylesheet"
-      href="./style/theme/dark-theme.scss"
-      media="screen and (prefers-color-scheme: dark)"
-    />
-    <link
-      rel="stylesheet"
-      href="./style/theme/light-theme.scss"
-      media="screen and (prefers-color-scheme: light)"
-    />
-
+    <!--
     <script>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker
@@ -81,5 +60,11 @@
           });
       }
     </script>
+    -->
+    <input
+      type="file"
+      id="upload-file-input"
+      style="display: none !important"
+    />
   </body>
 </html>

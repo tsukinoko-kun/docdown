@@ -1,0 +1,124 @@
+.select-source-ui,
+.register-source-ui {
+  * {
+    padding: 0;
+    margin: 0;
+  }
+
+  pointer-events: all;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+
+  > form {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    width: fit-content;
+    height: fit-content;
+    transform: translate(-50%, -50%);
+    background-color: $current-line;
+    border: {
+      width: 1px;
+      style: solid;
+      color: $background;
+      radius: $rad;
+    }
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: $padding;
+  }
+
+  > form,
+  > form > ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: #{$padding * 0.5};
+    > * {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: $padding;
+
+      .edit {
+        mask: {
+          image: url(../image/edit_black.svg);
+          repeat: no-repeat;
+          size: contain;
+          position: center;
+        }
+        transition: background-color $timing ease-out;
+        cursor: pointer;
+        width: 1em;
+        height: 1em;
+
+        &:not(:hover) {
+          background-color: $background;
+        }
+
+        &:hover {
+          background-color: $cyan;
+        }
+      }
+    }
+  }
+
+  label {
+    font-size: $font-size;
+    color: $foreground;
+
+    input {
+      background-color: $background;
+      border-radius: $rad;
+      color: $foreground;
+      font-size: $font-size;
+      padding: 4px 8px;
+    }
+  }
+
+  .button {
+    color: $current-line;
+    font-weight: bold;
+    font-size: $font-size;
+    border-radius: $rad;
+    padding: 4px 8px;
+    cursor: pointer;
+
+    transition: background $timing ease-out;
+
+    background: $gradient-blue;
+    background-size: 200% auto;
+    &:not(:hover) {
+      background-position: 100% 0%;
+    }
+    &:hover {
+      background-position: 0% 0%;
+    }
+  }
+}
+
+.register-source-ui {
+  z-index: 101;
+
+  form::before {
+    content: "Add new source";
+    font-weight: bold;
+    color: $background;
+  }
+}
+
+.select-source-ui {
+  z-index: 100;
+  ul::before {
+    content: "Select a source";
+    font-weight: bold;
+    color: $background;
+  }
+}

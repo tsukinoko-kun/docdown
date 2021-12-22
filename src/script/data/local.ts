@@ -201,21 +201,21 @@ const localStringMap: { [key in language]: { [key in textId]: string } } = {
 
 let currentLanguage: language;
 
-export const getLocale = (): language => currentLanguage;
+listenForMessage(service.getLocale, () => currentLanguage);
 
-listenForMessage(service.setLocale, (language: language) => {
+listenForMessage(service.setLocale, (language) => {
   if (language in localStringMap) {
     currentLanguage = language;
     htmlEl.lang = language;
-
-    sendMessage(service.setChanged, {
-      language,
-    });
   } else {
     console.error(`Language "${language}" not supported`);
   }
 });
 
-sendMessage(service.setLocale, navigator.language.includes("de") ? "de" : "en");
+sendMessage(
+  service.setLocale,
+  true,
+  navigator.language.includes("de") ? "de" : "en"
+);
 
 export const getText = (id: textId) => localStringMap[currentLanguage][id];

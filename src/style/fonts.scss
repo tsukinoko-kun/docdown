@@ -1,5 +1,9 @@
 // NotoSans
 @font-face {
+  font-family: "NotoSansEmoji";
+  src: url("../font/Noto_Sans/NotoColorEmoji.otf") format("opentype");
+}
+@font-face {
   font-family: "NotoSans";
   src: url("../font/Noto_Sans/NotoSans-Regular.ttf") format("truetype");
   font-weight: normal;

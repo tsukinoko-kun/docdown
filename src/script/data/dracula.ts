@@ -14,6 +14,7 @@ import { Color } from "./Color";
 //   red: new Color(0xff5555),
 //   yellow: new Color(0xf1fa8c),
 // };
+// export default draculaDark;
 
 const draculaLight = {
   background: new Color(0xf8f8f2),
@@ -29,5 +30,4 @@ const draculaLight = {
   red: new Color(0xff5555).lighten(-10),
   yellow: new Color(0xf1fa8c).lighten(-75),
 };
-
 export default draculaLight;

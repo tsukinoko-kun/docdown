@@ -13,13 +13,21 @@ body,
 main {
   padding: 0;
   margin: 0;
-  background-color: var(--window-gap-color);
+  background-color: $background;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 * {
   position: relative;
 
   font-family: $default-font;
+
+  color-scheme: dark !important;
+}
+
+::selection {
+  background-color: $current-line;
 }
 
 :root,
@@ -27,10 +35,7 @@ body {
   overflow-x: hidden;
 }
 
-@import "alert";
-@import "main/main";
-@import "statistics";
-@import "selection";
-@import "scrollbar";
-@import "syntax";
-@import "tutorial";
+@import "toolbar";
+@import "editor";
+@import "hljs-dracula";
+@import "rendering";

@@ -1,3 +1,4 @@
+$darker: #14141b;
 $background: #282a36;
 $current-line: #44475a;
 $foreground: #f8f8f2;
@@ -8,42 +9,18 @@ $green: #50fa7b;
 $orange: #ffb86c;
 $pink: #ff79c6;
 $purple: #bd93f9;
+$indigo: #9580ff;
 $red: #ff5555;
 $yellow: #f1fa8c;
 
-$radius: 4px;
+$font-size: 14px;
 
-$default-font: "NotoSans", "Segoe UI", sans-serif;
+$gradient-blue: linear-gradient(140deg, $indigo, #80ffea);
+
+$rad: 0.5rem;
+$padding: 8px;
+
+$timing: 0.2s;
+
+$default-font: "NotoSans", "Segoe UI", "NotoSansEmoji", sans-serif;
 $monospace-font: "JetBrainsMono", "SFMono-Regular", monospace;
-
-@mixin clickable {
-  cursor: pointer;
-  user-select: none;
-
-  &:hover {
-    background-color: var(--anchor-hover-color) !important;
-    color: $foreground;
-
-    * {
-      color: $foreground;
-    }
-
-    input {
-      border-bottom-color: $foreground;
-      color-scheme: dark !important;
-    }
-  }
-}
-
-@mixin clickable-list {
-  padding: 0;
-  user-select: none;
-  list-style-type: none;
-
-  > * {
-    @include clickable;
-    width: 100%;
-    min-width: 100px;
-    padding: 2px 8px;
-  }
-}

@@ -1,0 +1,62 @@
+$toolbar-height: 60px;
+
+#toolbar {
+  $toolbar-padding: 5px;
+  height: $toolbar-height;
+  width: 100vw;
+  padding: $toolbar-padding;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  background-color: $darker;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow-x: hidden;
+  z-index: 100;
+
+  > span {
+    height: #{$toolbar-height - $toolbar-padding * 2};
+    width: #{$toolbar-height - $toolbar-padding * 2};
+    mask: {
+      repeat: no-repeat;
+      size: contain;
+      position: center;
+    }
+    cursor: pointer;
+    transition: background-image $timing ease-out;
+
+    &:not(:hover) {
+      background-image: linear-gradient(140deg, $darker, $background);
+    }
+
+    &#pdf {
+      mask-image: url(../image/file-earmark-pdf.svg);
+
+      &:hover {
+        background-image: linear-gradient(140deg, $orange, $red);
+      }
+    }
+
+    &#download {
+      mask-image: url(../image/file-earmark-arrow-down.svg);
+
+      &:hover {
+        background-image: linear-gradient(140deg, $cyan, $green);
+      }
+    }
+
+    &#upload {
+      mask-image: url(../image/file-earmark-arrow-up.svg);
+
+      &:hover {
+        background-image: linear-gradient(140deg, $blue, $indigo);
+      }
+    }
+  }
+}
+
+#editor {
+  margin-top: #{$toolbar-height + 64px};
+}
