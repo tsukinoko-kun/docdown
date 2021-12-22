@@ -34,21 +34,21 @@ export class ExportHeader implements IExportHelper<IHeaderData> {
     switch (level) {
       case 1:
         return {
+          tocItem: "toc",
           tocStyle: "toc_header1",
           style: "header1",
-          tocItem: "toc",
         };
       case 2:
         return {
+          tocItem: "toc",
           tocStyle: "toc_header2",
           style: "header2",
-          tocItem: "toc",
         };
       case 3:
         return {
+          tocItem: "toc",
           tocStyle: "toc_header3",
           style: "header3",
-          tocItem: "toc",
         };
       case 4:
         return {

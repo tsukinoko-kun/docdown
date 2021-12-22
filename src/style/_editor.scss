@@ -11,6 +11,12 @@
     }
   }
 
+  > .ce-block__content[data-sources]::after {
+    transform: translateY(-0.2em);
+    content: "\21E7 References linked to this block";
+    color: $current-line;
+  }
+
   .tc-popover.tc-popover--opened {
     background-color: $background;
 
@@ -160,7 +166,31 @@
 }
 
 .ce-toc {
-  color: rgba($foreground, 0.5) !important;
+  &::before {
+    content: 'Table of Contents: "';
+  }
+
+  &::after {
+    content: '"';
+  }
+}
+
+.ce-references {
+  &::before {
+    content: 'References: "';
+  }
+
+  &::after {
+    content: '"';
+  }
+}
+
+.ce-toc,
+.ce-references {
+  &::before,
+  &::after {
+    color: rgba($foreground, 0.5) !important;
+  }
   text-decoration: underline dotted rgba($foreground, 0.5) 1px !important;
 }
 

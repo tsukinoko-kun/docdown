@@ -294,9 +294,6 @@ export const styles: () => { [key: string]: Style } = () => {
       color: themeColor.toString(),
       decoration: "underline",
     },
-    fontawesome: {
-      font: "FontAwesome",
-    },
     code: {
       font: "JetBrainsMono",
       color: dracula.background.toString(),

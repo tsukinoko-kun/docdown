@@ -8,48 +8,55 @@ import Quote from "@editorjs/quote";
 import Table from "editorjs-table";
 import CodeBox from "@bomdi/codebox";
 import SimpleImage from "simple-image-editorjs";
-import TableOfContents from "./TableOfContentsData";
+import TableOfContents from "./TableOfContents";
+import { References } from "./Source";
+
 import { Source } from "./Source";
 
 import { listenForMessage, service } from "../router";
 
-const editorHolder = document.getElementById("editor") as HTMLElement;
+try {
+  const editorHolder = document.getElementById("editor") as HTMLElement;
 
-const editorConfig: EditorConfig = {
-  holder: editorHolder,
-  data: undefined as any,
-  autofocus: true,
-  tools: {
-    header: Header,
-    list: List,
-    table: {
-      class: Table,
-      inlineToolbar: true,
-      config: {
-        rows: 2,
-        cols: 3,
+  const editorConfig: EditorConfig = {
+    holder: editorHolder,
+    data: undefined as any,
+    autofocus: true,
+    tools: {
+      header: Header,
+      list: List,
+      table: {
+        class: Table,
+        inlineToolbar: true,
+        config: {
+          rows: 2,
+          cols: 3,
+        },
       },
+      image: SimpleImage,
+      quote: Quote,
+      marker: Marker,
+      codeBox: CodeBox,
+      toc: TableOfContents,
+      references: References,
+      source: Source,
     },
-    image: SimpleImage,
-    quote: Quote,
-    marker: Marker,
-    codeBox: CodeBox,
-    toc: TableOfContents,
-    source: Source,
-  },
-  tunes: ["source"],
-};
+    tunes: ["source"],
+  };
 
-let editor = new EditorJS(editorConfig);
+  let editor = new EditorJS(editorConfig);
 
-listenForMessage(service.getDocumentData, () => editor.save());
-listenForMessage(service.getSaveData, async () => ({
-  editor: await editor.save(),
-}));
-listenForMessage(service.initFromData, (data) => {
-  if (data.editor) {
-    editorConfig.data = data.editor;
-    editor.destroy();
-    editor = editor = new EditorJS(editorConfig);
-  }
-});
+  listenForMessage(service.getDocumentData, () => editor.save());
+  listenForMessage(service.getSaveData, async () => ({
+    editor: await editor.save(),
+  }));
+  listenForMessage(service.initFromData, (data) => {
+    if (data.editor) {
+      editorConfig.data = data.editor;
+      editor.destroy();
+      editor = editor = new EditorJS(editorConfig);
+    }
+  });
+} catch (e) {
+  console.warn(e);
+}

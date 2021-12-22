@@ -2,7 +2,7 @@ import { addDisposableEventListener, disposeNode } from "@frank-mayer/magic";
 import { h64 } from "xxhashjs";
 import { mapIterableAllowEmpty } from "../../logic/dataHelper";
 import { listenForMessage, service } from "../../router";
-import { numberToSourceId } from "./numberToSourceId";
+import { toId } from "../../data/toId";
 import type { sourceId, ISourceData } from "./SourceTypes";
 
 interface IUiTemplate {
@@ -11,7 +11,11 @@ interface IUiTemplate {
   type: string;
   value?: string;
   required: boolean;
+  min?: string;
+  max?: string;
 }
+
+const today = new Date().toISOString().split("T")[0]!;
 
 export class SourcesManager {
   private readonly hash = h64(0x123);
@@ -35,12 +39,15 @@ export class SourcesManager {
       label: "Date of creation",
       type: "date",
       required: false,
+      max: today,
     },
     {
       id: "dateOfAccess",
       label: "Date of access",
       type: "date",
       required: true,
+      value: today,
+      max: today,
     },
     {
       id: "url",
@@ -57,7 +64,14 @@ export class SourcesManager {
     this.sources = sources ?? [];
   }
 
-  public triggerAddNewSource(): Promise<void> {
+  public static getSource(id: sourceId): ISourceData | undefined {
+    return SourcesManager.sources.get(id);
+  }
+
+  public triggerAddNewSource(
+    data: Partial<ISourceData> = {},
+    id?: sourceId
+  ): Promise<void> {
     return new Promise((resolve, reject) => {
       const ui = document.createElement("div");
       ui.classList.add("register-source-ui");
@@ -71,10 +85,17 @@ export class SourcesManager {
         input.type = template.type;
         input.name = template.id;
         input.required = template.required;
-        if (template.value) {
+        if (data[template.id]) {
+          input.value = data[template.id]!;
+        } else if (template.value) {
           input.value = template.value;
         }
-
+        if (template.min) {
+          input.min = template.min;
+        }
+        if (template.max) {
+          input.max = template.max;
+        }
         label.innerText = template.label;
 
         label.appendChild(input);
@@ -95,7 +116,10 @@ export class SourcesManager {
         (ev) => {
           ev.stopPropagation();
           ev.preventDefault();
-          this.addSource(SourcesManager.sourceDataFromForm(new FormData(form)));
+          this.addSource(
+            SourcesManager.sourceDataFromForm(new FormData(form)),
+            id
+          );
           disposeNode(ui);
           resolve();
         },
@@ -127,11 +151,16 @@ export class SourcesManager {
     return data;
   }
 
-  private addSource(source: ISourceData) {
-    this.hash.update(JSON.stringify(source));
-    const hash = numberToSourceId(this.hash.digest());
-    SourcesManager.sources.set(hash, source);
-    return hash;
+  private addSource(source: ISourceData, id?: sourceId) {
+    if (id) {
+      SourcesManager.sources.set(id, source);
+      return id;
+    } else {
+      this.hash.update(JSON.stringify(source));
+      const hash = toId(this.hash.digest());
+      SourcesManager.sources.set(hash, source);
+      return hash;
+    }
   }
 
   public triggerSelectSource(): Promise<Array<sourceId>> {
@@ -148,9 +177,16 @@ export class SourcesManager {
       const addSrcButton = document.createElement("p");
       addSrcButton.innerText = "Add new source";
       addDisposableEventListener(addSrcButton, "click", () => {
-        this.triggerAddNewSource().then(() => {
-          this.populateSourcesCheckList(ul);
-        });
+        this.triggerAddNewSource()
+          .then(() => {
+            this.populateSourcesCheckList(ul);
+          })
+          .catch((err) => {
+            console.error(err);
+            if (err) {
+              reject();
+            }
+          });
       });
       form.appendChild(addSrcButton);
 
@@ -210,6 +246,7 @@ export class SourcesManager {
       const label = document.createElement("label");
       const input = document.createElement("input");
       const span = document.createElement("span");
+      const edit = document.createElement("span");
 
       input.type = "checkbox";
       input.value = id;
@@ -219,8 +256,17 @@ export class SourcesManager {
 
       span.innerText = SourcesManager.sourceToString(source);
 
+      edit.classList.add("edit");
+
+      addDisposableEventListener(edit, "click", () => {
+        this.triggerAddNewSource(source, id).then(() => {
+          this.populateSourcesCheckList(ul);
+        });
+      });
+
       label.appendChild(input);
       label.appendChild(span);
+      label.appendChild(edit);
       ul.appendChild(label);
     }
   }

@@ -14,6 +14,7 @@ export enum service {
   initFromData,
   getSaveData,
   createPdf,
+  prepareExport,
 }
 
 enum paramResult {
@@ -36,6 +37,7 @@ type ServiceMapNoParam = {
   [service.getTheme]: ParamResult<undefined, string>;
   [service.getDocumentData]: ParamResult<undefined, Promise<OutputData>>;
   [service.getSaveData]: ParamResult<undefined, Promise<Partial<ISaveData>>>;
+  [service.prepareExport]: ParamResult<undefined, void>;
 };
 
 const messageReciever = new Map<service, Array<Function>>();
@@ -108,6 +110,11 @@ type SendMessageOverload = {
     onlyFirstAnswer: false,
     message: ServiceMap[S][paramResult.param]
   ): Array<ServiceMap[S][paramResult.result]>;
+
+  // ServiceMap[S][paramResult.result] is of type undefined
+  <S extends keyof ServiceMapNoParam>(service: S):
+    | ServiceMapNoParam[S][paramResult.result]
+    | undefined;
 
   // ServiceMap[S][paramResult.result] is of type undefined
   <S extends keyof ServiceMapNoParam>(service: S, onlyFirstAnswer: true):

@@ -38,19 +38,12 @@ export const mapIterableAllowEmpty = <T, U>(
 
 export const mapIterableAllowEmptyAsync = async <T, U>(
   iterable: Iterable<T>,
-  callback: (item: T) => Promise<U>,
-  keepOrder: boolean = true
+  callback: (item: T) => Promise<U>
 ): Promise<Array<U>> => {
   const result = new Array<Promise<U>>();
 
-  if (keepOrder) {
-    for await (const item of iterable) {
-      result.push(callback(item));
-    }
-  } else {
-    for (const item of iterable) {
-      result.push(callback(item));
-    }
+  for await (const item of iterable) {
+    result.push(callback(item));
   }
 
   return await Promise.all(result);

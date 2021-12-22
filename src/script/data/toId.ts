@@ -1,4 +1,4 @@
-import type { sourceId } from "./SourceTypes";
+import type { sourceId } from "../ui/Source/SourceTypes";
 
 const sourceIdValues = [
   "0",
@@ -66,10 +66,11 @@ const sourceIdValues = [
 ];
 
 const radix = sourceIdValues.length;
-export const numberToSourceId = (
-  n: number | { toNumber(): number }
-): sourceId => {
+
+export const toId = (n: number | { toNumber(): number }): string => {
   if (typeof n === "number") {
+    n = Math.abs(n);
+
     const sb = new Array<string>();
 
     while (n > 0) {
@@ -80,6 +81,6 @@ export const numberToSourceId = (
 
     return sb.reverse().join("");
   } else {
-    return numberToSourceId(n.toNumber());
+    return toId(n.toNumber());
   }
 };
