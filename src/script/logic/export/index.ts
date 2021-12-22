@@ -97,8 +97,7 @@ const createDocDefinition = async (
       await mapIterableAllowEmptyAsync(
         outputData.blocks,
         mapOutputBlockToPdfContent
-      ),
-      1
+      )
     ),
     footer: (currentPage, pageCount) => ({
       text: `${currentPage}/${pageCount}`,
