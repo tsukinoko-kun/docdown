@@ -1,6 +1,6 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 import { parseHtml } from "./html/parseHtml";
 
 interface IParagraphData {
@@ -15,10 +15,10 @@ export class ExportParagraph implements IExportHelper<IParagraphData> {
     if (block.id) {
       return {
         id: block.id,
-        text: parseHtml(block.data.text),
+        text: wrapEmoji(parseHtml(block.data.text)),
       };
     }
 
-    return { text: parseHtml(block.data.text) };
+    return { text: wrapEmoji(parseHtml(block.data.text)) };
   }
 }

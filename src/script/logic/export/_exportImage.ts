@@ -2,7 +2,7 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
 import { A4 } from "../../data/pageSize";
 import { getImageData } from "../dataHelper/getImageData";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 
 interface IImageData {
   /** image's url */
@@ -40,11 +40,7 @@ export class ExportImage implements IExportHelper<IImageData> {
       imageData.size.width =
         (maxHeight / imageData.size.height) * imageData.size.width;
       imageData.size.height = maxHeight;
-    } else {
-      console.debug("Image is ok");
     }
-
-    console.debug("Image size", imageData.size.toString());
 
     const contentImage: Content = block.id
       ? {
@@ -60,7 +56,10 @@ export class ExportImage implements IExportHelper<IImageData> {
         };
 
     if (block.data.caption) {
-      return [contentImage, { text: block.data.caption, style: "caption" }];
+      return [
+        contentImage,
+        { text: wrapEmoji(block.data.caption), style: "caption" },
+      ];
     } else {
       return contentImage;
     }

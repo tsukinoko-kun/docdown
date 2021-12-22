@@ -2,7 +2,7 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content, OrderedListElement } from "pdfmake/interfaces";
 import { listenForMessage, service } from "../../router";
 import type { IReferencesData, ISourceData } from "../../ui/Source";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 
 export class ExportReferences implements IExportHelper<IReferencesData> {
   private static s_referencesContent = new Array<OrderedListElement>();
@@ -42,15 +42,19 @@ export class ExportReferences implements IExportHelper<IReferencesData> {
     if (sourceData.url) {
       return {
         text: [
-          `${sourceData.author}: ${sourceData.title}, ${sourceData.dateOfAccess}, `,
-          { text: sourceData.url, style: "anchor" },
+          wrapEmoji(
+            `${sourceData.author}: ${sourceData.title}, ${sourceData.dateOfAccess}, `
+          ),
+          { text: wrapEmoji(sourceData.url), style: "anchor" },
         ],
         link: sourceData.url,
         tocItem: ExportReferences.s_id,
       };
     } else {
       return {
-        text: `${sourceData.author}: ${sourceData.title}, ${sourceData.dateOfAccess}`,
+        text: wrapEmoji(
+          `${sourceData.author}: ${sourceData.title}, ${sourceData.dateOfAccess}`
+        ),
         tocItem: ExportReferences.s_id,
       };
     }

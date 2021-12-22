@@ -1,6 +1,6 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 import { parseHtml } from "./html/parseHtml";
 
 interface IQuoteData {
@@ -23,10 +23,10 @@ export class ExportQuote implements IExportHelper<IQuoteData> {
       text: block.data.caption
         ? [
             {
-              text: ["„", ...parseHtml(block.data.text), "“"],
+              text: ["„", ...parseHtml(block.data.text).map(wrapEmoji), "“"],
             },
             {
-              text: [" — ", ...parseHtml(block.data.caption)],
+              text: [" — ", ...parseHtml(block.data.caption).map(wrapEmoji)],
               style: "caption",
             },
           ]

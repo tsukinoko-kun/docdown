@@ -5,6 +5,7 @@ import NotoSansRegular from "../../font/Noto_Sans/NotoSans-Regular.ttf";
 import NotoSansBold from "../../font/Noto_Sans/NotoSans-Bold.ttf";
 import NotoSansItalic from "../../font/Noto_Sans/NotoSans-Italic.ttf";
 import NotoSansBoldItalic from "../../font/Noto_Sans/NotoSans-BoldItalic.ttf";
+import NotoColorEmoji from "../../font/Noto_Sans/NotoColorEmoji.otf";
 
 import JetBrainsMonoRegular from "../../font/JetBrainsMono/JetBrainsMono-Regular.ttf";
 import JetBrainsMonoBold from "../../font/JetBrainsMono/JetBrainsMono-Bold.ttf";
@@ -23,6 +24,9 @@ export const fonts: TFontDictionary = {
     bold: JetBrainsMonoBold,
     italics: JetBrainsMonoItalic,
     bolditalics: JetBrainsMonoBoldItalic,
+  },
+  NotoColorEmoji: {
+    normal: NotoColorEmoji,
   },
 };
 
@@ -306,7 +310,6 @@ export const styles: () => { [key: string]: Style } = () => {
     src: {
       sup: true,
       color: themeColor.toString(),
-      separator: ["(", ")"],
     },
     sub: {
       sub: true,
@@ -314,6 +317,11 @@ export const styles: () => { [key: string]: Style } = () => {
     hidden: {
       color: "transparent",
       fontSize: 0,
+    },
+    emoji: {
+      font: "NotoColorEmoji",
+      bold: false,
+      italics: false,
     },
   };
 };

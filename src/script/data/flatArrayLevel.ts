@@ -26,7 +26,7 @@ export const flatArrayKeepAsArray = <
   >
 >(
   arr: A,
-  flatLevel: number
+  flatLevel: number = 1
 ): A => {
   if (flatLevel <= 0) {
     return arr;

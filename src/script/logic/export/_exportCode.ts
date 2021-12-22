@@ -2,7 +2,7 @@ import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content, Style } from "pdfmake/interfaces";
 import { syntaxStyles } from "../../data/pdfStylesheet";
 import { mapIterableAllowEmpty, tryFlatIfArray } from "../dataHelper";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 
 interface ICodeBoxData {
   code: string;
@@ -37,7 +37,7 @@ export class ExportCodeBox implements IExportHelper<ICodeBoxData> {
     tempEl.remove();
 
     return {
-      text: tryFlatIfArray(lines),
+      text: wrapEmoji(tryFlatIfArray(lines)),
       style: "code",
     };
   }

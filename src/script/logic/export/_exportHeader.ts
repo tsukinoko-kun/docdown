@@ -1,6 +1,6 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 import { parseHtml } from "./html/parseHtml";
 
 type headerLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -19,13 +19,13 @@ export class ExportHeader implements IExportHelper<IHeaderData> {
     if (block.id) {
       return {
         id: block.id,
-        text: parseHtml(block.data.text),
+        text: wrapEmoji(parseHtml(block.data.text)),
         ...(this.getStyle(block.data.level) as any),
       };
     }
 
     return {
-      text: parseHtml(block.data.text),
+      text: wrapEmoji(parseHtml(block.data.text)),
       ...(this.getStyle(block.data.level) as any),
     };
   }

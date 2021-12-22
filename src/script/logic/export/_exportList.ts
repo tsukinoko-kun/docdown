@@ -1,6 +1,6 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 import { parseHtml } from "./html/parseHtml";
 
 type listStyle = "ordered" | "unordered";
@@ -35,7 +35,7 @@ export class ExportList implements IExportHelper<IListData> {
     const data = new Array<Content>();
 
     if (nestedListItem.content) {
-      data.push(parseHtml(nestedListItem.content));
+      data.push(wrapEmoji(parseHtml(nestedListItem.content)));
     }
 
     if (nestedListItem.items.length > 0) {

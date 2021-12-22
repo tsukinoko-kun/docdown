@@ -1,7 +1,7 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
 import type { ITableOfContentsData } from "../../ui/TableOfContents";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 
 export class ExportTableOfContents
   implements IExportHelper<ITableOfContentsData>
@@ -15,7 +15,7 @@ export class ExportTableOfContents
   parse(block: OutputBlockData<"toc", ITableOfContentsData>): Content {
     return {
       toc: {
-        title: { text: block.data.title, style: "title" },
+        title: { text: wrapEmoji(block.data.title), style: "title" },
         id: "toc",
       },
       pageBreak: "after",

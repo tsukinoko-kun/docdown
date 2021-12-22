@@ -1,6 +1,6 @@
 import type { OutputBlockData } from "@editorjs/editorjs";
 import type { Content } from "pdfmake/interfaces";
-import type { IExportHelper } from "./ExportHelper";
+import { IExportHelper, wrapEmoji } from "./ExportHelper";
 import { parseHtml } from "./html/parseHtml";
 
 interface ITableData {
@@ -23,7 +23,7 @@ export class ExportTable implements IExportHelper<ITableData> {
     return {
       table: {
         body: block.data.content.map((row) =>
-          row.map((cell) => parseHtml(cell))
+          row.map((cell) => wrapEmoji(parseHtml(cell)))
         ),
         headerRows: block.data.withHeadings ? 1 : 0,
       },
