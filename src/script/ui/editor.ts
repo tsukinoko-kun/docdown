@@ -14,6 +14,7 @@ import { References } from "./Source";
 import { Source } from "./Source";
 
 import { listenForMessage, service } from "../router";
+import { getImageData } from "../logic/dataHelper/getImageData";
 
 try {
   const editorHolder = document.getElementById("editor") as HTMLElement;
@@ -47,9 +48,21 @@ try {
   let editor = new EditorJS(editorConfig);
 
   listenForMessage(service.getDocumentData, () => editor.save());
-  listenForMessage(service.getSaveData, async () => ({
-    editor: await editor.save(),
-  }));
+  listenForMessage(service.getSaveData, async () => {
+    const saveData = await editor.save();
+
+    for await (const blockData of saveData.blocks) {
+      if (blockData.type === "image") {
+        blockData.data.url = await (
+          await getImageData(blockData.data.url)
+        ).dataUrl;
+      }
+    }
+
+    return {
+      editor: saveData,
+    };
+  });
   listenForMessage(service.initFromData, (data) => {
     if (data.editor) {
       editorConfig.data = data.editor;

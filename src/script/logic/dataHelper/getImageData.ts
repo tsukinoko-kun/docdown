@@ -7,6 +7,8 @@ type imageData = {
 const imageDataCache = new Map<string, imageData>();
 export const getImageData = (image: string): Promise<imageData> =>
   new Promise((resolve, reject) => {
+    const isAlreadyDataUrl = image.startsWith("data:image");
+
     if (imageDataCache.has(image)) {
       resolve(imageDataCache.get(image) as imageData);
       return;
@@ -26,13 +28,17 @@ export const getImageData = (image: string): Promise<imageData> =>
 
       ctx!.drawImage(img, 0, 0);
 
-      const data: imageData = {
-        size: new Size(img.width, img.height),
-        dataUrl: canvas.toDataURL("image/png"),
-      };
+      if (isAlreadyDataUrl) {
+        resolve({ size: new Size(img.width, img.height), dataUrl: image });
+      } else {
+        const data: imageData = {
+          size: new Size(img.width, img.height),
+          dataUrl: canvas.toDataURL("image/webp", 0.9),
+        };
 
-      imageDataCache.set(image, data);
-      resolve(data);
+        imageDataCache.set(image, data);
+        resolve(data);
+      }
 
       // cleanup
       img.onload = null;
