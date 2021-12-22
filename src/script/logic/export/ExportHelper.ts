@@ -35,6 +35,8 @@ export const wrapEmoji = (
         return el;
       }
     }
+
+    return undefined;
   });
 
   if (content.length === 1) {
