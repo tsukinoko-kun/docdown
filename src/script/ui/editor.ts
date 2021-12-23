@@ -18,7 +18,7 @@ import { Source } from "./Source";
 // Other
 import Undo from "editorjs-undo";
 
-import { listenForMessage, service } from "../router";
+import { listenForMessage, sendMessage, service } from "../router";
 import { getImageData } from "../logic/dataHelper/getImageData";
 
 try {
@@ -50,6 +50,9 @@ try {
     tunes: ["source"],
     onReady: () => {
       new Undo({ editor });
+    },
+    onChange: () => {
+      sendMessage(service.dataChanged);
     },
   };
 

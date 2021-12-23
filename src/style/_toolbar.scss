@@ -14,7 +14,7 @@ $toolbar-height: 60px;
   left: 0;
   right: 0;
   overflow-x: hidden;
-  z-index: 100;
+  z-index: 10;
 
   > span {
     height: #{$toolbar-height - $toolbar-padding * 2};
@@ -47,8 +47,8 @@ $toolbar-height: 60px;
       }
     }
 
-    &#upload {
-      mask-image: url(../image/file-earmark-arrow-up.svg);
+    &#open {
+      mask-image: url(../image/file_open.svg);
 
       &:hover {
         background-image: linear-gradient(140deg, $blue, $indigo);
@@ -59,4 +59,42 @@ $toolbar-height: 60px;
 
 #editor {
   margin-top: #{$toolbar-height + 64px};
+}
+
+.open-file {
+  @include alert-back;
+
+  > * {
+    @include alert-form;
+    z-index: 100;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    gap: $padding;
+    grid-template-areas:
+      "recent"
+      "ctrl";
+
+    .recent {
+      grid-area: recent;
+      display: flex;
+      flex-direction: column;
+      gap: $padding;
+      max-height: 50vh;
+      overflow-y: auto;
+      > * {
+        padding: 0 $padding;
+        list-style: none;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .ctrl {
+      grid-area: ctrl;
+    }
+  }
 }

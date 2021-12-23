@@ -15,6 +15,10 @@ export enum service {
   getSaveData,
   createPdf,
   prepareExport,
+  dataChanged,
+  setDocumentName,
+  getDocumentName,
+  forEachSavedDocument,
 }
 
 enum paramResult {
@@ -31,6 +35,11 @@ type ServiceMap = {
   [service.setLocale]: ParamResult<language, void>;
   [service.createPdf]: ParamResult<pdfOutput, void>;
   [service.initFromData]: ParamResult<ISaveData, void>;
+  [service.setDocumentName]: ParamResult<string, void>;
+  [service.forEachSavedDocument]: ParamResult<
+    (doc: Partial<ISaveData>) => void,
+    void
+  >;
 };
 type ServiceMapNoParam = {
   [service.getLocale]: ParamResult<undefined, language>;
@@ -38,10 +47,12 @@ type ServiceMapNoParam = {
   [service.getDocumentData]: ParamResult<undefined, Promise<OutputData>>;
   [service.getSaveData]: ParamResult<undefined, Promise<Partial<ISaveData>>>;
   [service.prepareExport]: ParamResult<undefined, void>;
+  [service.dataChanged]: ParamResult<undefined, void>;
+  [service.getDocumentName]: ParamResult<undefined, string>;
 };
 
-const messageReciever = new Map<service, Array<Function>>();
-const messageNotifyReciever = new Map<service, Array<Function>>();
+const messageReceiver = new Map<service, Array<Function>>();
+const messageNotifyReceiver = new Map<service, Array<Function>>();
 
 type ListenForMessageOverload = {
   <S extends keyof ServiceMap>(
@@ -65,11 +76,11 @@ export const listenForMessage: ListenForMessageOverload = ((
   service: any,
   callback: any
 ) => {
-  const s = messageReciever.get(service);
+  const s = messageReceiver.get(service);
   if (s) {
     s.push(callback);
   } else {
-    messageReciever.set(service, [callback]);
+    messageReceiver.set(service, [callback]);
   }
 }) as ListenForMessageOverload;
 
@@ -88,11 +99,11 @@ export const notifyOnMessage: NotifyOnMessageOverload = (
   service: any,
   callback: any
 ) => {
-  const s = messageNotifyReciever.get(service);
+  const s = messageNotifyReceiver.get(service);
   if (s) {
     s.push(callback);
   } else {
-    messageNotifyReciever.set(service, [callback]);
+    messageNotifyReceiver.set(service, [callback]);
   }
 };
 
@@ -133,7 +144,7 @@ export const sendMessage = ((
   onlyFirstAnswer = true,
   message = undefined
 ) => {
-  const s = messageReciever.get(service);
+  const s = messageReceiver.get(service);
   if (s && s.length > 0) {
     let value: any = onlyFirstAnswer ? undefined : new Array();
     for (const callback of s) {
@@ -156,7 +167,7 @@ export const sendMessage = ((
       }
     }
 
-    const s2 = messageNotifyReciever.get(service);
+    const s2 = messageNotifyReceiver.get(service);
     if (s2) {
       for (const callback of s2) {
         try {
@@ -173,6 +184,6 @@ export const sendMessage = ((
 
     return value;
   } else {
-    throw new Error(`No listener for service ${service}`);
+    console.warn(new Error(`No listener for service ${service}`));
   }
 }) as SendMessageOverload;

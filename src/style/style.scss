@@ -20,9 +20,8 @@ main {
 
 * {
   position: relative;
-
-  font-family: $default-font;
-
+  font-family: $default-font !important;
+  color: $foreground;
   color-scheme: dark !important;
 }
 
@@ -33,6 +32,26 @@ main {
 :root,
 body {
   overflow-x: hidden;
+}
+
+.button {
+  color: $current-line;
+  font-weight: bold;
+  font-size: $font-size;
+  border-radius: $rad;
+  padding: 4px 8px !important;
+  cursor: pointer;
+
+  transition: background $timing ease-out;
+
+  background: $gradient-blue;
+  background-size: 200% auto;
+  &:not(:hover) {
+    background-position: 100% 0%;
+  }
+  &:hover {
+    background-position: 0% 0%;
+  }
 }
 
 @import "toolbar";

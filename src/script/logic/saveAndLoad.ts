@@ -1,11 +1,47 @@
-import { sendMessage, service } from "../router";
+import {
+  listenForMessage,
+  notifyOnMessage,
+  sendMessage,
+  service,
+} from "../router";
 import type { sourceId, ISourceData } from "../ui/Source/SourceTypes";
 import type { OutputData } from "@editorjs/editorjs";
+import { openDB } from "idb";
+import { toId } from "../data/toId";
+
+const getEditorData = async () => {
+  const a = await Promise.all(sendMessage(service.getSaveData, false));
+
+  console.debug("Editor data", a);
+
+  const b = Object.assign({}, ...a) as Partial<ISaveData>;
+  console.debug("Editor data combined", b);
+  return b;
+};
+
+//#region Document Name
+let documentName = toId(Math.random() * Math.pow(10, 20));
+let prevDocumentName = documentName;
+listenForMessage(service.setDocumentName, (name) => {
+  prevDocumentName = documentName;
+  documentName = name;
+});
+listenForMessage(service.getDocumentName, () => documentName);
+listenForMessage(service.getSaveData, () =>
+  Promise.resolve({ name: documentName })
+);
+listenForMessage(service.initFromData, (data) => {
+  if (data.name) {
+    documentName = data.name;
+  }
+});
 
 export interface ISaveData {
   sources: { [key: sourceId]: ISourceData };
   editor: OutputData;
+  name: string;
 }
+//#endregion
 
 //#region Download
 const downloadTxt = (data: string, fileName: string, mime = "text/plain") => {
@@ -25,27 +61,24 @@ const downloadTxt = (data: string, fileName: string, mime = "text/plain") => {
 };
 
 export const downloadData = async () => {
-  const data = Object.assign(
-    {},
-    ...(await Promise.all(sendMessage(service.getSaveData, false)))
-  );
-
+  const data = await getEditorData();
+  const name = data.name ?? sendMessage(service.getDocumentName);
   downloadTxt(
     JSON.stringify(data, undefined, 2),
-    "data.json",
+    `${name}.json`,
     "application/json"
   );
 };
 //#endregion
 
-//#region Upload
+//#region Open
 const uploadEl = document.getElementById(
   "upload-file-input"
 ) as HTMLInputElement;
 
 uploadEl.multiple = false;
 
-uploadEl.addEventListener("change", async () => {
+uploadEl.onchange = async () => {
   const file = uploadEl.files![0];
   if (!file) {
     return;
@@ -57,9 +90,66 @@ uploadEl.addEventListener("change", async () => {
     await sendMessage(service.initFromData, true, data);
   };
   reader.readAsText(file);
-});
+};
 
 export const uploadData = () => {
   uploadEl.click();
 };
+//#endregion
+
+//#region store in db
+enum stores {
+  documents = "documents",
+}
+
+openDB("docdown.app", 1, {
+  upgrade(db) {
+    db.createObjectStore(stores.documents, {
+      autoIncrement: true,
+    });
+  },
+})
+  .then((db) => {
+    const save = async () => {
+      const data = await getEditorData();
+      console.debug("try save", data);
+      if (
+        data.editor &&
+        data.editor.blocks &&
+        data.editor.blocks.length !== 0
+      ) {
+        console.debug("writing to db");
+        db.put(stores.documents, await getEditorData(), documentName);
+      } else {
+        console.debug("nothing saved");
+      }
+    };
+
+    let timerToken: number | undefined = undefined;
+    listenForMessage(service.dataChanged, () => {
+      if (timerToken !== undefined) {
+        window.clearTimeout(timerToken);
+      }
+      timerToken = window.setTimeout(() => {
+        save();
+        timerToken = undefined;
+      }, 2000);
+    });
+
+    notifyOnMessage(service.setDocumentName, () => {
+      db.delete(stores.documents, prevDocumentName);
+      save();
+    });
+
+    listenForMessage(service.forEachSavedDocument, (cb) => {
+      db.getAll(stores.documents).then((docs) => {
+        docs.forEach(cb);
+      });
+    });
+  })
+  .catch((err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
 //#endregion

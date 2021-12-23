@@ -24,3 +24,40 @@ $timing: 0.2s;
 
 $default-font: "NotoSans", "Segoe UI", "NotoSansEmoji", sans-serif;
 $monospace-font: "JetBrainsMono", "SFMono-Regular", monospace;
+
+@mixin alert-back {
+  * {
+    padding: 0;
+    margin: 0;
+  }
+
+  pointer-events: all;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 50;
+}
+
+@mixin alert-form {
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  min-width: fit-content;
+  height: fit-content;
+  width: 50vw;
+  transform: translate(-50%, -50%);
+  background-color: $current-line;
+  border: {
+    width: 1px;
+    style: solid;
+    color: $background;
+    radius: $rad;
+  }
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding: $padding;
+  gap: $padding;
+}

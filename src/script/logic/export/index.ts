@@ -81,7 +81,8 @@ const createDocDefinition = async (
     info: {
       creationDate: now,
       modDate: now,
-      title: "DocDown PDF Export",
+      title: sendMessage(service.getDocumentName) || "DocDown PDF Export",
+      producer: "docdown.app",
     },
     ownerPassword: toId(Math.random() * Math.pow(10, 20)),
     version: "1.7ext3",
