@@ -2132,6 +2132,11 @@ editorjs-table@^1.4.10:
   resolved "https://registry.yarnpkg.com/editorjs-table/-/editorjs-table-1.4.10.tgz#2714d91054732fc827087c705ceb2641a16d3ed2"
   integrity sha512-jRpgqnimReXXtMLhjXWQ2M+qkOLNqCvKfoiExpZtzPThTFNtSPrE6WZ/HhTsOA2BMkZSejoLcf4KUYvRa5dZYw==
 
+editorjs-undo@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/editorjs-undo/-/editorjs-undo-1.0.1.tgz#e59d4eb99b5839860395d663523a237251c71ade"
+  integrity sha512-dGk9fPujFJCayWJi2xspPJBwylAcLV8ACbXGOOTxSdysuQs3EpUUVv6F3aLzgxqyalCq7jJ+bnWxBoVhOccShg==
+
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"

@@ -1,6 +1,7 @@
 import EditorJS from "@editorjs/editorjs";
 import type { EditorConfig } from "@editorjs/editorjs";
 
+// Block Tool
 import Header from "@editorjs/header";
 import List from "@editorjs/nested-list";
 import Marker from "@editorjs/marker";
@@ -11,7 +12,11 @@ import SimpleImage from "simple-image-editorjs";
 import TableOfContents from "./TableOfContents";
 import { References } from "./Source";
 
+// Block Tunes
 import { Source } from "./Source";
+
+// Other
+import Undo from "editorjs-undo";
 
 import { listenForMessage, service } from "../router";
 import { getImageData } from "../logic/dataHelper/getImageData";
@@ -43,6 +48,9 @@ try {
       source: Source,
     },
     tunes: ["source"],
+    onReady: () => {
+      new Undo({ editor });
+    },
   };
 
   let editor = new EditorJS(editorConfig);
