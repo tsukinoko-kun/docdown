@@ -1,4 +1,4 @@
-$toolbar-height: 60px;
+$toolbar-height: 42px;
 
 #toolbar {
   $toolbar-padding: 5px;
@@ -15,6 +15,13 @@ $toolbar-height: 60px;
   right: 0;
   overflow-x: hidden;
   z-index: 10;
+
+  > #document-name {
+    font-size: #{$toolbar-height - $toolbar-padding * 4};
+    color: $foreground;
+    width: fit-content;
+    background-color: transparent;
+  }
 
   > span {
     height: #{$toolbar-height - $toolbar-padding * 2};

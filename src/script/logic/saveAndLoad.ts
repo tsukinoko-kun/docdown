@@ -8,6 +8,7 @@ import type { sourceId, ISourceData } from "../ui/Source/SourceTypes";
 import type { OutputData } from "@editorjs/editorjs";
 import { openDB } from "idb";
 import { toId } from "../data/toId";
+import { addDisposableEventListener } from "@frank-mayer/magic/bin";
 
 const getEditorData = async () => {
   const a = await Promise.all(sendMessage(service.getSaveData, false));
@@ -20,28 +21,42 @@ const getEditorData = async () => {
 };
 
 //#region Document Name
-let documentName = toId(Math.random() * Math.pow(10, 20));
-let prevDocumentName = documentName;
-listenForMessage(service.setDocumentName, (name) => {
+let documentName: string = "";
+let prevDocumentName: typeof documentName = documentName;
+const documentNameEl = document.getElementById(
+  "document-name"
+) as HTMLInputElement;
+
+const setDocumentName = (newName: string) => {
   prevDocumentName = documentName;
-  documentName = name;
-});
+  documentName = newName;
+  documentNameEl.value = newName;
+};
+
+listenForMessage(service.setDocumentName, setDocumentName);
 listenForMessage(service.getDocumentName, () => documentName);
 listenForMessage(service.getSaveData, () =>
   Promise.resolve({ name: documentName })
 );
 listenForMessage(service.initFromData, (data) => {
   if (data.name) {
-    documentName = data.name;
+    setDocumentName(data.name);
   }
 });
+addDisposableEventListener(documentNameEl, "change", () => {
+  console.debug("Document name changed", documentNameEl.value);
+  sendMessage(service.setDocumentName, true, documentNameEl.value);
+});
+
+//preset
+setDocumentName("Unnamed Document");
+//#endregion
 
 export interface ISaveData {
   sources: { [key: sourceId]: ISourceData };
   editor: OutputData;
   name: string;
 }
-//#endregion
 
 //#region Download
 const downloadTxt = (data: string, fileName: string, mime = "text/plain") => {
@@ -137,8 +152,14 @@ openDB("docdown.app", 1, {
     });
 
     notifyOnMessage(service.setDocumentName, () => {
+      if (timerToken !== undefined) {
+        window.clearTimeout(timerToken);
+      }
       db.delete(stores.documents, prevDocumentName);
-      save();
+      timerToken = window.setTimeout(() => {
+        save();
+        timerToken = undefined;
+      }, 2000);
     });
 
     listenForMessage(service.forEachSavedDocument, (cb) => {
