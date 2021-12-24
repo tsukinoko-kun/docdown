@@ -91,7 +91,7 @@ const createDocDefinition = async (
     pageMargins,
     header: {
       text: now.toLocaleDateString(sendMessage(service.getLocale)),
-      margin: centimeterToPoint<[number, number]>([3.5, 0.5]),
+      margin: [pageMargins[0], centimeterToPoint(0.5)],
       opacity: 0.5,
     },
     content: flatArrayKeepAsArray(
@@ -103,17 +103,21 @@ const createDocDefinition = async (
     footer: (currentPage, pageCount) => ({
       text: `${currentPage}/${pageCount}`,
       alignment: "right",
-      margin: [40, 20],
+      margin: [pageMargins[0], centimeterToPoint(0.5)],
       opacity: 0.5,
     }),
-    pageBreakBefore: function (
+    pageBreakBefore: (
       currentNode,
       followingNodesOnPage
       /*,nodesOnNextPage,
         previousNodesOnPage*/
-    ) {
+    ) => {
+      console.debug(currentNode);
       return (
-        currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0
+        typeof currentNode.headlineLevel === "number" &&
+        currentNode.headlineLevel > 0 &&
+        (followingNodesOnPage.length === 0 ||
+          followingNodesOnPage[0]!.startPosition.verticalRatio > 0.75)
       );
     },
     compress: true,

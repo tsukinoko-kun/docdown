@@ -16,9 +16,10 @@ export class ExportParagraph implements IExportHelper<IParagraphData> {
       return {
         id: block.id,
         text: wrapEmoji(parseHtml(block.data.text)),
+        style: "paragraph",
       };
     }
 
-    return { text: wrapEmoji(parseHtml(block.data.text)) };
+    return { text: wrapEmoji(parseHtml(block.data.text)), style: "paragraph" };
   }
 }

@@ -20,12 +20,14 @@ export class ExportHeader implements IExportHelper<IHeaderData> {
       return {
         id: block.id,
         text: wrapEmoji(parseHtml(block.data.text)),
+        headlineLevel: block.data.level,
         ...(this.getStyle(block.data.level) as any),
       };
     }
 
     return {
       text: wrapEmoji(parseHtml(block.data.text)),
+      headlineLevel: block.data.level,
       ...(this.getStyle(block.data.level) as any),
     };
   }

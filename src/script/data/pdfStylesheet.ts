@@ -287,6 +287,9 @@ export const styles: () => { [key: string]: Style } = () => {
       fontSize: 14,
       opacity: 0.5,
     },
+    paragraph: {
+      margin: [0, 0, 0, 10],
+    },
     caption: {
       opacity: 0.5,
     },
