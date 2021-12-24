@@ -7,7 +7,6 @@ import {
 import type { sourceId, ISourceData } from "../ui/Source/SourceTypes";
 import type { OutputData } from "@editorjs/editorjs";
 import { openDB } from "idb";
-import { toId } from "../data/toId";
 import { addDisposableEventListener } from "@frank-mayer/magic/bin";
 
 const getEditorData = async () => {
