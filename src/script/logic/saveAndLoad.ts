@@ -163,7 +163,8 @@ openDB("docdown.app", 1, {
 
     listenForMessage(service.forEachSavedDocument, (cb) => {
       db.getAll(stores.documents).then((docs) => {
-        docs.forEach(cb);
+        // order by date (latest first)
+        docs.sort((a, b) => b.editor.time - a.editor.time).forEach(cb);
       });
     });
   })
