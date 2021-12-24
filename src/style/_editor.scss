@@ -96,3 +96,75 @@
   background-color: $background;
   border-color: $current-line;
 }
+
+.ce-toc {
+  &::before {
+    content: 'Table of Contents: "';
+  }
+
+  &::after {
+    content: '"';
+  }
+}
+
+.ce-references {
+  &::before {
+    content: 'References: "';
+  }
+
+  &::after {
+    content: '"';
+  }
+}
+
+.ce-toc,
+.ce-references {
+  &::before,
+  &::after {
+    color: rgba($foreground, 0.5) !important;
+  }
+  text-decoration: underline dotted rgba($foreground, 0.5) 1px !important;
+}
+
+.codeBoxSelectDiv {
+  border: {
+    width: 2px;
+    style: solid;
+    radius: $rad;
+  }
+
+  &:not(:hover) {
+    border-color: $current-line;
+  }
+
+  &:hover {
+    border-color: $purple;
+  }
+
+  .codeBoxSelectInput,
+  .codeBoxSelectDropIcon {
+    background-color: transparent;
+  }
+
+  .codeBoxSelectPreview {
+    background-color: $darker;
+    border: {
+      width: 2px;
+      style: solid;
+      color: $current-line;
+      radius: $rad;
+    }
+
+    .codeBoxSelectItem {
+      &:not(:hover) {
+        background-color: $darker;
+      }
+
+      &:hover {
+        background-color: $current-line;
+        color: white !important;
+        opacity: 1 !important;
+      }
+    }
+  }
+}
