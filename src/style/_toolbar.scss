@@ -35,7 +35,7 @@ $toolbar-height: 42px;
     transition: background-image $timing ease-out;
 
     &:not(:hover) {
-      background-image: linear-gradient(140deg, $darker, $background);
+      background-image: linear-gradient(140deg, $background, $background);
     }
 
     &#pdf {
@@ -59,6 +59,14 @@ $toolbar-height: 42px;
 
       &:hover {
         background-image: linear-gradient(140deg, $blue, $indigo);
+      }
+    }
+
+    &#formatting-markers {
+      mask-image: url(../image/paragraph.svg);
+
+      &:hover {
+        background-image: linear-gradient(140deg, $purple, $pink);
       }
     }
   }
