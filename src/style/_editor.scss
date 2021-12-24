@@ -40,6 +40,10 @@
       radius: $rad !important;
     }
 
+    * {
+      color: $foreground;
+    }
+
     #{$button} {
       background-color: $current-line !important;
       border: {
@@ -48,8 +52,14 @@
         color: transparent !important;
         radius: $rad !important;
       }
+      color: $background;
+
+      * {
+        color: $background;
+      }
+
       svg {
-        fill: $background;
+        fill: $background !important;
       }
 
       transition: border $timing ease-out, background $timing ease-out;
@@ -63,8 +73,14 @@
         color: $purple !important;
         radius: $rad !important;
       }
+      color: $purple !important;
+
+      * {
+        color: $purple !important;
+      }
+
       svg {
-        fill: $purple;
+        fill: $purple !important;
       }
     }
   }
@@ -91,6 +107,23 @@
   ".ce-toolbox__button",
   ".ce-toolbox__button:hover, .ce-toolbox__button--active"
 );
+
+@include popup(
+  ".ce-inline-toolbar",
+  ".ce-inline-tool, .ce-inline-toolbar__dropdown",
+  ".ce-inline-tool--focused, .ce-inline-tool:hover"
+);
+
+@include popup(
+  ".ce-conversion-toolbar",
+  ".ce-conversion-tool",
+  ".ce-conversion-tool--focused, .ce-conversion-tool:hover"
+);
+
+.ce-conversion-tool__icon {
+  background: unset !important;
+  border: unset !important;
+}
 
 .table-cell {
   background-color: $background;
