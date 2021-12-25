@@ -292,6 +292,7 @@ export const styles: () => { [key: string]: Style } = () => {
     },
     caption: {
       opacity: 0.5,
+      margin: [0, 0, 0, 10],
     },
     mark: {
       background: markColor.toString(),
