@@ -111,15 +111,11 @@ const createDocDefinition = async (
       followingNodesOnPage
       /*,nodesOnNextPage,
         previousNodesOnPage*/
-    ) => {
-      console.debug(currentNode);
-      return (
-        typeof currentNode.headlineLevel === "number" &&
-        currentNode.headlineLevel > 0 &&
-        (followingNodesOnPage.length === 0 ||
-          followingNodesOnPage[0]!.startPosition.verticalRatio > 0.75)
-      );
-    },
+    ) =>
+      typeof currentNode.headlineLevel === "number" &&
+      currentNode.headlineLevel > 0 &&
+      (followingNodesOnPage.length === 0 ||
+        followingNodesOnPage[0]!.startPosition.verticalRatio > 0.75),
     compress: true,
     pageSize: "A4",
     pageOrientation: "portrait",

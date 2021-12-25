@@ -295,7 +295,7 @@ export const styles: () => { [key: string]: Style } = () => {
     },
     mark: {
       background: markColor.toString(),
-      padding: [0, 2, 0, 2],
+      // padding: [0, 2, 0, 2],
     },
     anchor: {
       color: themeColor.toString(),

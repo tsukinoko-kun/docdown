@@ -1,15 +1,12 @@
 import type { Content } from "pdfmake/interfaces";
+import { styles } from "../../../data/pdfStylesheet";
 import type { IHtmlHelper } from "./HtmlHelper";
 
 export class AnchorParser implements IHtmlHelper {
-  fulfillsSchema(node: HTMLElement): boolean {
+  fulfillsSchema(node: Element): boolean {
     return node.tagName === "A";
   }
-  parse(node: ChildNode): Content {
-    return {
-      text: (node as HTMLElement).innerText,
-      style: "anchor",
-      link: (node as HTMLAnchorElement).href,
-    };
+  getStyle(node: ChildNode): Partial<Content> {
+    return { link: (node as HTMLAnchorElement).href, ...styles().anchor };
   }
 }

@@ -2,12 +2,11 @@ import type { Content } from "pdfmake/interfaces";
 import type { IHtmlHelper } from "./HtmlHelper";
 
 export class ItalicParser implements IHtmlHelper {
-  fulfillsSchema(node: HTMLElement): boolean {
+  fulfillsSchema(node: Element): boolean {
     return node.tagName === "I";
   }
-  parse(node: ChildNode): Content {
+  getStyle(): Partial<Content> {
     return {
-      text: (node as HTMLElement).innerText,
       italics: true,
     };
   }

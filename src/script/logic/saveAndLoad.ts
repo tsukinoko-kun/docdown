@@ -9,15 +9,11 @@ import type { OutputData } from "@editorjs/editorjs";
 import { openDB } from "idb";
 import { addDisposableEventListener } from "@frank-mayer/magic/bin";
 
-const getEditorData = async () => {
-  const a = await Promise.all(sendMessage(service.getSaveData, false));
-
-  console.debug("Editor data", a);
-
-  const b = Object.assign({}, ...a) as Partial<ISaveData>;
-  console.debug("Editor data combined", b);
-  return b;
-};
+const getEditorData = async () =>
+  Object.assign(
+    {},
+    ...(await Promise.all(sendMessage(service.getSaveData, false)))
+  ) as Partial<ISaveData>;
 
 //#region Document Name
 let documentName: string = "";
@@ -43,7 +39,6 @@ listenForMessage(service.initFromData, (data) => {
   }
 });
 addDisposableEventListener(documentNameEl, "change", () => {
-  console.debug("Document name changed", documentNameEl.value);
   sendMessage(service.setDocumentName, true, documentNameEl.value);
 });
 
@@ -126,16 +121,13 @@ openDB("docdown.app", 1, {
   .then((db) => {
     const save = async () => {
       const data = await getEditorData();
-      console.debug("try save", data);
+
       if (
         data.editor &&
         data.editor.blocks &&
         data.editor.blocks.length !== 0
       ) {
-        console.debug("writing to db");
         db.put(stores.documents, await getEditorData(), documentName);
-      } else {
-        console.debug("nothing saved");
       }
     };
 

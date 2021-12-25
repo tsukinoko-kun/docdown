@@ -2,12 +2,11 @@ import type { Content } from "pdfmake/interfaces";
 import type { IHtmlHelper } from "./HtmlHelper";
 
 export class BoldParser implements IHtmlHelper {
-  fulfillsSchema(node: HTMLElement): boolean {
+  fulfillsSchema(node: Element): boolean {
     return node.tagName === "B";
   }
-  parse(node: ChildNode): Content {
+  getStyle(): Partial<Content> {
     return {
-      text: (node as HTMLElement).innerText,
       bold: true,
     };
   }

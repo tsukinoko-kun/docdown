@@ -28,6 +28,6 @@ const draculaLight = {
   pink: new Color(0xff79c6).lighten(-50),
   purple: new Color(0xbd93f9).lighten(-50),
   red: new Color(0xff5555).lighten(-10),
-  yellow: new Color(0xf1fa8c).lighten(-75),
+  yellow: new Color(0xf1fa8c).lighten(-50),
 };
 export default draculaLight;

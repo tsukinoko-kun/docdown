@@ -14,7 +14,6 @@ document.getElementById("open")?.addEventListener("click", () => {
   const recent = document.createElement("ul");
   recent.className = "recent";
   sendMessage(service.forEachSavedDocument, true, (doc) => {
-    console.debug("recent", doc);
     if (doc.name && doc.editor) {
       const item = document.createElement("li");
       item.innerText = doc.name;
