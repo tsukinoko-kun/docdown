@@ -26,6 +26,8 @@ export class ExportImage implements IExportHelper<IImageData> {
     return block.type === "image";
   }
 
+  private readonly maxHeight = A4.height * 0.85;
+
   public async parse(
     block: OutputBlockData<"image", IImageData>
   ): Promise<Content> {
@@ -35,11 +37,12 @@ export class ExportImage implements IExportHelper<IImageData> {
       imageData.size.height =
         (A4.width / imageData.size.width) * imageData.size.height;
       imageData.size.width = A4.width;
-    } else if (imageData.size.height > A4.height) {
-      const maxHeight = A4.height * 0.75;
+    }
+
+    if (imageData.size.height > this.maxHeight) {
       imageData.size.width =
-        (maxHeight / imageData.size.height) * imageData.size.width;
-      imageData.size.height = maxHeight;
+        (this.maxHeight / imageData.size.height) * imageData.size.width;
+      imageData.size.height = this.maxHeight;
     }
 
     const contentImage: Content = block.id
