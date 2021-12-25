@@ -139,7 +139,7 @@ openDB("docdown.app", 1, {
       timerToken = window.setTimeout(() => {
         save();
         timerToken = undefined;
-      }, 2000);
+      }, 5000);
     });
 
     notifyOnMessage(service.setDocumentName, () => {
