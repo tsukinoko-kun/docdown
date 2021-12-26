@@ -3,6 +3,7 @@
   "short_name": "docdown",
   "description": "Fully automated documentation tool",
   "start_url": "/",
+  "orientation": "landscape",
   "display": "standalone",
   "theme_color": "#14141b",
   "background_color": "#282a36",

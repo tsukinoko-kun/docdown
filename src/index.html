@@ -3,8 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <title>docdown</title>
-    <script src="./script/index.ts" type="module" defer></script>
+    <style class="splash">
+      body * {
+        display: none !important;
+        pointer-events: none !important;
+      }
 
+      body {
+        background-color: #282a36;
+        background-image: url(./image/icon.svg);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 45vmin;
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+      }
+
+      body::before {
+        display: block;
+        content: "Loading…";
+        color: #f8f8f2;
+        font-size: 14px;
+        position: fixed;
+        bottom: 7px;
+        left: 0;
+        width: 100vw;
+        text-align: center;
+        font-family: noto-sans, NotoSans, sans-serif;
+      }
+    </style>
+    <script class="splash">
+      window.load = new Promise((resolve) => {
+        window.addEventListener("load", () => {
+          resolve();
+        });
+      });
+    </script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="canonical" content="https://docdown.app" />
@@ -51,5 +86,6 @@
       accept="application/json"
       style="display: none !important"
     />
+    <script src="./script/index.ts" type="module" defer></script>
   </body>
 </html>
