@@ -36,33 +36,33 @@ export class ExportHeader implements IExportHelper<IHeaderData> {
     switch (level) {
       case 1:
         return {
+          style: "title",
+        };
+      case 2:
+        return {
           tocItem: "toc",
           tocStyle: "toc_header1",
           style: "header1",
         };
-      case 2:
+      case 3:
         return {
           tocItem: "toc",
           tocStyle: "toc_header2",
           style: "header2",
         };
-      case 3:
+      case 4:
         return {
           tocItem: "toc",
           tocStyle: "toc_header3",
           style: "header3",
         };
-      case 4:
+      case 5:
         return {
           style: "header4",
         };
-      case 5:
-        return {
-          style: "header5",
-        };
       case 6:
         return {
-          style: "header6",
+          style: "header5",
         };
       default:
         throw new Error("Invalid header level");

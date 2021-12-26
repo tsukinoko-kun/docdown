@@ -15,7 +15,10 @@ export class ExportTableOfContents
   parse(block: OutputBlockData<"toc", ITableOfContentsData>): Content {
     return {
       toc: {
-        title: { text: wrapEmoji(block.data.title), style: "title" },
+        title: {
+          text: wrapEmoji(block.data.title),
+          style: "header1",
+        },
         id: "toc",
       },
       pageBreak: "after",
