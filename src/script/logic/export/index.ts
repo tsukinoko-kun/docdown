@@ -155,13 +155,18 @@ listenForMessage(service.createPdf, (output) => {
       switch (output) {
         case pdfOutput.print:
           x.print();
+          break;
 
-          break;
         case pdfOutput.download:
-          x.download();
+          x.download(
+            sendMessage(service.getDocumentName) || "docdown PDF-export"
+          );
           break;
+
         case pdfOutput.open:
-          x.open();
+          x.open({
+            autoPrint: false,
+          });
           break;
       }
     });

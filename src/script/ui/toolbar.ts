@@ -5,12 +5,31 @@ import {
   disposeNode,
 } from "@frank-mayer/magic/bin";
 
-document.getElementById("pdf")?.addEventListener("click", () => {
+document.getElementById("preview-pdf")?.addEventListener("click", () => {
   sendMessage(service.createPdf, true, 2);
+});
+document.getElementById("download-pdf")?.addEventListener("click", () => {
+  sendMessage(service.createPdf, true, 1);
 });
 
 document.getElementById("download")?.addEventListener("click", downloadData);
-document.getElementById("open")?.addEventListener("click", () => {
+addDisposableEventListener(
+  document,
+  "keydown",
+  (ev) => {
+    if (ev.key === "s" && (ev.ctrlKey || ev.metaKey)) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      downloadData();
+    }
+  },
+  {
+    capture: true,
+    passive: false,
+  }
+);
+
+const open = () => {
   const recent = document.createElement("ul");
   recent.className = "recent";
   sendMessage(service.forEachSavedDocument, true, (doc) => {
@@ -48,4 +67,22 @@ document.getElementById("open")?.addEventListener("click", () => {
   addDisposableEventListener(ui, "click", () => {
     disposeNode(ui);
   });
+};
+document.getElementById("open")?.addEventListener("click", () => {
+  open();
 });
+addDisposableEventListener(
+  document,
+  "keydown",
+  (ev) => {
+    if (ev.key === "o" && (ev.ctrlKey || ev.metaKey)) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      open();
+    }
+  },
+  {
+    capture: true,
+    passive: false,
+  }
+);

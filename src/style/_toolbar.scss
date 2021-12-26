@@ -38,7 +38,7 @@ $toolbar-height: 42px;
       background-image: linear-gradient(140deg, $background, $background);
     }
 
-    &#pdf {
+    &#preview-pdf {
       mask-image: url(../image/file-earmark-pdf.svg);
 
       &:hover {
@@ -46,8 +46,16 @@ $toolbar-height: 42px;
       }
     }
 
-    &#download {
+    &#download-pdf {
       mask-image: url(../image/file-earmark-arrow-down.svg);
+
+      &:hover {
+        background-image: linear-gradient(140deg, $red, $purple);
+      }
+    }
+
+    &#download {
+      mask-image: url(../image/save.svg);
 
       &:hover {
         background-image: linear-gradient(140deg, $cyan, $green);
