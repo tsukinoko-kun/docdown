@@ -30,7 +30,7 @@
   }
 }
 
-@mixin popup($container, $button, $button-active) {
+@mixin popup($container, $button, $button-hover, $button-active: ".never") {
   #{$container} {
     background-color: $current-line;
     border: {
@@ -65,7 +65,7 @@
       transition: border $timing ease-out, background $timing ease-out;
     }
 
-    #{$button-active} {
+    #{$button-hover} {
       background-color: $background !important;
       border: {
         width: 2px !important;
@@ -83,13 +83,26 @@
         fill: $purple !important;
       }
     }
+
+    #{$button-active} {
+      color: $green !important;
+
+      * {
+        color: $green !important;
+      }
+
+      svg {
+        fill: $green !important;
+      }
+    }
   }
 }
 
 @include popup(
   ".ce-settings",
   ".cdx-settings-button, .ce-settings__button",
-  ".cdx-settings-button:hover, .ce-settings__button--focused, .ce-settings__button:hover"
+  ".cdx-settings-button:hover, .ce-settings__button--focused, .ce-settings__button:hover",
+  ".cdx-settings-button--active"
 );
 .ce-settings--opened {
   z-index: 1000;
