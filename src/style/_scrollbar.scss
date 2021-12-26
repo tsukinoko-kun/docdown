@@ -1,0 +1,23 @@
+// width
+::-webkit-scrollbar {
+  width: $padding;
+  height: $padding;
+}
+
+// Track
+::-webkit-scrollbar-track {
+  background: $background;
+}
+
+// Handle
+::-webkit-scrollbar-thumb {
+  background: $foreground;
+
+  &:not(:hover) {
+    opacity: 0.5;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+}
