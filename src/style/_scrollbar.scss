@@ -11,13 +11,11 @@
 
 // Handle
 ::-webkit-scrollbar-thumb {
-  background: $foreground;
-
   &:not(:hover) {
-    opacity: 0.5;
+    background: mix($foreground, $background);
   }
 
   &:hover {
-    opacity: 1;
+    background: $foreground;
   }
 }
