@@ -13,21 +13,6 @@ document.getElementById("download-pdf")?.addEventListener("click", () => {
 });
 
 document.getElementById("download")?.addEventListener("click", downloadData);
-addDisposableEventListener(
-  document,
-  "keydown",
-  (ev) => {
-    if (ev.key === "s" && (ev.ctrlKey || ev.metaKey)) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      downloadData();
-    }
-  },
-  {
-    capture: true,
-    passive: false,
-  }
-);
 
 const open = () => {
   const recent = document.createElement("ul");
@@ -71,14 +56,29 @@ const open = () => {
 document.getElementById("open")?.addEventListener("click", () => {
   open();
 });
+
 addDisposableEventListener(
   document,
   "keydown",
   (ev) => {
-    if (ev.key === "o" && (ev.ctrlKey || ev.metaKey)) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      open();
+    if (ev.ctrlKey || ev.metaKey) {
+      switch (ev.key) {
+        case "o":
+          ev.preventDefault();
+          ev.stopPropagation();
+          open();
+          break;
+        case "s":
+          ev.preventDefault();
+          ev.stopPropagation();
+          downloadData();
+          break;
+        case "p":
+          ev.preventDefault();
+          ev.stopPropagation();
+          sendMessage(service.createPdf, true, 0);
+          break;
+      }
     }
   },
   {
