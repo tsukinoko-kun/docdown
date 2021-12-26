@@ -6,6 +6,7 @@
 
 .ce-block__content {
   padding: #{$padding * 0.25} #{$padding * 2};
+  min-height: #{$font-size + $padding * 4};
 }
 
 .ce-block--selected .ce-block__content {
@@ -32,7 +33,7 @@
 
 @mixin popup($container, $button, $button-hover, $button-active: ".never") {
   #{$container} {
-    background-color: $current-line;
+    background-color: $current-line !important;
     border: {
       width: 2px !important;
       style: solid !important;
