@@ -34,9 +34,9 @@
       }
     </style>
     <script class="splash">
-      window.load = new Promise((resolve) => {
-        window.addEventListener("load", () => {
-          resolve();
+      globalThis.windowLoaded = new Promise((resolve) => {
+        window.addEventListener("load", (ev) => {
+          resolve(ev);
         });
       });
     </script>

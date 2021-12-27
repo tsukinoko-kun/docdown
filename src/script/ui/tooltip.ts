@@ -1,4 +1,4 @@
-import { addDisposableEventListener } from "@frank-mayer/magic";
+import { addDisposableEventListener, nextEventLoop } from "@frank-mayer/magic";
 
 const platform: string =
   navigator.platform || (navigator as any).userAgentData.platform;
@@ -58,16 +58,21 @@ export const tooltip = (
 };
 
 // add custom tooltip to all elements
-document.body.querySelectorAll("[title]").forEach((el) => {
-  const title = el.getAttribute("title");
-  if (!title) {
-    return;
-  }
+if (windowLoaded) {
+  windowLoaded.then(async () => {
+    await nextEventLoop();
+    document.body.querySelectorAll("[title]").forEach((el) => {
+      const title = el.getAttribute("title");
+      if (!title) {
+        return;
+      }
 
-  const shortcut = el.getAttribute("shortcut");
+      const shortcut = el.getAttribute("shortcut");
 
-  tooltip(el, title, true, shortcut as string);
+      tooltip(el, title, true, shortcut as string);
 
-  el.removeAttribute("title");
-  el.removeAttribute("shortcut");
-});
+      el.removeAttribute("title");
+      el.removeAttribute("shortcut");
+    });
+  });
+}

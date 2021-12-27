@@ -9,8 +9,6 @@ const removeSplash = () => {
   }
 };
 
-const windowLoaded = (window as any).load as Promise<void> | undefined;
-
 if (windowLoaded) {
   windowLoaded.then(() => {
     removeSplash();
