@@ -8,7 +8,7 @@ name: Build and deploy on merge
       - main
 jobs:
   build_and_deploy:
-    runs-on: ubuntu-latest
+    runs-on: mac-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
