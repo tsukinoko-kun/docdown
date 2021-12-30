@@ -8,6 +8,7 @@ import type { sourceId, ISourceData } from "../ui/Source/SourceTypes";
 import type { OutputData } from "@editorjs/editorjs";
 import { openDB } from "idb";
 import { addDisposableEventListener } from "@frank-mayer/magic/bin";
+import { indicateProcess } from "../ui/processingIndicator";
 
 const getEditorData = async () =>
   Object.assign(
@@ -119,16 +120,18 @@ openDB("docdown.app", 1, {
   },
 })
   .then((db) => {
-    const save = async () => {
-      const data = await getEditorData();
+    const save = () => {
+      indicateProcess(async () => {
+        const data = await getEditorData();
 
-      if (
-        data.editor &&
-        data.editor.blocks &&
-        data.editor.blocks.length !== 0
-      ) {
-        db.put(stores.documents, await getEditorData(), documentName);
-      }
+        if (
+          data.editor &&
+          data.editor.blocks &&
+          data.editor.blocks.length !== 0
+        ) {
+          await db.put(stores.documents, await getEditorData(), documentName);
+        }
+      });
     };
 
     let timerToken: number | undefined = undefined;
@@ -139,7 +142,7 @@ openDB("docdown.app", 1, {
       timerToken = window.setTimeout(() => {
         save();
         timerToken = undefined;
-      }, 5000);
+      }, 2500);
     });
 
     notifyOnMessage(service.setDocumentName, () => {

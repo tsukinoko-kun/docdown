@@ -23,6 +23,21 @@ $toolbar-height: 42px;
     background-color: transparent;
   }
 
+  > #indicator {
+    height: #{$toolbar-height - $toolbar-padding * 2};
+    width: #{$toolbar-height - $toolbar-padding * 2};
+    background-size: contain;
+    background-position: center;
+
+    &:not(.processing) {
+      background-image: url(../image/icon.svg);
+    }
+
+    &.processing {
+      background-image: url(../image/processing.svg);
+    }
+  }
+
   > span {
     height: #{$toolbar-height - $toolbar-padding * 2};
     width: #{$toolbar-height - $toolbar-padding * 2};
