@@ -100,6 +100,14 @@ $toolbar-height: 42px;
       "ctrl";
 
     .recent {
+      &::before {
+        content: "Open Document";
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        color: #282a36;
+      }
+
       grid-area: recent;
       display: flex;
       flex-direction: column;
