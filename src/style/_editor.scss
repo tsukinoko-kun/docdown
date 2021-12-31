@@ -263,3 +263,9 @@
     content: "H6";
   }
 }
+
+.ct,
+.ct__content {
+  border-radius: $rad !important;
+  background-color: rgba(17, 17, 17, 0.9) !important;
+}

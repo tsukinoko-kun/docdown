@@ -1,7 +1,7 @@
-$toolbar-height: 42px;
+$toolbar-height: 60px;
 
 #toolbar {
-  $toolbar-padding: 5px;
+  $toolbar-padding: 10px;
   height: $toolbar-height;
   width: 100vw;
   padding: $toolbar-padding;
@@ -15,9 +15,10 @@ $toolbar-height: 42px;
   right: 0;
   overflow-x: hidden;
   z-index: 10;
+  box-shadow: 0 5px 10px 0 rgb(0 0 0 / 15%);
 
   > #document-name {
-    font-size: #{$toolbar-height - $toolbar-padding * 4};
+    font-size: #{($toolbar-height - ($toolbar-padding * 2)) * 0.5};
     color: $foreground;
     width: fit-content;
     background-color: transparent;
@@ -50,14 +51,14 @@ $toolbar-height: 42px;
     transition: background-image $timing ease-out;
 
     &:not(:hover) {
-      background-image: linear-gradient(140deg, $background, $background);
+      background-image: linear-gradient(135deg, $background, $background);
     }
 
     &#preview-pdf {
       mask-image: url(../image/file-earmark-pdf.svg);
 
       &:hover {
-        background-image: linear-gradient(140deg, $orange, $red);
+        background-image: linear-gradient(135deg, $orange, $red);
       }
     }
 
@@ -65,7 +66,7 @@ $toolbar-height: 42px;
       mask-image: url(../image/file-earmark-arrow-down.svg);
 
       &:hover {
-        background-image: linear-gradient(140deg, $red, $purple);
+        background-image: linear-gradient(135deg, $red, $purple);
       }
     }
 
@@ -73,7 +74,7 @@ $toolbar-height: 42px;
       mask-image: url(../image/save.svg);
 
       &:hover {
-        background-image: linear-gradient(140deg, $cyan, $green);
+        background-image: linear-gradient(135deg, $cyan, $green);
       }
     }
 
@@ -81,7 +82,7 @@ $toolbar-height: 42px;
       mask-image: url(../image/file_open.svg);
 
       &:hover {
-        background-image: linear-gradient(140deg, $blue, $indigo);
+        background-image: linear-gradient(135deg, $blue, $indigo);
       }
     }
 
@@ -89,7 +90,7 @@ $toolbar-height: 42px;
       mask-image: url(../image/paragraph.svg);
 
       &:hover {
-        background-image: linear-gradient(140deg, $purple, $pink);
+        background-image: linear-gradient(135deg, $purple, $pink);
       }
     }
   }
@@ -120,7 +121,7 @@ $toolbar-height: 42px;
         width: 100%;
         text-align: center;
         font-weight: bold;
-        color: #282a36;
+        @include gradient-text;
       }
 
       grid-area: recent;

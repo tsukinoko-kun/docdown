@@ -1,6 +1,7 @@
 $darker: #14141b;
-$background: #282a36;
+$background: #22212c;
 $current-line: #44475a;
+$card: rgb(29, 30, 38);
 $foreground: #f8f8f2;
 $comment: #6272a4;
 $cyan: #8be9fd;
@@ -15,10 +16,12 @@ $yellow: #f1fa8c;
 
 $font-size: 14px;
 
-$gradient-blue: linear-gradient(140deg, $indigo, #80ffea);
+$gradient-degree: 135deg;
+
+$gradient-blue: linear-gradient($gradient-degree, $purple, $cyan);
 
 $rad: 0.5rem;
-$padding: 8px;
+$padding: 10px;
 
 $timing: 0.2s;
 
@@ -38,7 +41,7 @@ $monospace-font: "JetBrainsMono", "SFMono-Regular", monospace;
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
   z-index: 50;
 }
 
@@ -48,16 +51,22 @@ $monospace-font: "JetBrainsMono", "SFMono-Regular", monospace;
   left: 50vw;
   min-width: fit-content;
   height: fit-content;
-  width: 50vw;
+  width: 33.333vw;
   transform: translate(-50%, -50%);
-  background-color: $current-line;
+  background-color: $card;
   border: {
     width: 1px;
     style: solid;
     color: $background;
-    radius: $rad;
+    radius: #{$rad * 2};
   }
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   padding: $padding;
   gap: $padding;
+}
+
+@mixin gradient-text {
+  background-clip: text;
+  color: transparent;
+  background-image: $gradient-blue;
 }

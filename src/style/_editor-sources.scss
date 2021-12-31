@@ -52,8 +52,8 @@
     cursor: pointer;
 
     input {
-      background-color: $background;
-      border-radius: $rad;
+      background-color: $darker;
+      border-radius: #{$rad * 0.5};
       color: $foreground;
       font-size: $font-size;
       padding: 4px 8px;
@@ -67,7 +67,9 @@
   form::before {
     content: "Add new source";
     font-weight: bold;
-    color: $background;
+    @include gradient-text;
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -76,6 +78,8 @@
   ul::before {
     content: "Select a source";
     font-weight: bold;
-    color: $background;
+    @include gradient-text;
+    width: 100%;
+    text-align: center;
   }
 }

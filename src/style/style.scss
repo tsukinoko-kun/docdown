@@ -35,7 +35,12 @@ body {
 }
 
 .button {
-  color: $current-line;
+  color: $card;
+  width: fit-content !important;
+  margin: {
+    right: $padding !important;
+    left: auto !important;
+  }
   font-weight: bold;
   font-size: $font-size;
   border-radius: $rad;
@@ -45,12 +50,14 @@ body {
   transition: background $timing ease-out;
 
   background: $gradient-blue;
-  background-size: 200% auto;
+  background-size: 150% auto;
+
   &:not(:hover) {
-    background-position: 100% 0%;
+    background-position: 95% 0%;
   }
+
   &:hover {
-    background-position: 0% 0%;
+    background-position: 5% 0%;
   }
 }
 
