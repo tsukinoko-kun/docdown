@@ -4,6 +4,7 @@
   shape-rendering: geometricPrecision;
 }
 
-svg {
+svg,
+svg * {
   text-rendering: geometricPrecision !important;
 }
