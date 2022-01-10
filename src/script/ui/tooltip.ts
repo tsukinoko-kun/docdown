@@ -1,13 +1,12 @@
-import { addDisposableEventListener, nextEventLoop } from "@frank-mayer/magic";
-
-const platform: string =
-  navigator.platform || (navigator as any).userAgentData.platform;
+import {
+  addDisposableEventListener,
+  Client,
+  nextEventLoop,
+  os,
+} from "@frank-mayer/magic";
 
 const CMD = (text: string) => {
-  return text.replace(
-    /CMD/gi,
-    platform.match(/(Mac|iPhone|iPod|iPad)/i) ? "⌘" : "Ctrl"
-  );
+  return text.replace(/CMD/gi, Client.os === os.mac ? "⌘" : "Ctrl");
 };
 
 export const tooltip = (
