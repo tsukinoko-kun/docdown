@@ -29,13 +29,13 @@
           size: contain;
           position: center;
         }
-        transition: background-color $timing ease-out;
+        // transition: background-color $timing ease-out;
         cursor: pointer;
         width: 1em;
         height: 1em;
 
         &:not(:hover) {
-          background-color: $background;
+          background-color: $foreground;
         }
 
         &:hover {
