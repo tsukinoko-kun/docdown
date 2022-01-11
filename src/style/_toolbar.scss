@@ -86,7 +86,7 @@ $toolbar-height: 60px;
       }
     }
 
-    &#formatting-markers {
+    &#formatting-signs {
       mask-image: url(../image/paragraph.svg);
 
       &:hover {
@@ -94,6 +94,10 @@ $toolbar-height: 60px;
       }
     }
   }
+}
+
+.formatting-signs #formatting-signs {
+  background-image: linear-gradient(135deg, $pink, $purple) !important;
 }
 
 #editor {

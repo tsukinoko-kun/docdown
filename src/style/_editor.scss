@@ -220,51 +220,57 @@
   }
 }
 
-.ce-block__content {
-  h1.ce-header,
-  h2.ce-header,
-  h3.ce-header,
-  h4.ce-header,
-  h5.ce-header,
-  h6.ce-header,
-  .cdx-simple-image,
-  .ce-paragraph {
-    &::after {
-      font-weight: lighter;
-      text-decoration: none;
-      font-style: normal;
-      height: 0;
-      overflow: visible;
-      color: $foreground;
-      opacity: 0.5;
-      display: block;
-      font-size: $font-size;
-      transform: translate(calc(100% + 4em), -2em);
+.formatting-signs .codex-editor {
+  *[contenteditable="true"] {
+    font-family: "Noto Sans WhiteSpace", $default-font !important;
+  }
+
+  .ce-block__content {
+    h1.ce-header,
+    h2.ce-header,
+    h3.ce-header,
+    h4.ce-header,
+    h5.ce-header,
+    h6.ce-header,
+    .cdx-simple-image,
+    .ce-paragraph {
+      &::after {
+        font-weight: lighter;
+        text-decoration: none;
+        font-style: normal;
+        height: 0;
+        overflow: visible;
+        color: $foreground;
+        opacity: 0.5;
+        display: block;
+        font-size: $font-size;
+        transform: translate(calc(100% + 4em), -2em);
+      }
     }
-  }
 
-  h1.ce-header::after {
-    content: "H1/Title";
-  }
+    h1.ce-header::after {
+      content: "H1/Title";
+    }
 
-  h2.ce-header::after {
-    content: "H2";
-  }
+    h2.ce-header::after {
+      content: "H2";
+    }
 
-  h3.ce-header::after {
-    content: "H3";
-  }
+    h3.ce-header::after {
+      content: "H3";
+    }
 
-  h4.ce-header::after {
-    content: "H4";
-  }
+    h4.ce-header::after {
+      content: "H4";
+    }
 
-  h5.ce-header::after {
-    content: "H5";
-  }
+    h5.ce-header::after {
+      content: "H5";
+    }
 
-  h6.ce-header::after {
-    content: "H6";
+    h6.ce-header::after {
+      content: "H6";
+    }
   }
 }
 

@@ -13,6 +13,9 @@ document.getElementById("download-pdf")?.addEventListener("click", () => {
 });
 
 document.getElementById("download")?.addEventListener("click", downloadData);
+document.getElementById("formatting-signs")?.addEventListener("click", () => {
+  document.body.classList.toggle("formatting-signs");
+});
 
 const open = () => {
   const recent = document.createElement("ul");
