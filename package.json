@@ -21,7 +21,7 @@
     "parcel": "^2.1.1",
     "@parcel/packager-raw-url": "^2.1.1",
     "@parcel/transformer-sass": "^2.1.1",
-    "@parcel/transformer-webmanifest": "^2.1.1",
+    "@parcel/transformer-webmanifest": "^2.2.0",
     "@types/editorjs__header": "^2.6.0",
     "@types/pdfmake": "^0.1.20",
     "@types/xxhashjs": "^0.2.2",
