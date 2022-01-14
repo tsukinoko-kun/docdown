@@ -53,6 +53,14 @@ try {
     },
     onChange: () => {
       sendMessage(service.dataChanged);
+
+      const ceBlocks = editorHolder.getElementsByClassName("ce-block");
+      if (ceBlocks.length !== 0) {
+        ceBlocks.item(ceBlocks.length - 1)!.classList.add("last-block");
+        for (let i = ceBlocks.length - 2; i >= 0; i--) {
+          ceBlocks.item(i)!.classList.remove("last-block");
+        }
+      }
     },
   };
 
@@ -60,6 +68,10 @@ try {
 
   listenForMessage(service.getDocumentData, () => editor.save());
   listenForMessage(service.getSaveData, async () => {
+    if (typeof editor.save !== "function") {
+      throw new Error("EditorJS is not ready");
+    }
+
     const saveData = await editor.save();
 
     for await (const blockData of saveData.blocks) {

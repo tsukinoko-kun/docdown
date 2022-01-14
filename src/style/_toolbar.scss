@@ -29,6 +29,7 @@ $toolbar-height: 60px;
     width: #{$toolbar-height - $toolbar-padding * 2};
     background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
 
     &:not(.processing) {
       background-image: url(../image/icon.svg);
