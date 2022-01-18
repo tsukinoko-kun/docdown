@@ -18,10 +18,10 @@
     "build": "parcel build 'src/index.html' --no-source-maps --no-cache && cp ./src/sw.js ./dist/"
   },
   "devDependencies": {
-    "parcel": "^2.1.1",
-    "@parcel/packager-raw-url": "^2.1.1",
-    "@parcel/transformer-sass": "^2.1.1",
-    "@parcel/transformer-webmanifest": "^2.1.1",
+    "parcel": "^2.2.1",
+    "@parcel/packager-raw-url": "^2.2.1",
+    "@parcel/transformer-sass": "^2.2.1",
+    "@parcel/transformer-webmanifest": "^2.2.1",
     "@types/editorjs__header": "^2.6.0",
     "@types/pdfmake": "^0.1.20",
     "@types/xxhashjs": "^0.2.2",
