@@ -43,7 +43,6 @@ export const parseHtml = (text: string, parentStyle: object = {}): Content => {
   } else {
     const content = new Array<Content>();
     for (const child of Array.from(tempEl.childNodes)) {
-      console.debug("child", child);
       if (child.nodeType === Node.ELEMENT_NODE) {
         const parsed = parseHtml((child as HTMLElement).outerHTML, style);
         if (Array.isArray(parsed)) {
@@ -60,7 +59,6 @@ export const parseHtml = (text: string, parentStyle: object = {}): Content => {
 
     tempEl.remove();
 
-    console.debug({ ...style, text: content });
     return { ...style, text: content };
   }
 };

@@ -73,8 +73,7 @@
           .register(new URL("/sw.js", location.href))
           .then((registration) => {
             console.info(
-              "Registration successful, scope is:",
-              registration.scope
+              `Registration of ServiceWorker successful, scope is: "${registration.scope}"`
             );
           })
           .catch((error) => {

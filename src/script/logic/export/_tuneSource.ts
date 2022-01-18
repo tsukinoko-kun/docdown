@@ -36,6 +36,7 @@ export class TuneSource implements ITuneHelper<Array<sourceId>> {
 
     for (const id of data) {
       const s = SourcesManager.getSource(id);
+
       if (!s) {
         continue;
       }
@@ -62,7 +63,11 @@ export class TuneSource implements ITuneHelper<Array<sourceId>> {
         content.text.push(sourceInline);
       } else if (typeof content.text === "string") {
         content.text = [content.text, sourceInline];
+      } else if (typeof content.text === "object" && "text" in content.text) {
+        content.text = [content.text.text, sourceInline];
       }
+    } else {
+      console.warn("TuneSource.tune: no text", content);
     }
 
     return content;
