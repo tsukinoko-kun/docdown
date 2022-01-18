@@ -6,31 +6,65 @@
   "orientation": "landscape",
   "display": "standalone",
   "theme_color": "#14141b",
-  "background_color": "#22212c",
+  "background_color": "#14141b",
   "icons": [
     {
-      "src": "./image/icon.svg",
-      "type": "image/svg"
-    },
-    {
-      "src": "./image/icon_32.png",
-      "sizes": "32x32",
-      "type": "image/png"
-    },
-    {
-      "src": "./image/icon_64.png",
-      "sizes": "64x64",
-      "type": "image/png"
-    },
-    {
-      "src": "./image/icon_128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "./image/icon_512.png",
+      "src": "./image/pwa/Maskable-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./image/pwa/Maskable.svg",
+      "type": "image/svg",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./image/pwa/Icon.svg",
+      "type": "image/svg",
+      "purpose": "any"
+    },
+    {
+      "src": "./image/pwa/Icon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./image/pwa/Icon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./image/pwa/Icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./image/pwa/Icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./image/pwa/Icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./image/pwa/Icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./image/pwa/Icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
