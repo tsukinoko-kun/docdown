@@ -31,12 +31,7 @@ export default class Source implements BlockTune {
       this.sourcesManager
         .triggerSelectSource()
         .then((sources) => {
-          if (this.blockContent) {
-            this.blockContent.setAttribute(
-              "data-sources",
-              JSON.stringify(sources)
-            );
-          }
+          this.setDataSource(sources);
         })
         .catch((err) => {
           if (err) {
@@ -52,12 +47,25 @@ export default class Source implements BlockTune {
     return button;
   }
 
-  public save(): Array<sourceId> | undefined {
-    return this.sources.length !== 0 ? this.sources : undefined;
+  public save(): Array<sourceId> {
+    return this.sources ?? [];
+  }
+
+  private setDataSource(sources: Array<sourceId> = this.sources) {
+    if (this.blockContent) {
+      if (sources.length === 0) {
+        this.blockContent.removeAttribute("data-sources");
+      } else {
+        this.blockContent.setAttribute("data-sources", JSON.stringify(sources));
+      }
+    }
   }
 
   public wrap(blockContent: HTMLElement): HTMLElement {
     this.blockContent = blockContent;
+
+    this.setDataSource();
+
     return blockContent;
   }
 }

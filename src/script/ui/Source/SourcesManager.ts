@@ -61,7 +61,7 @@ export class SourcesManager {
   public static readonly sources = new Map<sourceId, ISourceData>();
 
   public constructor(sources?: Array<sourceId>) {
-    this.sources = sources ?? [];
+    this.sources = sources ?? new Array();
   }
 
   public static getSource(id: sourceId): ISourceData | undefined {
