@@ -148,24 +148,24 @@
   border-color: $current-line;
 }
 
-.ce-toc {
-  &::before {
-    content: 'Table of Contents: "';
-  }
-
-  &::after {
-    content: '"';
-  }
+body.formatting-signs .ce-toc::after {
+  content: '"¶';
+}
+body:not(.formatting-signs) .ce-toc::after {
+  content: '"';
+}
+.ce-toc::before {
+  content: 'Table of Contents: "';
 }
 
-.ce-references {
-  &::before {
-    content: 'References: "';
-  }
-
-  &::after {
-    content: '"';
-  }
+body.formatting-signs .ce-references::after {
+  content: '"¶';
+}
+body:not(.formatting-signs) .ce-references::after {
+  content: '"';
+}
+.ce-references::before {
+  content: 'References: "';
 }
 
 .ce-toc,
