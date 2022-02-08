@@ -210,10 +210,10 @@
   resolved "https://registry.yarnpkg.com/@bomdi/codebox/-/codebox-1.0.12.tgz#0f68d62f6f8418b5e8a937513e0eaa146d770c6a"
   integrity sha512-G3d4cSYYNXSRiN1LaSJn4OEf3Th+RDjZfwlPclhh94WDsFHPSQrEEEodNIq6bss0gl/sTQV8DgJpLaSihMmDQg==
 
-"@editorjs/editorjs@^2.22.2":
-  version "2.22.2"
-  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.22.2.tgz#bf1d10c9fa9dd1dc574c18d8f4b77fef43d8e7f6"
-  integrity sha512-rPCv7Z5LZebreQaaL4DZuWzoVGEqwB+P7BF1dsefGQNBmLyeLF412topeW2b6e+g4l1oQ7t75kCOACNTEyYYIA==
+"@editorjs/editorjs@^2.23.0":
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.23.0.tgz#64607e1fd2d17b1ed7ecea640f0da02721eed075"
+  integrity sha512-K/8lkBrenj8za9rJW4bvdE6yyiS0NSevZkUyP2p3NyFCP7X62unwCe8F8DYHIHUpOfs1zCdctVQ3z/VPTzlfBA==
   dependencies:
     codex-notifier "^1.1.2"
     codex-tooltip "^1.0.2"
