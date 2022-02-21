@@ -139,23 +139,10 @@
     <meta name="theme-color" content="#14141b" />
   </head>
   <body>
-    <div id="toolbar">
-      <div id="indicator"></div>
-      <input type="text" id="document-name" placeholder="Document name" />
-      <span id="preview-pdf" title="PDF Preview"></span>
-      <span id="download-pdf" title="PDF Download"></span>
-      <span
-        id="download"
-        shortcut="CMD + S"
-        title="Download Document Data"
-      ></span>
-      <span id="open" shortcut="CMD + O" title="Open Document"></span>
-      <span id="formatting-signs" title="Toggle Formatting Signs"></span>
-    </div>
-    <div id="editor"></div>
+    <div id="toolbar"></div>
 
-    <link rel="stylesheet" href="./style/fonts.scss" media="screen" />
-    <link rel="stylesheet" href="./style/style.scss" media="screen" />
+    <main id="editor"></main>
+
     <script>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker
@@ -170,12 +157,7 @@
           });
       }
     </script>
-    <input
-      type="file"
-      id="upload-file-input"
-      accept="application/json"
-      style="display: none !important"
-    />
+    <link rel="stylesheet" href="./style/style.scss" />
     <script src="./script/index.ts" type="module" defer></script>
   </body>
 </html>

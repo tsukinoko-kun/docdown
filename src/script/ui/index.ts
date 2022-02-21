@@ -1,3 +1,2 @@
-export * as editor from "./editor";
-export * as toolbar from "./toolbar";
-export { tooltip } from "./tooltip";
+export * as Editor from "./Editor";
+export * from "./tooltip";

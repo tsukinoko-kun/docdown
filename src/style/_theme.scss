@@ -1,7 +1,5 @@
-$darker: #14141b;
 $background: #22212c;
 $current-line: #44475a;
-$card: rgb(29, 30, 38);
 $foreground: #f8f8f2;
 $comment: #6272a4;
 $cyan: #8be9fd;
@@ -20,50 +18,14 @@ $gradient-degree: 135deg;
 
 $gradient-blue: linear-gradient($gradient-degree, $purple, $cyan);
 
-$rad: 0.5rem;
+$rad: 8px;
 $padding: 10px;
+$padding-2: 6px;
 
-$timing: 0.2s;
+$timing: 200ms;
 
 $default-font: "Noto Sans", "Segoe UI", "Noto Sans Emoji", sans-serif;
 $monospace-font: "JetBrainsMono", "SFMono-Regular", monospace;
-
-@mixin alert-back {
-  * {
-    padding: 0;
-    margin: 0;
-  }
-
-  pointer-events: all;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 50;
-}
-
-@mixin alert-form {
-  position: fixed;
-  top: 50vh;
-  left: 50vw;
-  min-width: fit-content;
-  height: fit-content;
-  width: 33.333vw;
-  transform: translate(-50%, -50%);
-  background-color: $card;
-  border: {
-    width: 1px;
-    style: solid;
-    color: $background;
-    radius: #{$rad * 2};
-  }
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  padding: $padding;
-  gap: $padding;
-}
 
 @mixin gradient-text {
   background-clip: text;

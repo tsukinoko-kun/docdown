@@ -1,69 +1,24 @@
+@import "../../node_modules/normalize.css/normalize.css";
 @import "theme";
+@import "fonts";
 
-*:not(hr),
-*:before,
-*:after {
-  box-sizing: border-box;
+* {
   outline: none;
-  border: none;
-}
-
-:root,
-body,
-main {
-  padding: 0;
-  margin: 0;
-  background-color: $background;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 * {
-  position: relative;
-  font-family: $default-font !important;
+  font-family: $default-font;
   color: $foreground;
-  color-scheme: dark !important;
 }
 
-::selection {
-  background-color: $current-line;
+:root {
+  background-color: $background;
 }
 
-:root,
-body {
-  overflow-x: hidden;
+pre,
+code {
+  font-family: $monospace-font;
 }
 
-.button {
-  color: $card;
-  width: fit-content !important;
-  margin: {
-    right: $padding !important;
-    left: auto !important;
-  }
-  font-weight: bold;
-  font-size: $font-size;
-  border-radius: $rad;
-  padding: 4px 8px !important;
-  cursor: pointer;
-
-  transition: background $timing ease-out;
-
-  background: $gradient-blue;
-  background-size: 150% auto;
-
-  &:not(:hover) {
-    background-position: 95% 0%;
-  }
-
-  &:hover {
-    background-position: 5% 0%;
-  }
-}
-
-@import "toolbar";
+@import "tooltip";
 @import "editor";
-@import "editor-sources";
-@import "hljs-dracula";
-@import "rendering";
-@import "scrollbar";

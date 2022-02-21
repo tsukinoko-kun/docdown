@@ -1,0 +1,9 @@
+.tooltip {
+  transform: translate(-50%, $padding);
+  pointer-events: none;
+  width: fit-content;
+  max-width: 200px;
+  height: fit-content;
+  padding: $padding-2 $padding;
+  background-color: $comment;
+}

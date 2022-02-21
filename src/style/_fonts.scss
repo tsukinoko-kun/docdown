@@ -2,34 +2,40 @@
 @font-face {
   font-family: "Noto Sans Emoji";
   src: url("../font/Noto_Sans/NotoColorEmoji.otf") format("opentype");
+  font-display: swap;
 }
 @font-face {
   font-family: "Noto Sans WhiteSpace";
   src: url("../font/Noto_Sans/NotoSans-WhiteSpace.woff2") format("woff2");
+  font-display: swap;
 }
 @font-face {
   font-family: "Noto Sans";
   src: url("../font/Noto_Sans/NotoSans-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "Noto Sans";
   src: url("../font/Noto_Sans/NotoSans-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "Noto Sans";
   src: url("../font/Noto_Sans/NotoSans-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
+  font-display: swap;
 }
 @font-face {
   font-family: "Noto Sans";
   src: url("../font/Noto_Sans/NotoSans-BoldItalic.ttf") format("truetype");
   font-weight: bold;
   font-style: italic;
+  font-display: swap;
 }
 
 // JetBrainsMono
@@ -38,18 +44,21 @@
   src: url("../font/JetBrainsMono/JetBrainsMono-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "JetBrainsMono";
   src: url("../font/JetBrainsMono/JetBrainsMono-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: "JetBrainsMono";
   src: url("../font/JetBrainsMono/JetBrainsMono-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
+  font-display: swap;
 }
 @font-face {
   font-family: "JetBrainsMono";
@@ -57,4 +66,5 @@
     format("truetype");
   font-weight: bold;
   font-style: italic;
+  font-display: swap;
 }
