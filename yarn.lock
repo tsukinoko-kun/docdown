@@ -210,13 +210,13 @@
   resolved "https://registry.yarnpkg.com/@bomdi/codebox/-/codebox-1.0.12.tgz#0f68d62f6f8418b5e8a937513e0eaa146d770c6a"
   integrity sha512-G3d4cSYYNXSRiN1LaSJn4OEf3Th+RDjZfwlPclhh94WDsFHPSQrEEEodNIq6bss0gl/sTQV8DgJpLaSihMmDQg==
 
-"@editorjs/editorjs@^2.22.2":
-  version "2.22.2"
-  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.22.2.tgz#bf1d10c9fa9dd1dc574c18d8f4b77fef43d8e7f6"
-  integrity sha512-rPCv7Z5LZebreQaaL4DZuWzoVGEqwB+P7BF1dsefGQNBmLyeLF412topeW2b6e+g4l1oQ7t75kCOACNTEyYYIA==
+"@editorjs/editorjs@^2.23.2":
+  version "2.23.2"
+  resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.23.2.tgz#a4d3e60de8052602233750eda353596c09131a90"
+  integrity sha512-SXWQjxE/ZO6zWvo83U+gfkM9LVJzYOtNkttyXkdfyYALVWiENyxtlej/Jmd1TZ4yWpKwQEICPXz0ceGkzKnJyQ==
   dependencies:
     codex-notifier "^1.1.2"
-    codex-tooltip "^1.0.2"
+    codex-tooltip "^1.0.4"
     nanoid "^3.1.22"
 
 "@editorjs/header@^2.6.2":
@@ -1506,7 +1506,7 @@ codex-notifier@^1.1.2:
   resolved "https://registry.yarnpkg.com/codex-notifier/-/codex-notifier-1.1.2.tgz#a733079185f4c927fa296f1d71eb8753fe080895"
   integrity sha512-DCp6xe/LGueJ1N5sXEwcBc3r3PyVkEEDNWCVigfvywAkeXcZMk9K41a31tkEFBW0Ptlwji6/JlAb49E3Yrxbtg==
 
-codex-tooltip@^1.0.2:
+codex-tooltip@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/codex-tooltip/-/codex-tooltip-1.0.4.tgz#bb8c6e0fe7accc68ce79cdcb7c71bf7b4bf1317a"
   integrity sha512-Ud+N+y8PMIa9xGyKuo2j3q8QlfTzkMWQ5KeRrbCDerwVn7xq45nqPKQCFBXEMV0YI42/OqSMnsxP8MyVAyVhnA==
