@@ -11,12 +11,10 @@ import CodeBox from "@bomdi/codebox";
 import SimpleImage from "simple-image-editorjs";
 import TableOfContents from "./TableOfContents";
 import { References } from "./Source";
+import Undo from "editorjs-undo";
 
 // Block Tunes
 import { Source } from "./Source";
-
-// Other
-import Undo from "editorjs-undo";
 
 import { listenForMessage, sendMessage, service } from "../router";
 import { getImageData } from "../logic/dataHelper/getImageData";
@@ -48,9 +46,9 @@ try {
       source: Source,
     },
     tunes: ["source"],
-    onReady: () => {
+    onReady: ((editor: EditorJS) => {
       new Undo({ editor });
-    },
+    }) as any,
     onChange: () => {
       sendMessage(service.dataChanged);
 
@@ -90,7 +88,7 @@ try {
     if (data.editor) {
       editorConfig.data = data.editor;
       editor.destroy();
-      editor = editor = new EditorJS(editorConfig);
+      editor = new EditorJS(editorConfig);
     }
   });
 } catch (e) {
