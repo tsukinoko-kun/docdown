@@ -40,9 +40,8 @@ $toolbar-height: 60px;
     }
   }
 
-  > input {
-    width: max-content;
-    min-width: 64px;
+  > select {
+    background-color: transparent;
   }
 
   > span {
