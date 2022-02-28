@@ -81,6 +81,23 @@ addDisposableEventListener(
           ev.stopPropagation();
           open();
           break;
+        case "v":
+          if (
+            (ev.target as HTMLElement).classList.contains("codeBoxTextArea") &&
+            window.getSelection
+          ) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            navigator.clipboard.readText().then((text) => {
+              const sel = window.getSelection();
+              if (sel && sel.getRangeAt && sel.rangeCount) {
+                const range = sel.getRangeAt(0);
+                range.deleteContents();
+                range.insertNode(document.createTextNode(text));
+              }
+            });
+          }
+          break;
         case "s":
           ev.preventDefault();
           ev.stopPropagation();

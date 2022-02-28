@@ -40,7 +40,13 @@ try {
       image: SimpleImage,
       quote: Quote,
       marker: Marker,
-      codeBox: CodeBox,
+      codeBox: {
+        class: CodeBox,
+        config: {
+          themeURL:
+            "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/dracula.min.css",
+        },
+      },
       toc: TableOfContents,
       references: References,
       source: Source,
