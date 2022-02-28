@@ -30,7 +30,7 @@ export class ExportReferences implements IExportHelper<IReferencesData> {
         tocItem: "toc",
         tocStyle: "toc_header1",
         style: "header1",
-        id: ExportReferences.s_id,
+        id: ExportReferences.id,
       },
       {
         ol: ExportReferences.s_referencesContent,
@@ -38,7 +38,7 @@ export class ExportReferences implements IExportHelper<IReferencesData> {
     ];
   }
 
-  public static formatSourceData(sourceData: ISourceData) {
+  public static formatSourceData(sourceData: ISourceData): Content {
     if (sourceData.url) {
       return {
         text: [

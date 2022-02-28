@@ -59,12 +59,16 @@ export class TuneSource implements ITuneHelper<Array<sourceId>> {
     };
 
     if (content.text) {
-      if (Array.isArray(content.text)) {
-        content.text.push(sourceInline);
-      } else if (typeof content.text === "string") {
+      if (typeof content.text === "string") {
         content.text = [content.text, sourceInline];
+      } else if (Array.isArray(content.text)) {
+        content.text.push(sourceInline);
       } else if (typeof content.text === "object" && "text" in content.text) {
-        content.text = [content.text.text, sourceInline];
+        if (Array.isArray(content.text.text)) {
+          content.text.text.push(sourceInline);
+        } else {
+          content.text = [content.text.text, sourceInline];
+        }
       }
     } else {
       console.warn("TuneSource.tune: no text", content);
