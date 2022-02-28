@@ -40,6 +40,11 @@ $toolbar-height: 60px;
     }
   }
 
+  > input {
+    width: max-content;
+    min-width: 64px;
+  }
+
   > span {
     height: #{$toolbar-height - $toolbar-padding * 2};
     width: #{$toolbar-height - $toolbar-padding * 2};

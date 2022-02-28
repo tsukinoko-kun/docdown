@@ -4,6 +4,7 @@ import {
   addDisposableEventListener,
   disposeNode,
 } from "@frank-mayer/magic/bin";
+import { defaultStyle } from "../data/pdfStylesheet";
 
 document.getElementById("preview-pdf")?.addEventListener("click", () => {
   sendMessage(service.createPdf, true, 2);
@@ -16,6 +17,15 @@ document.getElementById("download")?.addEventListener("click", downloadData);
 document.getElementById("formatting-signs")?.addEventListener("click", () => {
   document.body.classList.toggle("formatting-signs");
 });
+
+const fontSizeEl = document.getElementById("font-size") as HTMLInputElement;
+if (fontSizeEl) {
+  fontSizeEl.addEventListener("change", () => {
+    const value = Number(fontSizeEl.value);
+    defaultStyle.fontSize = value;
+    document.body.style.setProperty("--font-size", `${value}pt`);
+  });
+}
 
 const open = () => {
   const recent = document.createElement("ul");

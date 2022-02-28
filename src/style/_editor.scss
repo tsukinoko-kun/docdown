@@ -9,8 +9,39 @@
 }
 
 .ce-block__content {
+  font-size: var(--font-size);
   padding: #{$padding * 0.25} #{$padding * 2};
-  min-height: #{$font-size + $padding * 4};
+  min-height: calc(var(--font-size) + #{$padding * 4});
+
+  h1 {
+    font-size: calc(var(--font-size) * 2) !important;
+    color: $blue;
+
+    &::after,
+    &::before {
+      color: $blue !important;
+    }
+  }
+
+  h2 {
+    font-size: calc(var(--font-size) * 1.6666) !important;
+  }
+
+  h3 {
+    font-size: calc(var(--font-size) * 1.3333) !important;
+  }
+
+  h4 {
+    font-size: calc(var(--font-size) * 1.1666) !important;
+  }
+
+  h5 {
+    font-size: calc(var(--font-size) * 1.08333) !important;
+  }
+
+  h6 {
+    font-size: var(--font-size) !important;
+  }
 }
 
 .ce-block--selected .ce-block__content {
@@ -148,6 +179,11 @@
   border-color: $current-line;
 }
 
+body.formatting-signs .tc-table__inp::after {
+  content: "¤";
+  font-size: 1em;
+}
+
 body.formatting-signs .ce-toc::after {
   content: '"¶';
 }
@@ -231,6 +267,21 @@ body:not(.formatting-signs) .ce-references::after {
     }
   }
 
+  .codeBoxTextArea,
+  .codeBoxTextArea * {
+    font-family: "Noto Sans WhiteSpace", $monospace-font !important;
+  }
+
+  .codeBoxTextArea > div > div {
+    min-width: 2em;
+    display: block;
+    &::after {
+      content: "¶";
+      position: relative;
+      display: inline !important;
+    }
+  }
+
   .ce-block:not(.last-block) {
     .ce-header::after,
     .ce-paragraph::after {
@@ -257,7 +308,7 @@ body:not(.formatting-signs) .ce-references::after {
         color: $foreground;
         opacity: 0.5;
         display: block;
-        font-size: $font-size;
+        font-size: var(--font-size);
         transform: translate(calc(-100% - 1em), 0);
       }
 

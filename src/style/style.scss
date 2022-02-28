@@ -29,6 +29,10 @@ main {
   background-color: $current-line;
 }
 
+:root {
+  --font-size: 11pt;
+}
+
 :root,
 body {
   overflow-x: hidden;

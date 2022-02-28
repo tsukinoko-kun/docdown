@@ -239,52 +239,52 @@ export const styles: () => { [key: string]: Style } = () => {
 
   return {
     title: {
-      fontSize: 26,
+      fontSize: Math.round(defaultStyle.fontSize! * 2),
       bold: true,
       margin: [0, 10, 0, 2],
       color: themeColor.toString(),
     },
     header1: {
-      fontSize: 20,
+      fontSize: Math.round(defaultStyle.fontSize! * 1.6666),
       lineHeight: 1.5,
       bold: true,
       margin: [0, 10, 0, 2],
     },
     header2: {
-      fontSize: 16,
+      fontSize: Math.round(defaultStyle.fontSize! * 1.3333),
       bold: true,
       margin: [0, 10, 0, 2],
     },
     header3: {
-      fontSize: 14,
+      fontSize: Math.round(defaultStyle.fontSize! * 1.1666),
       bold: true,
       margin: [0, 5, 0, 0],
     },
     header4: {
-      fontSize: 13,
+      fontSize: Math.round(defaultStyle.fontSize! * 1.08333),
       bold: true,
       margin: [0, 5, 0, 0],
     },
     header5: {
-      fontSize: 12,
+      fontSize: defaultStyle.fontSize!,
       bold: true,
       margin: [0, 5, 0, 0],
     },
     header6: {
-      fontSize: 12,
+      fontSize: defaultStyle.fontSize!,
       bold: true,
       margin: [0, 5, 0, 0],
     },
     toc_header1: {
-      fontSize: 16,
+      fontSize: Math.round(defaultStyle.fontSize! * 1.3333),
       bold: true,
     },
     toc_header2: {
-      fontSize: 15,
+      fontSize: Math.round(defaultStyle.fontSize! * 1.25),
       opacity: 0.75,
     },
     toc_header3: {
-      fontSize: 14,
+      fontSize: Math.round(defaultStyle.fontSize! * 1.1666),
       opacity: 0.5,
     },
     paragraph: {
