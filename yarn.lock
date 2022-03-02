@@ -1269,10 +1269,10 @@ editorjs-table@^1.4.10:
   resolved "https://registry.yarnpkg.com/editorjs-table/-/editorjs-table-1.4.10.tgz#2714d91054732fc827087c705ceb2641a16d3ed2"
   integrity sha512-jRpgqnimReXXtMLhjXWQ2M+qkOLNqCvKfoiExpZtzPThTFNtSPrE6WZ/HhTsOA2BMkZSejoLcf4KUYvRa5dZYw==
 
-editorjs-undo@^2.0.0-rc.1:
-  version "2.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/editorjs-undo/-/editorjs-undo-2.0.0-rc.1.tgz#93574d06b6611c754f316003420bc2a2a757a93c"
-  integrity sha512-ndeTNSRYDZQ1GD5iqEKW+wpnsa20XHXRNeIlFQWQEpED7x/EwdaCthfxs9wmOj7Rfgz+0RQmoNG3T7UhD19XbQ==
+editorjs-undo@^2.0.0-rc.2:
+  version "2.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/editorjs-undo/-/editorjs-undo-2.0.0-rc.2.tgz#26d78f07652043ddee481a48f33c8c4a66b1245c"
+  integrity sha512-KP0LSCiVfAhzcDVuGdBWAKgX871qYHPnl/m+9JhbIRRSBXASqxhT1bakPoJLSwcTC4UaIF3tGgT08P7TAirkCg==
   dependencies:
     vanilla-caret-js "^1.0.1"
 
