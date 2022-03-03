@@ -30,7 +30,7 @@
     "parcel": "^2.3.2",
     "postcss": "^8.4.7",
     "sass": "^1.49.9",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.2"
   },
   "dependencies": {
     "@bomdi/codebox": "^1.0.12",
