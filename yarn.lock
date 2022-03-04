@@ -97,10 +97,10 @@
   resolved "https://registry.yarnpkg.com/@foliojs-fork/restructure/-/restructure-2.0.2.tgz#73759aba2aff1da87b7c4554e6839c70d43c92b4"
   integrity sha512-59SgoZ3EXbkfSX7b63tsou/SDGzwUEK6MuB5sKqgVK1/XE0fxmpsOb9DQI8LXW3KfGnAjImCGhhEb7uPPAUVNA==
 
-"@frank-mayer/magic@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@frank-mayer/magic/-/magic-1.4.0.tgz#244df1cc90d556c84be9f301f9dd5cca7d6fe355"
-  integrity sha512-NUqKF1bud7jc5fgT4Wn0ayb/zk1wsYB00gx8LL/ITTPF2dXsb98CPYsp5l1fkg2Tm0V2fbT0DtD1KMiyKdGE/Q==
+"@frank-mayer/magic@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@frank-mayer/magic/-/magic-1.5.0.tgz#93e64d7bf3408a8ad3707ce2c8114586bfa3380b"
+  integrity sha512-z9NG1uVwwdmFn8QeKzbKpwugdi3Aw0tb5iFg54IRzRloZsDd5qObcba3ziFzyrr2ZJX5VJC8kuyJMOCjXVUMfQ==
 
 "@parcel/bundler-default@2.3.2":
   version "2.3.2"
