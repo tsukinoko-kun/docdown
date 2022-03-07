@@ -97,10 +97,12 @@
   resolved "https://registry.yarnpkg.com/@foliojs-fork/restructure/-/restructure-2.0.2.tgz#73759aba2aff1da87b7c4554e6839c70d43c92b4"
   integrity sha512-59SgoZ3EXbkfSX7b63tsou/SDGzwUEK6MuB5sKqgVK1/XE0fxmpsOb9DQI8LXW3KfGnAjImCGhhEb7uPPAUVNA==
 
-"@frank-mayer/magic@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@frank-mayer/magic/-/magic-1.5.0.tgz#93e64d7bf3408a8ad3707ce2c8114586bfa3380b"
-  integrity sha512-z9NG1uVwwdmFn8QeKzbKpwugdi3Aw0tb5iFg54IRzRloZsDd5qObcba3ziFzyrr2ZJX5VJC8kuyJMOCjXVUMfQ==
+"@frank-mayer/magic@^1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@frank-mayer/magic/-/magic-1.9.1.tgz#f8cf690349e1687b5eebe211392dcb8177530b1e"
+  integrity sha512-pAe/tupMHSez82UplCruCIJ0TMbucYizElkhf/zN0yJ6eSIUPFkwGdGDoY4hAtW126ueHRdH2/XVEu4aSJcHJw==
+  dependencies:
+    tslib "^2.3.1"
 
 "@parcel/bundler-default@2.3.2":
   version "2.3.2"
@@ -2457,6 +2459,11 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
+
+tslib@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 type-check@~0.3.2:
   version "0.3.2"
