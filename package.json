@@ -28,7 +28,7 @@
     "buffer": "^6.0.3",
     "editorjs-undo": "^2.0.0-rc.2",
     "parcel": "^2.3.2",
-    "postcss": "^8.4.7",
+    "postcss": "^8.4.8",
     "sass": "^1.49.9",
     "typescript": "^4.6.2"
   },
